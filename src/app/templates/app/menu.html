@@ -1,0 +1,28 @@
+<nav id="nav">
+	<a href="#" class="nav__btn nav__btn--home" onclick="myStorage.clear()">&curren;</a>
+	<a href="#" class="nav__btn nav__btn--resin" onclick="">&diams;</a>
+	<a href="#" class="nav__btn nav__btn--close" onclick="closeNav()">&times;</a>
+	{% for page, link in nav.items %}
+		{% url link as link %}
+		<a {% if request.path == link %} href="javascript:void(0)" class="nav-active" {% else %} href="{{ link }}" {% endif %}>{{ page }}</a>
+	{% endfor %}
+</nav>
+	
+	
+
+<!-- <header id="header"></header><script>makeHeader()</script>
+
+	function makeHeader(click){
+		const HEADER = document.getElementById('header')
+	
+		const menu = create(HEADER,'button',{'class':'header__menu'})
+		menu.onclick = ()=>openNav(); menu.innerHTML = '&equiv;';
+	
+		if(!click) return
+		const button = create(HEADER,'div',{'class':'header__button'})
+		const icon = create(button,'div',{'class':'header__button--icon'})
+		const input = create(button,'input',
+		{'class':'header__button--input','type':'button','value':'Save'})
+		input.onclick = ()=>click();
+		makeDialog()
+	} -->
