@@ -15,5 +15,6 @@
 <body>
 	{% include 'app/menu.html' %}
 	{% block content %}{% endblock%}
+	<h1>{{request.user}}</h1>
 </body>
 </html>

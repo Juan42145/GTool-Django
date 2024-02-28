@@ -1,4 +1,7 @@
 <nav id="nav">
+	<form method="post" action="{% url 'logout' %}">{% csrf_token %}
+    <button type="submit">logout</button>
+	</form>
 	<a href="#" class="nav__btn nav__btn--home" onclick="myStorage.clear()">&curren;</a>
 	<a href="#" class="nav__btn nav__btn--resin" onclick="">&diams;</a>
 	<a href="#" class="nav__btn nav__btn--close" onclick="closeNav()">&times;</a>
