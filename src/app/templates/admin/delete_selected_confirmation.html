@@ -1,0 +1,20 @@
+{% extends "admin/delete_selected_confirmation.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs-app %}{% with is_custom=queryset.0.module %}
+	{% url 'admin:app_list' app_label=opts.app_label as url %}
+	&rsaquo; 
+	{% if is_custom %}
+		<a href="{{ url }}?sub={{is_custom}}">{{ is_custom|title }}</a>
+	{% else %}
+		<a href="{{ url }}">{{ opts.app_config.verbose_name }}</a>
+	{% endif %}
+{% endwith %}{% endblock %}
+
+{% block breadcrumbs-model %}
+	&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|title }}</a>
+{% endblock %}
+
+{% block breadcrumbs-obj %}
+	&rsaquo; {% translate 'Delete multiple objects' %}
+{% endblock %}

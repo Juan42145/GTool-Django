@@ -1,0 +1,6 @@
+data = JSON.parse(document.getElementById('json_context').textContent)
+console.log(data)
+console.log(data.DB)
+console.log(data.IMAGE)
+console.log(data.STATIC)
+console.log(JSON.parse(document.getElementById('json_user_data').textContent))

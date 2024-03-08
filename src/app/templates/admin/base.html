@@ -1,0 +1,50 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}{% load static %}
+
+{% comment %} {% block pretitle %} <div id="debug" style='display: none'>{% debug %}</div> {%endblock%} {% endcomment %}
+
+{% block welcome-msg %}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'admin/style.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+	<script defer>
+		window.onload = () => {
+			setCurrentApp()
+			initSidebar()
+		}
+
+		// Add class "current-app" to app with "current-model" child
+		function setCurrentApp(){
+			child = document.querySelector('.current-model')
+			if (child) parent = child.closest('.module')
+			if (parent && parent != window) parent.classList.add('current-app')
+		}
+
+		// Close sidebar on smaller media
+		function initSidebar() {
+			var media = window.matchMedia("(max-width: 767px)")
+			if (media.matches && document.querySelector('#main').classList.contains('shifted')){
+				document.querySelector('#toggle-nav-sidebar').click()
+				console.log('close click')
+			}
+		}
+
+	</script>
+{% endblock %}
+
+{% block nav-breadcrumbs %}
+	<nav aria-label="{% translate 'Breadcrumbs' %}">
+		{% block custom-breadcrumbs %}
+			<div class="breadcrumbs">
+				<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+				{% block breadcrumbs-app %}{% if title %} &rsaquo; {{ title }}{% endif %}{% endblock %}
+				{% block breadcrumbs-model %}{% endblock %}
+				{% block breadcrumbs-obj %}{% endblock %}
+				{% block breadcrumbs-action %}{% endblock %}
+			</div>
+		{% endblock %}
+	</nav>
+{% endblock %}

@@ -34,6 +34,14 @@
   --rank3: #6faaca;
   --rank4: #917ab1;
   --rank5: #9a6d43;
+
+  --primary: #79aec8;
+  --secondary: #417690;
+  --accent: #f5dd5d;
+  --primary-fg: #fff;
+
+  --primary: #264b5d;
+  --primary-fg: #f7f7f7;
 }
 
 * {
@@ -420,27 +428,27 @@ dialog::backdrop {
   ----BACKGROUNDS----
   */
 .r_1 {
-  background: url("../assets/Q1.webp") top left no-repeat;
+  background: url("../app/assets/Q1.webp") top left no-repeat;
   background-size: cover;
 }
 
 .r_2 {
-  background: url("../assets/Q2.webp") top left no-repeat;
+  background: url("../app/assets/Q2.webp") top left no-repeat;
   background-size: cover;
 }
 
 .r_3 {
-  background: url("../assets/Q3.webp") top left no-repeat;
+  background: url("../app/assets/Q3.webp") top left no-repeat;
   background-size: cover;
 }
 
 .r_4 {
-  background: url("../assets/Q4.webp") top left no-repeat;
+  background: url("../app/assets/Q4.webp") top left no-repeat;
   background-size: cover;
 }
 
 .r_5 {
-  background: url("../assets/Q5.webp") top left no-repeat;
+  background: url("../app/assets/Q5.webp") top left no-repeat;
   background-size: cover;
 }
 

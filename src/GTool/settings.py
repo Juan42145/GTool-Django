@@ -25,15 +25,17 @@ SECRET_KEY = 'django-insecure-75^5tul+ba7tpz+lpaccf^4r9hf1orx)^5io*ri2h+)ygak9&d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'app.apps.AppConfig',
-	'users.apps.UsersConfig',
-	'crispy_forms',
+    'app.apps.AppConfig',
+    'users.apps.UsersConfig',
+
+    'crispy_forms',
+    # 'debug_toolbar',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -135,3 +139,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'app:home'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

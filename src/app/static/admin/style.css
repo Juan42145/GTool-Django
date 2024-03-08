@@ -1,0 +1,153 @@
+/* play with different colors for tables in dashboard */
+
+/* 
+	THEME COLORS
+*/
+html[data-theme="light"],
+:root {
+	--primary: #79aec8;
+	--secondary: #417690;
+	--accent: #f5dd5d;
+	--primary-fg: #fff;
+
+	--header-color: #ffc;
+	--header-branding-color: var(--accent);
+	--header-bg: var(--secondary);
+	--header-link-color: var(--primary-fg);
+
+	--breadcrumbs-fg: #c4dce8;
+	--breadcrumbs-link-fg: var(--body-bg);
+	--breadcrumbs-bg: #264b5d;
+
+	--link-fg: #417893;
+	--link-hover-color: #036;
+	--link-selected-fg: var(--secondary);
+
+	--hairline-color: #e8e8e8;
+	--border-color: #bbb;
+	/*MODIFED in BOTH*/
+
+	--selected-bg: #e4e4e4;
+	/* E.g. selected table cells */
+	--selected-row: #ffc;
+
+	--button-bg: var(--secondary);
+	--button-hover-bg: #205067;
+	--default-button-bg: #205067;
+	--default-button-hover-bg: var(--secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+
+	html[data-theme="dark"],
+	:root {
+		--primary: #264b5d;
+		--primary-fg: #f7f7f7;
+
+		--breadcrumbs-link-fg: #e0e0e0;
+		--breadcrumbs-bg: var(--primary);
+
+		--link-fg: #81d4fa;
+		--link-hover-color: #4ac1f7;
+		--link-selected-fg: #6f94c6;
+
+		--hairline-color: #272727;
+		--border-color: #444;
+
+		--selected-bg: #1b1b1b;
+		--selected-row: #00363a;
+	}
+}
+
+/* 
+	DASHBOARD
+*/
+.dashboard #content {
+	width: auto;
+	display: grid;
+	grid-template-columns: auto min-content;
+	grid-auto-flow: dense;
+	column-gap: 30px;
+}
+
+.dashboard #content h1{
+	grid-column: span 2;
+}
+
+.dashboard #content-main {
+	--gap: 30px;
+	columns: 300px;
+	gap: var(--gap);
+	padding-bottom: var(--gap);
+}
+
+.dashboard #content-footer {
+	grid-column: 1;
+}
+
+.dashboard #content-related {
+	grid-column: 2;
+	grid-row: span 2;
+	margin: 0;
+}
+
+@media (max-width: 767px) {
+	.dashboard #content {
+		display: block;
+	}
+
+	.dashboard #content-main {
+		padding-bottom: 0;
+	}
+}
+
+/* Dashboard Modules */
+.dashboard .module:not(:first-child) {
+	margin-top: var(--gap);
+}
+
+@media (min-width: 767px) {
+	.dashboard .module {
+		margin-bottom: 0;
+	}
+}
+
+/* 
+		APP LIST SIDEBAR
+*/
+#nav-sidebar {
+	flex-direction: column;
+}
+
+/* Make sidebar always visible */
+#nav-sidebar,
+#toggle-nav-sidebar {
+	display: flex;
+}
+
+/* Hide and show sidebar */
+@media (max-width: 767px) {
+	.shifted #nav-sidebar {
+		flex: auto;
+	}
+
+	.shifted .content {
+		display: none;
+	}
+}
+
+/* Module ordering */
+#nav-sidebar .module {
+	order: 1;
+}
+
+#nav-sidebar .current-app {
+	order: 0;
+}
+
+/* 
+		PAGINATOR HORIZONTAL OVERFLOW FIX
+*/
+.paginator {
+	width: 98%;
+}

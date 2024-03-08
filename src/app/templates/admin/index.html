@@ -1,0 +1,18 @@
+{% extends "admin/index.html" %}
+
+{% block coltype %}{% endblock %}
+
+{% block content %}
+{% if app_list|length > 1 and not sub_app %}
+	<div id="content-main">
+		{% include "admin/app_list.html" with app_list=app_list|slice:':-1' show_changelinks=True %}
+	</div>
+	<div id="content-footer">
+		{% include "admin/app_list.html" with app_list=app_list|slice:'-1:' show_changelinks=True %}
+	</div>
+{% else %}
+	<div id="content-main">
+		{% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+	</div>
+{% endif %}
+{% endblock %}

@@ -26,5 +26,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', user_views.UserCreateView.as_view(), name='register'),
     path('user/', user_views.UserUpdateView.as_view(), name='user'),
+    path('save/', user_views.saveProfile, name='save'),
     path('', include('app.urls')),
+
+    # path('__debug__', include('debug_toolbar.urls')),
 ]

@@ -3,18 +3,35 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<base target="_self">
 	{% if title %}
 		<title>GTool - {{ title }}</title>
 	{% else %}
 		<title>GTool</title>
 	{% endif %}
 
-	<!-- <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}"> -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'app/favicon.ico' %}"/>
+
+	<link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+	{% block extrastyle %}{% if stylesheet %}
+		<link rel="stylesheet" type="text/css" href="{% static stylesheet %}">
+	{% endif %}{% endblock %}
+
+	{{ json_context|json_script:"json_context" }}
+	{% if user.is_authenticated %}{{ request.user.profile.data|json_script:"json_user_data" }}{% endif %}
+	<script src="{% static 'app/database.js' %}"></script>
+	<script src="{% static 'app/main.js' %}"></script>
+	{% block extrascript %}{% if script %}
+		<script src="{% static script %}"></script>
+	{% endif %}{% endblock %}
+
 </head>
 <body>
 	{% include 'app/menu.html' %}
-	{% block content %}{% endblock%}
-	<h1>{{request.user}}</h1>
+
+	{% block content %}{% endblock %}
+
 </body>
 </html>

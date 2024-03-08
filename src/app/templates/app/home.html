@@ -1,4 +1,29 @@
 {% extends "app/base.html" %}
+
+{% block extrastyle %}{% with stylesheet='app/pages/home/home.css' %}
+	{{ block.super }}
+{% endwith %}{% endblock %}
+
+{% block extrascript %}{% with script='app/pages/home/home.js' %}
+	{{ block.super }}
+{% endwith %}{% endblock %}
+
 {% block content %}
-  HOME
+
+<div class="filter">
+	<input type="checkbox" class="filter__btn" onchange="update(this)">
+</div>
+
+<div id='home' class="home">
+	<div id="var"></div>
+	<div id="BOOKS" class="section js-section section--total hide"></div>
+	<div id="TROPHIES" class="section js-section section--total hide"></div>
+	<div id="GEMS" class="section js-section section--total hide"></div>
+	<div id="ELITE" class="section js-section section--total hide"></div>
+	<div id="COMMON" class="section js-section section--total hide"></div>
+	<div id="RESOURCES" class="section js-section hide"></div>
+	<div id="WEEKLY_DROPS" class="section js-section hide"></div>
+	<div id="BOSSES" class="section js-section hide"></div>
+	<div id="LOCAL_SPECIALTIES" class="section js-section hide"></div>
+</div>
 {% endblock content %}

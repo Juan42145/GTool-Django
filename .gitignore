@@ -1,5 +1,6 @@
 .venv
 *.sqlite3
+.prettierignore
 
 __pycache__/
 *.py[cod]

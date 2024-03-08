@@ -1,0 +1,30 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs-app %}{% with is_custom=original.module %}
+	{% url 'admin:app_list' app_label=opts.app_label as url %}
+	&rsaquo; 
+	{% if is_custom %}
+		<a href="{{ url }}?sub={{is_custom}}">{{ is_custom|title }}</a>
+	{% else %}
+		<a href="{{ url }}">{{ opts.app_config.verbose_name }}</a>
+	{% endif %}
+{% endwith %}{% endblock %}
+
+{% block breadcrumbs-model %}
+	&rsaquo;
+	{% if has_view_permission %}
+		<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|title }}</a>
+	{% else %}
+		{{ opts.verbose_name_plural|title }}
+	{% endif %}
+{% endblock %}
+
+{% block breadcrumbs-obj %}
+	&rsaquo;
+	{% if add %}
+		{% blocktranslate with name=opts.verbose_name|title %}Add {{ name }}{% endblocktranslate %}
+	{% else %}
+		{{ original|truncatewords:"18" }}
+	{% endif %}
+{% endblock %}

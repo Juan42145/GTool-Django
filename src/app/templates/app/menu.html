@@ -1,31 +1,43 @@
 <nav id="nav">
 	<form method="post" action="{% url 'logout' %}">{% csrf_token %}
-    <button type="submit">logout</button>
+    <button class="nav__btn nav__btn--home" onclick="myStorage.clear()" type="submit">logout</button>
 	</form>
-	<a href="#" class="nav__btn nav__btn--home" onclick="myStorage.clear()">&curren;</a>
-	<a href="#" class="nav__btn nav__btn--resin" onclick="">&diams;</a>
-	<a href="#" class="nav__btn nav__btn--close" onclick="closeNav()">&times;</a>
+	<button class="nav__btn nav__btn--resin" onclick="document.getElementById('resin-dialog').showModal()">&diams;</button>
+	<button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button>
+
+	<dialog id='resin-dialog'>
+		<button class="nav__btn dialog--close" onclick="this.parentElement.close()">&times;</button>
+		<div id="resin-results" class="dialog--div"></div>
+		<input id="resin-input" class="dialog--input" type="text" pattern: "\\d*">
+	</dialog>
+
 	{% for page, link in nav.items %}
-		{% url link as link %}
-		<a {% if request.path == link %} href="javascript:void(0)" class="nav-active" {% else %} href="{{ link }}" {% endif %}>{{ page }}</a>
+		{% url link as url %}
+		<a
+			{% if url in request.path|urlencode %} href="javascript:void(0)" class="nav-active"
+			{% else %} href="{{ url }}"
+			{% endif %}
+		>{{ page|upper }}</a>
 	{% endfor %}
 </nav>
-	
-	
 
-<!-- <header id="header"></header><script>makeHeader()</script>
+<header id="header">
+	<button class="header__menu" onclick="openNav()">&equiv;</button>
+	{% if action and form %}
+		<div class="header__button">
+			<div class="header__button--icon"></div>
+			<input class="header__button--input" type="button" value="Save" onclick="{{ action }}">
+			<form id="header__form" method="post" >{% csrf_token %}
+				{{ form }}
+				<button type="submit"></button>
+			</form>
+		</div>
+	{% endif %}
+</header>
 
-	function makeHeader(click){
-		const HEADER = document.getElementById('header')
-	
-		const menu = create(HEADER,'button',{'class':'header__menu'})
-		menu.onclick = ()=>openNav(); menu.innerHTML = '&equiv;';
-	
-		if(!click) return
-		const button = create(HEADER,'div',{'class':'header__button'})
-		const icon = create(button,'div',{'class':'header__button--icon'})
-		const input = create(button,'input',
-		{'class':'header__button--input','type':'button','value':'Save'})
-		input.onclick = ()=>click();
-		makeDialog()
-	} -->
+{% if action and form %}
+	<dialog id="dialog" class="alert" onclick="(()=>{
+		this.close();
+		this.innerHTML = ''
+	})()"></dialog>
+{% endif %}

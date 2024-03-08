@@ -1,0 +1,15 @@
+{% extends 'admin/change_list.html' %}
+
+{% block breadcrumbs-app %}{% with is_custom=cl.model.module %}
+	{% url 'admin:app_list' app_label=cl.opts.app_label as url %}
+	&rsaquo; 
+	{% if is_custom %}
+		<a href="{{ url }}?sub={{is_custom}}">{{ is_custom|title }}</a>
+	{% else %}
+		<a href="{{ url }}">{{ cl.opts.app_config.verbose_name }}</a>
+	{% endif %}
+{% endwith %}{% endblock %}
+
+{% block breadcrumbs-model %}
+	&rsaquo; {{ cl.opts.verbose_name_plural|title }}
+{% endblock %}
