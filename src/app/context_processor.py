@@ -1,7 +1,7 @@
 from django.forms.models import model_to_dict
 
 from .models import *
-from .serializers import *
+from .custom_serializers import *
 
 # Custom context processor
 def custom_context(request):

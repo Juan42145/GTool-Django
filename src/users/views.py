@@ -7,14 +7,6 @@ from django.views.generic import CreateView, UpdateView
 from .forms import *
 
 # Create your views here.
-def saveProfile(request, *args, **kwargs):
-    if request.method == 'POST':
-        data = request.POST.get('data')
-        print(data)
-        profile = request.user.profile
-        profile.data = data
-        profile.save()
-
 class UserCreateView(CreateView):
     model = User
     form_class = UserCreationForm

@@ -7,27 +7,90 @@ Storage.prototype.get = function (key) {
 	return JSON.parse(this.getItem(key));
 }
 
-/**--DJANGO CONTEXT-- */
-const CONTEXT = JSON.parse(document.getElementById('json_context').textContent)
-const USER_CONTEXT = JSON.parse(document.getElementById('json_user_data').textContent)
+Storage.prototype.has = function (key) {
+	return this.get(key) !== null;
+}
 
 /**--GLOBAL VARIABLES */
-myStorage = localStorage;
-user = loadUser()
+const myStorage = localStorage;
+const mainDownload = Promise.all([loadMaster(),loadImages(),loadStatic()])
 
 // Initialize calc
-if (!myStorage.get('calc')) {
+if (!myStorage.has('calc')) {
 	console.log('not calc in cache')
 	myStorage.set('calc', true);
 }
 
-/**--USER STORAGE */
-function storeUser() {
+/**--DATABASE-- */
+async function request(url, context = undefined){
+	console.log('request ', url)
+	return await fetch(url+'/',context)
+	.then(res => res.json())
+	.catch(e=>{
+		console.log('error', e)
+	})
+}
+
+/**--SAVE-- */
+function getCookie(name) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+					}
+			}
+	}
+	return cookieValue;
+}
+
+function saveUser(){
+	const USER_ID = JSON.parse(document.getElementById('json_user_id').textContent)
+	user = myStorage.get('user')
+	alert('Saving')
+	request('/api/profile/'+USER_ID,{
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			'X-CSRFToken': getCookie('csrftoken')
+		},
+		body: JSON.stringify({
+			data: user.data
+		})
+	}).then(data => alert('Saved'))
+}
+
+/**--LOAD-- */
+function loader(url, key){
+	return myStorage.has(key)? myStorage.get(key): 
+	request(url).then(data => {
+		console.log('Loaded', key)
+		myStorage.set(key, data)
+		return data
+	})
+}
+
+function loadStatic(){return loader('/api/constant','DB_Static')}
+function loadMaster(){return loader('/api/master','DB_Master')}
+function loadCharacters(){return loader('/api/character','DB_Characters')}
+function loadWeapons(){return loader('/api/weapon','DB_Weapons')}
+function loadImages(){return loader('/api/image','DB_Images')}
+
+/**--USER CLIENT STORAGE */
+function storeUser(user) {
 	myStorage.set('user', user);
 }
 
 function loadUser() {
-	return myStorage.get('user') ? myStorage.get('user') : processInventory(USER_CONTEXT)
+	if (myStorage.has('user')) return myStorage.get('user')
+	else {
+		const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
+		return processInventory(USER_DATA)
+	}
 }
 
 function userSet(userObject, path, value){
@@ -62,7 +125,7 @@ function processInventory(user) {
 			if (counter > 1) inv[category][item]['0'] = total;
 		});
 	});
-	user.Inventory = inv; return user;
+	user.INVENTORY = inv; return user;
 }
 
 /**--IMAGES-- */
@@ -101,32 +164,6 @@ function preloadImages(array) {
 
 preloadImages(["url1.jpg", "url2.jpg", "url3.jpg"]);
  */
-
-/**--SETTERS-- */
-// form.addEventListener('submit', saveUser)
-function saveUser(e) {
-	e.preventDefault()
-	let form = document.getElementById('header__form')
-	fetch(document.URL, {
-		method: "POST",
-		body: JSON.stringify({
-			data: form.querySelector('#id_data').value,
-			csrfmiddlewaretoken: form.querySelector('input[name=csrfmiddlewaretoken]').value
-		}),
-		headers: {
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	})
-  .then(function(response) {
-		console.log("GOOD", response)
-  })
-  .catch(function(response) {
-    console.log("BAD", response)
-  })
-	//Idea compare with user context for difference
-	//check if django has success return or smtg
-	//Posibly using form
-}
 
 /**--ALERT-- */
 function toast(message) {

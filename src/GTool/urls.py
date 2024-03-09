@@ -22,12 +22,9 @@ from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('register/', user_views.UserCreateView.as_view(), name='register'),
-    path('user/', user_views.UserUpdateView.as_view(), name='user'),
-    path('save/', user_views.saveProfile, name='save'),
+    path('api/', include('api.urls')),
     path('', include('app.urls')),
+    path('', include('users.urls')),
 
     # path('__debug__', include('debug_toolbar.urls')),
 ]

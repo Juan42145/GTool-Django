@@ -21,6 +21,7 @@
 
 	{{ json_context|json_script:"json_context" }}
 	{% if user.is_authenticated %}{{ request.user.profile.data|json_script:"json_user_data" }}{% endif %}
+	{% if user.is_authenticated %}{{ request.user.profile.id|json_script:"json_user_id" }}{% endif %}
 	<script src="{% static 'app/database.js' %}"></script>
 	<script src="{% static 'app/main.js' %}"></script>
 	{% block extrascript %}{% if script %}

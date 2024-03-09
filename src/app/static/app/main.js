@@ -26,26 +26,27 @@ function focusText(e) {
 
 /**--IMAGES-- */
 function getImageLink(name, text = ''){
-	let imageObj = CONTEXT.IMAGE[name]
-	// if (imageObj.format && typeof imageObj.format[0] === 'string'){
+	let imageObj = loadImages()[name]
+	// if (imageObj.FORMAT && typeof imageObj.FORMAT[0] === 'string'){
 
 	// }
-	if (text && imageObj.format) {
-		imageObj.format.forEach((format)=>{
+	if (text && imageObj.FORMAT) {
+		imageObj.FORMAT.forEach((format)=>{
 			if(Array.isArray(format)){
 				[pattern,replacement] = format
 				text = text.replaceAll(pattern, replacement)
 			} else{
-				console.log(format)
+				console.log('nonformat: ',format)
 			}
 		})
 	}
-	return 'https://' + imageObj.url.replace('*', text);
+	return 'https://' + imageObj.URL.replace('*', text);
 }
 
 function getImage(category, item, rank) {
 	if (item === '') return getError();
-	return getImageLink(category, CONTEXT.DB.MASTER[category][item][rank]);
+	const DBM = loadMaster()
+	return getImageLink(category, DBM[category][item][rank]);
 }
 
 function getCharacter(name, full = false) {
@@ -80,20 +81,18 @@ function closeNav() {
 function makeResinDialog() {
 	const results = document.getElementById('resin-results')
 	const input = document.getElementById('resin-input')
-	input.addEventListener('input', () => {
-		results.innerHTML = '';
-		let v = +input.value;
-		resinCalc(results, v, 'init')
-		while (v >= 40) {
-			resinCalc(results, v - 20, 'end')
-			v -= 40;
-			resinCalc(results, v, 'loop')
-		}
-		if (v >= 20) {
-			v -= 20;
-			resinCalc(results, v, 'end')
-		}
-	}, false);
+	results.innerHTML = '';
+	let v = +input.value;
+	resinCalc(results, v, 'init')
+	while (v >= 40) {
+		resinCalc(results, v - 20, 'end')
+		v -= 40;
+		resinCalc(results, v, 'loop')
+	}
+	if (v >= 20) {
+		v -= 20;
+		resinCalc(results, v, 'end')
+	}
 }
 
 function resinCalc(CONT, value, type) {
@@ -134,8 +133,6 @@ var tooltip = function () {
 		}
 	};
 }();
-
-//UNDER GOES ON DATA
 
 /**--INVENTORY-- */
 //CHECK
@@ -180,10 +177,10 @@ function translate(category){
 
 /**--CALC DATA-- */
 let calcPivot
-const DB = CONTEXT.DB;
-const CALCDATA = CONTEXT.STATIC.calculation_data
-
 function calculate() {
+	const DBC = loadCharacters()
+	const DBW = loadWeapons()
+	let user = loadUser()
 	let calculator = {
 		'CHARACTERS': {},
 		'WEAPONS': {},
@@ -201,9 +198,9 @@ function calculate() {
 		'LOCAL_SPECIALTIES': {}
 	};
 
-	Object.entries(user.Characters).forEach(([character, state]) => {
+	Object.entries(user.CHARACTERS).forEach(([character, state]) => {
 		if (!state.FARM) return;
-		const info = DB.CHARACTERS[character];
+		const info = DBC[character];
 		const ascension = [+state.PHASE, +state.TARGET];
 		const talent = [
 			[+state.NORMAL, +state.TNORMAL],
@@ -212,18 +209,18 @@ function calculate() {
 		];
 		calculator.CHARACTERS[character] = {
 			ELEMENT: info.ELEMENT,
-			AFARM: calcCharA(info, ascension, true),
-			TFARM: calcCharT(info, talent, true)
+			AFARM: calcCharA(info, ascension),
+			TFARM: calcCharT(info, talent)
 		}
 	})
 
-	Object.entries(user.Weapons).forEach(([weapon, state]) => {
+	Object.entries(user.WEAPONS).forEach(([weapon, state]) => {
 		if (!state.FARM) return;
-		const info = DB.WEAPONS[weapon];
-		const phase = [+state.PHASE, +state.TARGET];
+		const info = DBW[weapon];
+		const phase = [+state.PHASE, +state.TARGET, info.RARITY];		
 		calculator.WEAPONS[weapon] = {
 			RARITY: info.RARITY,
-			FARM: calcWpn(info, phase, true)
+			FARM: calcWpn(info, phase)
 		}
 	})
 
@@ -232,70 +229,86 @@ function calculate() {
 	myStorage.set('calc', false);
 }
 
+/**--COST CALCULATORS-- */
 function calcCharA(info, ascension, rollToPivot) {
-	return {
-		GEM: [info.ELEMENT, calcA('GEM', ascension, info.ELEMENT, rollToPivot)],
-		BOSS: [info.BOSS, calcA('BOSS', ascension, info.BOSS, rollToPivot)],
-		LOCAL_SPECIALTY: [info.LOCAL, calcA('LOCAL_SPECIALTY', ascension, info.LOCAL_SPECIALTY, rollToPivot)],
-		COMMON: [info.COMMON, calcA('COMMON', ascension, info.COMMON, rollToPivot)],
-		EXP: ['EXP', calcA('EXP', ascension, 'EXP', rollToPivot)],
-		MORA: ['Mora', calcA('MORA', ascension, 'Mora', rollToPivot)],
+	props = {
+		GEM: info.ELEMENT,
+		BOSS: info.BOSS,
+		LOCAL_SPECIALTY: info.LOCAL_SPECIALTY,
+		COMMON: info.COMMON,
+		EXP: 'EXP',
+		MORA: 'Mora',
 	}
+	return generateCosts(props, calcA, ascension, rollToPivot)
 }
 function calcCharT(info, talent, rollToPivot) {
-	let wb = info['WEEKLY BOSS'] + ' ' + info.WEEKLY;
-	return {
-		BOOK: [info.BOOK, calcT('BOOK', talent, info.BOOK, rollToPivot)],
-		COMMON: [info.COMMON, calcT('COMMON', talent, info.COMMON, rollToPivot)],
-		WEEKLY: [wb, calcT('WEEKLY', talent, wb, rollToPivot)],
-		MORA: ['Mora', calcT('MORA', talent, 'Mora', rollToPivot)],
+	props = {
+		BOOK: info.BOOK,
+		COMMON: info.COMMON,
+		WEEKLY: info['WEEKLY BOSS'] + ' ' + info.WEEKLY,
+		MORA: 'Mora',
 	}
+	return generateCosts(props, calcT, talent, rollToPivot)
 }
 function calcWpn(info, phase, rollToPivot) {
-	return {
-		TROPHY: [info.TROPHY, calcW('TROPHY', phase, info.TROPHY, info.RARITY, rollToPivot)],
-		ELITE: [info.ELITE, calcW('ELITE', phase, info.ELITE, info.RARITY, rollToPivot)],
-		COMMON: [info.COMMON, calcW('COMMON', phase, info.COMMON, info.RARITY, rollToPivot)],
-		ORE: ['Ore', calcW('ORE', phase, 'Ore', info.RARITY, rollToPivot)],
-		MORA: ['Mora', calcW('MORA', phase, 'Mora', info.RARITY, rollToPivot)],
+	props = {
+		TROPHY: info.TROPHY,
+		ELITE: info.ELITE,
+		COMMON: info.COMMON,
+		ORE: 'Ore',
+		MORA: 'Mora',
 	}
+	return generateCosts(props, calcW, phase, rollToPivot)
 }
 
-function calcA(category, [phase, target], item, rollToPivot) {
+function generateCosts(props, calcFunc, data, rollToPivot = true) {
+	let costs = {}
+	Object.entries(props).forEach(([key,item])=>{
+		let value = calcFunc(key, data)
+		costs[key] = [item, value]
+		if(value && rollToPivot) rollup(key, item, value)
+	})
+	return costs
+}
+
+/**--DATA CALCULATORS-- */
+function calcA(category, [phase, target]) {
+	const CALCDATA = loadStatic().calculation_data.ASCENSION[category]
 	let error = [phase, target].some(i => { return i < 0 || i > 7 });
 	if (error || phase >= target) return;
-	let p = phase ? CALCDATA.ASCENSION[category][phase] : 0;
-	let t = CALCDATA.ASCENSION[category][target];
+	let p = phase ? CALCDATA[phase] : 0;
+	let t = CALCDATA[target];
 	const value = vsub(t, p);
-	if (rollToPivot) rollup(category, item, value);
 	return value;
 }
 
-function calcT(category, talent, item, rollToPivot) {
+function calcT(category, talent) {
+	const CALCDATA = loadStatic().calculation_data.TALENT[category]
 	let error = talent.some(t => { return t.some(i => { return i < 0 || i > 10; }) });
 	if (error || (!talent[0][1] && !talent[1][1] && !talent[2][1])) return;
 	let v = [0, 0, 0];
 	for (let i = 0; i < 3; i++) {
 		if (talent[i][0] < talent[i][1]) {
-			let c = talent[i][0] > 1 ? CALCDATA.TALENT[category][talent[i][0]] : 0;
-			let t = talent[i][1] > 1 ? CALCDATA.TALENT[category][talent[i][1]] : 0;
+			let c = talent[i][0] > 1 ? CALCDATA[talent[i][0]] : 0;
+			let t = talent[i][1] > 1 ? CALCDATA[talent[i][1]] : 0;
 			v[i] = vsub(t, c);
 		}
 	}
 	const value = vadd(v[0], v[1], v[2]);
-	if (rollToPivot) rollup(category, item, value);
 	return value;
 }
 
-function calcW(category, [phase, target], item, rarity, rollToPivot) {
+function calcW(category, [phase, target, rarity]) {	
+	const CALCDATA = loadStatic().calculation_data[rarity + 'WEAPON'][category]
 	let error = [phase, target].some(i => { return i < 0 || i > 7 });
 	if (error || phase >= target) return;
-	let p = phase ? CALCDATA[rarity + 'WEAPON'][category][phase] : 0;
-	let t = CALCDATA[rarity + 'WEAPON'][category][target];
+	let p = phase ? CALCDATA[phase] : 0;
+	let t = CALCDATA[target];
 	const value = vsub(t, p);
-	if (rollToPivot) rollup(category, item, value);
 	return value;
 }
+
+/**--PIVOT-- */
 
 function rollup(category, item, value) {
 	let flag = Object.values(value).some(v => {
@@ -305,6 +318,8 @@ function rollup(category, item, value) {
 	if (flag) calcPivot[name][item] = item in calcPivot[name] ?
 		vadd(calcPivot[name][item], value) : value;
 }
+
+/**--VECTOR FUNCTIONS-- */
 
 function vadd(...objs) {
 	return objs.reduce((a, b) => {

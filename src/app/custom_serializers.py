@@ -1,4 +1,4 @@
-from .models import *
+from api.models import *
 
 # Helper
 def encode(model, obj_upper = False, field_upper = True):

@@ -8,7 +8,7 @@
 	<dialog id='resin-dialog'>
 		<button class="nav__btn dialog--close" onclick="this.parentElement.close()">&times;</button>
 		<div id="resin-results" class="dialog--div"></div>
-		<input id="resin-input" class="dialog--input" type="text" pattern: "\\d*">
+		<input id="resin-input" class="dialog--input" type="text" pattern: "\\d*" oninput="makeResinDialog()">
 	</dialog>
 
 	{% for page, link in nav.items %}
@@ -26,10 +26,7 @@
 	{% if action and form %}
 		<div class="header__button">
 			<div class="header__button--icon"></div>
-			<input class="header__button--input" type="button" value="Save" onclick="{{ action }}">
-			<form id="header__form" method="post" >{% csrf_token %}
-				{{ form }}
-				<button type="submit"></button>
+			<input class="header__button--input" type="button" value="Save" onclick="">
 			</form>
 		</div>
 	{% endif %}

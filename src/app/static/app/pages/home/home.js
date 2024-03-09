@@ -1,9 +1,14 @@
-const LDB = CONTEXT.DB.MASTER;
-let userInv = loadUser().Inventory;
-const REGION = Object.keys(LDB.ELEMENTS); const D = (new Date()).getDay();
+let userInv = loadUser().INVENTORY;
+const D = (new Date()).getDay();
 
 /*HOME*/
-window.addEventListener('load',()=>{home()})
+window.addEventListener('load',()=>{
+	Promise.all([mainDownload,loadCharacters(),loadWeapons()]).then((values) => {
+		window.LDB = loadMaster()
+		window.REGION = Object.keys(LDB.ELEMENTS)
+		home()
+	})
+})
 
 function home() {
 	if (myStorage.get('calc')) calculate();
@@ -53,7 +58,7 @@ function makeRow(TBL, category, iData, ii, isPage) {
 	if (category === 'BOOKS' || category === 'TROPHIES' || category === 'WEEKLYS')
 		setData(category, item, NAME, isPage);
 
-	let tc = translate(category), ti = item//decode(category, item);
+	let tc = translate(category), ti = item// decode(category, item);
 	let calc = getInventory(tc, ti, materials);
 	Object.entries(materials).reverse().forEach(([rank, value], mi) => {
 		let index = mi + 3;
@@ -135,7 +140,7 @@ function getInventory(category, item, materials) {
 	let gateD = category === 'BOOKS' || category === 'TROPHIES';
 	let gateM = category === 'WEEKLYS' || category === 'BOSSES' || category === 'GEMS';
 	if (diff > 0 && (gateD || gateM)) {
-		divs = CONTEXT.STATIC.drop_rates[category][flag]; diff *= 3 ** (len - fagi);
+		divs = loadStatic().drop_rates[category][flag]; diff *= 3 ** (len - fagi);
 		let runs = Math.ceil(diff / divs), t;
 		switch (category) {
 			case 'WEEKLYS':
@@ -163,7 +168,6 @@ function pluralize(num, string) {
 }
 
 function setData(category, item, COMP, isPage) {
-	// console.log(category, LDB[category])
 	let ti = decode(category, item), index = Object.keys(LDB[category]).indexOf(ti);
 	COMP.classList.add('cell-color');
 	if (category === 'WEEKLYS') {
