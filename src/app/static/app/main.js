@@ -149,32 +149,6 @@ function recalculate(category, item) {
 	}
 }
 
-/**--DICTIONARIES-- */
-function toPlural(category) {
-	let dict = {
-		'BOOK': 'BOOKS',
-		'TROPHY': 'TROPHIES',
-		'EXP': 'RESOURCES',
-		'MORA': 'RESOURCES',
-		'ORE': 'RESOURCES',
-		'GEM': 'GEMS',
-		'WEEKLY_DROP': 'WEEKLY_DROPS',
-		'ELITE': 'ELITE',
-		'BOSS': 'BOSSES',
-		'COMMON': 'COMMON',
-		'LOCAL_SPECIALTY': 'LOCAL_SPECIALTIES',
-	}
-	return category in dict? dict[category]: category;
-}
-
-function converge(category){
-	return category == 'ELITE' || category == 'COMMON'? 'ENEMIES': category;
-}
-
-function translate(category){
-	return converge(toPlural(category))
-}
-
 /**--CALC DATA-- */
 let calcPivot
 function calculate() {

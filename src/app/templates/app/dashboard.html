@@ -1,0 +1,22 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+
+<div class="filter">
+	<input type="checkbox" class="filter__btn" onchange="update(this)">
+</div>
+
+<div id='home' class="home">
+	<div id="var"></div>
+	{% url 'app:dashboard-detail' '*' as url %}
+	<div id="BOOKS" data-url="{{url}}" class="section js-section section--total hide"></div>
+	<div id="TROPHIES" data-url="{{url}}" class="section js-section section--total hide"></div>
+	<div id="GEMS" data-url="{{url}}" class="section js-section section--total hide"></div>
+	<div id="ELITE" data-url="{{url}}" class="section js-section section--total hide"></div>
+	<div id="COMMON" data-url="{{url}}" class="section js-section section--total hide"></div>
+	<div id="RESOURCES" data-url="{{url}}" class="section js-section hide"></div>
+	<div id="WEEKLY_DROPS" data-url="{{url}}" class="section js-section hide"></div>
+	<div id="BOSSES" data-url="{{url}}" class="section js-section hide"></div>
+	<div id="LOCAL_SPECIALTIES" data-url="{{url}}" class="section js-section hide"></div>
+</div>
+{% endblock content %}

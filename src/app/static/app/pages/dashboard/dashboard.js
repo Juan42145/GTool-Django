@@ -3,14 +3,14 @@ const D = (new Date()).getDay();
 
 /*HOME*/
 window.addEventListener('load',()=>{
-	Promise.all([mainDownload,loadCharacters(),loadWeapons()]).then((values) => {
-		window.LDB = loadMaster()
-		window.REGION = Object.keys(LDB.ELEMENTS)
-		home()
+	Promise.all([mainDownload,loadCharacters(),loadWeapons()]).then(() => {
+		window.DBM = loadMaster()
+		window.REGION = Object.keys(DBM.ELEMENTS)
+		pageLoad()
 	})
 })
 
-function home() {
+function pageLoad() {
 	if (myStorage.get('calc')) calculate();
 
 	Object.entries(myStorage.get('pivot')).forEach(cData => {
@@ -24,8 +24,9 @@ function home() {
 		const TITLE = create(SEC, 'div', { 'class': 'section__title' });
 		TITLE.textContent = category;
 
-		let isTotal = SEC.classList.contains('section--total');
-		SEC.addEventListener('click', () => window.open('/test','_self'));
+		let isTotal = SEC.classList.contains('section--total')
+		SEC.addEventListener('click', () => window.open(SEC.dataset.url.replace('*',SEC.id),'_self'));
+		// SEC.addEventListener('click', () => window.open('/','_self'));
 		// SEC.addEventListener('click', () => page(cData, isTotal), false);
 
 		const TBL = create(SEC, 'div', { 'class': 'section__table js-table', 'data-total': isTotal })
@@ -156,7 +157,7 @@ function getInventory(category, item, materials) {
 		calc['runs'] = `(${pluralize(runs, 'run')} ~ ${t})`;
 	}
 	if (gateD) {
-		index = Object.keys(LDB[category]).indexOf(item);
+		index = Object.keys(DBM[category]).indexOf(item);
 		let w = ['Mo/Th', 'Tu/Fr', 'We/Sa'];
 		calc['runs'] += ` [${w[index % 3]}]`;
 	}
@@ -168,7 +169,7 @@ function pluralize(num, string) {
 }
 
 function setData(category, item, COMP, isPage) {
-	let ti = decode(category, item), index = Object.keys(LDB[category]).indexOf(ti);
+	let ti = decode(category, item), index = Object.keys(DBM[category]).indexOf(ti);
 	COMP.classList.add('cell-color');
 	if (category === 'WEEKLYS') {
 		COMP.dataset.color = REGION[Math.floor(index / 6) + 1];

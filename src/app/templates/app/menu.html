@@ -1,7 +1,7 @@
 <nav id="nav">
-	<form method="post" action="{% url 'logout' %}">{% csrf_token %}
-    <button class="nav__btn nav__btn--home" onclick="myStorage.clear()" type="submit">logout</button>
-	</form>
+	{% if user.is_authenticated %}
+		<a class="nav__btn nav__btn--home" href="#">{{ user.get_username }}</a>
+	{% endif %}
 	<button class="nav__btn nav__btn--resin" onclick="document.getElementById('resin-dialog').showModal()">&diams;</button>
 	<button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button>
 
@@ -14,11 +14,17 @@
 	{% for page, link in nav.items %}
 		{% url link as url %}
 		<a
-			{% if url in request.path|urlencode %} href="javascript:void(0)" class="nav-active"
+			{% if page == 'HOME' and request.path == "/" or url != "/" and url in request.path|urlencode %} href="javascript:void(0)" class="nav-active"
 			{% else %} href="{{ url }}"
 			{% endif %}
 		>{{ page|upper }}</a>
 	{% endfor %}
+
+	{% if user.is_authenticated %}
+		<form method="post" action="{% url 'logout' %}">{% csrf_token %}
+			<button class="" onclick="myStorage.clear()" type="submit">logout</button>
+		</form>
+	{% endif %}
 </nav>
 
 <header id="header">

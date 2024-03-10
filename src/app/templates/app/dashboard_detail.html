@@ -1,13 +1,5 @@
 {% extends "app/base.html" %}
 
-{% block extrastyle %}{% with stylesheet='app/pages/home/home.css' %}
-	{{ block.super }}
-{% endwith %}{% endblock %}
-
-{% block extrascript %}{% with script='app/pages/home/home.js' %}
-	{{ block.super }}
-{% endwith %}{% endblock %}
-
 {% block content %}
 
 <div class="filter">
@@ -16,14 +8,19 @@
 
 <div id='home' class="home">
 	<div id="var"></div>
-	<div id="BOOKS" class="section js-section section--total hide"></div>
-	<div id="TROPHIES" class="section js-section section--total hide"></div>
+	<div id="{{category}}" class="section js-section section--total hide"></div>
+	{% comment %} <div id="TROPHIES" class="section js-section section--total hide"></div>
 	<div id="GEMS" class="section js-section section--total hide"></div>
 	<div id="ELITE" class="section js-section section--total hide"></div>
 	<div id="COMMON" class="section js-section section--total hide"></div>
 	<div id="RESOURCES" class="section js-section hide"></div>
 	<div id="WEEKLY_DROPS" class="section js-section hide"></div>
 	<div id="BOSSES" class="section js-section hide"></div>
-	<div id="LOCAL_SPECIALTIES" class="section js-section hide"></div>
+	<div id="LOCAL_SPECIALTIES" class="section js-section hide"></div> {% endcomment %}
 </div>
+<div id="page" class="page hide">
+  <a href="javascript:void(0)" class="page__close" onclick="window.open({% url 'app:dashboard' %},'_self')">&times;</a>
+  <div id="page-container" class="page-container">
+</div>
+
 {% endblock content %}

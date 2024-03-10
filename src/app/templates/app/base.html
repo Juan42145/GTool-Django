@@ -12,21 +12,23 @@
 		<title>GTool</title>
 	{% endif %}
 
-	<link rel="shortcut icon" type="image/png" href="{% static 'app/favicon.ico' %}"/>
+	<link rel="shortcut icon" type="image/png" href="{% static 'app/assets/favicon.ico' %}"/>
 
 	<link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
-	{% block extrastyle %}{% if stylesheet %}
-		<link rel="stylesheet" type="text/css" href="{% static stylesheet %}">
-	{% endif %}{% endblock %}
+	{% if styles %}{% for style in styles %}
+		<link rel="stylesheet" type="text/css" href="{% static style %}">
+	{% endfor %}{% endif %}
+	{% block extrastyle %}{% endblock %}
 
-	{{ json_context|json_script:"json_context" }}
-	{% if user.is_authenticated %}{{ request.user.profile.data|json_script:"json_user_data" }}{% endif %}
-	{% if user.is_authenticated %}{{ request.user.profile.id|json_script:"json_user_id" }}{% endif %}
+	{% if user.is_authenticated %}{{ user.profile.data|json_script:"json_user_data" }}{% endif %}
+	{% if user.is_authenticated %}{{ user.profile.id|json_script:"json_user_id" }}{% endif %}
+
 	<script src="{% static 'app/database.js' %}"></script>
 	<script src="{% static 'app/main.js' %}"></script>
-	{% block extrascript %}{% if script %}
+	{% if scripts %}{% for script in scripts %}
 		<script src="{% static script %}"></script>
-	{% endif %}{% endblock %}
+	{% endfor %}{% endif %}
+	{% block extrascript %}{% endblock %}
 
 </head>
 <body>

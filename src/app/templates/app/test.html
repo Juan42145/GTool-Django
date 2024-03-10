@@ -1,11 +1,5 @@
 {% extends "app/base.html" %}
 
-{% block extrascript %}
-	{% with script="app/test.js" %}
-		{{ block.super }}
-	{% endwith %}
-{% endblock %}
-
 {% block content %}
-	<h1>{{request.user}}</h1>
+	<h1>{{category}}</h1>
 {% endblock content %}
