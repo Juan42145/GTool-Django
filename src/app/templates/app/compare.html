@@ -1,0 +1,44 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+
+<div id="compare" class="compare">
+	<div class="main">
+		<input id="owned" type="checkbox" onchange="compare()">
+		<select id="row" class="select select--row" onchange="compare()">
+			<option disabled selected hidden>...</option>
+			<option>Element</option>
+			<option>Weapon Type</option>
+			<option>Model</option>
+			<option>Region</option>
+			<option>Boss</option>
+			<option>Local Specialty</option>
+			<option>Common</option>
+			<option>Book</option>
+			<option>Weekly Boss</option>
+			<option>Weekly Drop</option>
+			<option>Stat</option>
+		</select>
+		<select id="col" class="select select--col" onchange="compare()">
+			<option>...</option>
+			<option>Rarity</option>
+			<option>Element</option>
+			<option>Weapon Type</option>
+			<option>Model</option>
+			<option>Region</option>
+			<option>Boss</option>
+			<option>Local Specialty</option>
+			<option>Common</option>
+			<option>Book</option>
+			<option>Weekly Boss</option>
+			<option>Weekly Drop</option>
+			<option>Stat</option>
+		</select>
+	</div>
+	<div id="cols" class="area"></div>
+	<div id="rows" class="area"></div>
+	<div id="table" class="area"></div>
+</div>
+
+
+{% endblock content %}

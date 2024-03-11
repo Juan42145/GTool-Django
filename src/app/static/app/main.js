@@ -1,10 +1,26 @@
 /**--GLOBAL FUNCTIONS-- */
+function setup(){
+	let promises = [mainDownload]
+	for (arg of arguments){promises.push(arg)}
+
+	window.addEventListener('load',()=>{
+		Promise.all(promises).then(() => {
+			pageLoad()
+		})
+	})
+}
+
 window.addEventListener('load',()=>{
 	makeResinDialog()
+	if (!hasCalc()) {
+		console.log('not calc in cache')
+		setCalc(true)
+	}
 })
 
-//Create HTML Element
+/**--CUSTOM FUNCTION-- */
 function create(parent, element, attr) {
+	//Create HTML Element
 	const E = document.createElement(element); parent.append(E);
 	if (!attr) return E;
 	Object.entries(attr).forEach(([attribute, value]) => {
@@ -13,23 +29,36 @@ function create(parent, element, attr) {
 	return E;
 }
 
-//Insert for creation of new pages (potential remove)
-function insert(url) {
-	const INSERT = document.getElementById('insert')
-	fetch(url).then(res => res.text()).then(data => { INSERT.innerHTML = data })
-}
-
-//Focus Input
-function focusText(e) {
+function focusInput(e) {
+	//Focus input at end and convert to empty string if 0/fasly
+	if(!+e.target.value) e.target.value = '';
 	e.target.setSelectionRange(e.target.value.length, e.target.value.length);
 }
 
-/**--IMAGES-- */
-function getImageLink(name, text = ''){
-	let imageObj = loadImages()[name]
-	// if (imageObj.FORMAT && typeof imageObj.FORMAT[0] === 'string'){
+/**--INVENTORY-- */
+function processTotals(category, item) {
+	let mMaterials = loadMaster()[category][item]
+	let iMaterials = userGet(loadUser().INVENTORY, [category,item], {})
+	let [counter, total] = calcTotals(mMaterials,iMaterials)
+	if (counter > 1) {
+		let totalInv = document.getElementById('I_' + item)
+		if (totalInv) totalInv.textContent = Math.floor(total).toLocaleString('en-us')
+		let totals = getTotals()
+		totals[category][item] = total;
+		setTotals(totals)
+	}
+}
 
-	// }
+/**--IMAGES-- */
+function getImageLink(group, text = ''){
+	//Exceptions
+	if (group === "ELEMENTS" && text === "-") group = "TRAVELER_EXCEPTION"
+
+	let imageObj = loadImages()[group]
+	if (imageObj.FORMAT && typeof imageObj.FORMAT[0] === 'string'){
+		let method = imageObj.FORMAT.shift()
+		if (method === "lowercase") text = text.toLowerCase()
+	}
 	if (text && imageObj.FORMAT) {
 		imageObj.FORMAT.forEach((format)=>{
 			if(Array.isArray(format)){
@@ -50,9 +79,9 @@ function getImage(category, item, rank) {
 }
 
 function getCharacter(name, full = false) {
-	let id = 'CHARACTER'
-	id += full? '_BANNERS': 'S';
-	return getImageLink(id, name)
+	let group = 'CHARACTER'
+	group += full? '_BANNERS': 'S';
+	return getImageLink(group, name)
 }
 
 function getWeapon(name) {
@@ -134,33 +163,18 @@ var tooltip = function () {
 	};
 }();
 
-/**--INVENTORY-- */
-//CHECK
-function recalculate(category, item) {
-	let counter = 0, total = 0;
-	Object.entries(userInv[category][item]).reverse().forEach(([rank, value]) => {
-		if (value === '*' || rank === 'ROW' || rank === '0') return
-		total += value / (3 ** counter); counter++;
-	});
-	if (counter > 1) {
-		let totalInv = document.getElementById('I_' + item)
-		if (totalInv) totalInv.textContent = Math.floor(total).toLocaleString('en-us')
-		userInv[category][item][0] = total;
-	}
-}
-
 /**--CALC DATA-- */
-let calcPivot
 function calculate() {
 	const DBC = loadCharacters()
 	const DBW = loadWeapons()
 	let user = loadUser()
+
 	let calculator = {
 		'CHARACTERS': {},
 		'WEAPONS': {},
 	};
 
-	calcPivot = {
+	let calcPivot = {
 		'BOOKS': {},
 		'TROPHIES': {},
 		'RESOURCES': {},
@@ -171,6 +185,7 @@ function calculate() {
 		'COMMON': {},
 		'LOCAL_SPECIALTIES': {}
 	};
+	setPivot(calcPivot);
 
 	Object.entries(user.CHARACTERS).forEach(([character, state]) => {
 		if (!state.FARM) return;
@@ -191,20 +206,19 @@ function calculate() {
 	Object.entries(user.WEAPONS).forEach(([weapon, state]) => {
 		if (!state.FARM) return;
 		const info = DBW[weapon];
-		const phase = [+state.PHASE, +state.TARGET, info.RARITY];		
+		const phase = [+state.PHASE, +state.TARGET, info.RARITY];
 		calculator.WEAPONS[weapon] = {
 			RARITY: info.RARITY,
 			FARM: calcWpn(info, phase)
 		}
 	})
 
-	myStorage.set('pivot', calcPivot);
-	myStorage.set('calculator', calculator);
-	myStorage.set('calc', false);
+	setCalculator(calculator);
+	setCalc(false);
 }
 
 /**--COST CALCULATORS-- */
-function calcCharA(info, ascension, rollToPivot) {
+function calcCharA(info, ascension, isPivot) {
 	props = {
 		GEM: info.ELEMENT,
 		BOSS: info.BOSS,
@@ -213,18 +227,18 @@ function calcCharA(info, ascension, rollToPivot) {
 		EXP: 'EXP',
 		MORA: 'Mora',
 	}
-	return generateCosts(props, calcA, ascension, rollToPivot)
+	return generateCosts(props, calcA, ascension, isPivot)
 }
-function calcCharT(info, talent, rollToPivot) {
+function calcCharT(info, talent, isPivot) {
 	props = {
 		BOOK: info.BOOK,
 		COMMON: info.COMMON,
-		WEEKLY: info['WEEKLY BOSS'] + ' ' + info.WEEKLY,
+		WEEKLY_DROP: info.WEEKLY_BOSS + ' ' + info.WEEKLY_DROP,
 		MORA: 'Mora',
 	}
-	return generateCosts(props, calcT, talent, rollToPivot)
+	return generateCosts(props, calcT, talent, isPivot)
 }
-function calcWpn(info, phase, rollToPivot) {
+function calcWpn(info, phase, isPivot) {
 	props = {
 		TROPHY: info.TROPHY,
 		ELITE: info.ELITE,
@@ -232,15 +246,15 @@ function calcWpn(info, phase, rollToPivot) {
 		ORE: 'Ore',
 		MORA: 'Mora',
 	}
-	return generateCosts(props, calcW, phase, rollToPivot)
+	return generateCosts(props, calcW, phase, isPivot)
 }
 
-function generateCosts(props, calcFunc, data, rollToPivot = true) {
+function generateCosts(props, calcFunc, uData, isPivot = true) {
 	let costs = {}
-	Object.entries(props).forEach(([key,item])=>{
-		let value = calcFunc(key, data)
-		costs[key] = [item, value]
-		if(value && rollToPivot) rollup(key, item, value)
+	Object.entries(props).forEach(([category,item])=>{
+		let materials = calcFunc(category, uData)
+		costs[category] = [item, materials]
+		if(materials && isPivot) pivot(category, item, materials)
 	})
 	return costs
 }
@@ -272,7 +286,7 @@ function calcT(category, talent) {
 	return value;
 }
 
-function calcW(category, [phase, target, rarity]) {	
+function calcW(category, [phase, target, rarity]) {
 	const CALCDATA = loadStatic().calculation_data[rarity + 'WEAPON'][category]
 	let error = [phase, target].some(i => { return i < 0 || i > 7 });
 	if (error || phase >= target) return;
@@ -283,23 +297,21 @@ function calcW(category, [phase, target, rarity]) {
 }
 
 /**--PIVOT-- */
-
-function rollup(category, item, value) {
-	let flag = Object.values(value).some(v => {
-		return v !== 0;
-	});
-	let name = toPlural(category);
-	if (flag) calcPivot[name][item] = item in calcPivot[name] ?
-		vadd(calcPivot[name][item], value) : value;
+function pivot(category, item, materials) {
+	let nonEmpty = Object.values(materials).some(v => {return v !== 0;});
+	if (!nonEmpty) return
+	let mCategory = toPlural(category)
+	let calcPivot = getPivot()
+	let pivotItems = calcPivot[mCategory]
+	pivotItems[item] = item in pivotItems? vadd(pivotItems[item], materials):
+										materials;
+	setPivot(calcPivot)
 }
 
 /**--VECTOR FUNCTIONS-- */
-
 function vadd(...objs) {
 	return objs.reduce((a, b) => {
-		for (let k in b) {
-			if (b.hasOwnProperty(k)) a[k] = (a[k] || 0) + b[k];
-		}
+		for (let k in b) {if (b.hasOwnProperty(k)) a[k] = (a[k] || 0) + b[k]}
 		return a;
 	}, {});
 }

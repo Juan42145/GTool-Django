@@ -29,9 +29,14 @@ class ConstantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CharacterSerializer(FormatSerializer):
+    weekly_boss = serializers.SerializerMethodField()
+
     class Meta:
         fields = '__all__'
         model = Character
+
+    def get_weekly_boss(self, obj):
+        return obj.weekly_boss.name if obj.weekly_drop else ''
 
 class WeaponSerializer(FormatSerializer):
     class Meta:

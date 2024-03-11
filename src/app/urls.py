@@ -4,16 +4,20 @@ from .views import *
 app_name = 'app'
 urlpatterns = [
     path('', test, name='home'),
-    path('domains/', test, name='domains'), #index
+    path('domains/', test, name='domains'), #index No login
     path('dashboard/', dashboard, name='dashboard'),
     path('dashboard/<str:category>/', dashboard_detail, name='dashboard-detail'),
     path('inventory/', inventory, name='inventory'),
-    path('planner/', test, name='planner'),
-    path('planner/<str:category>/', test, name='planner-detail'),
-    path('characters/', test, name='characters'),
-    path('characters/<str:name>', test, name='characters-detail'),
-    path('weapons/', test, name='weapons'),
-    path('weapons/<str:name>', test, name='weapons-detail'),
-    path('compare/', test, name='compare'),
-    path('data/', test, name='data'),
+    path('planner/', planner, name='planner'),
+    path('planner/<str:kind>/<str:name>', planner_detail, name='planner-detail'),
+    path('characters/', characters, name='characters'),
+    path('characters/<str:name>', test, name='characters-detail'), #MODEL
+    path('weapons/', weapons, name='weapons'),
+    path('weapons/<str:name>', test, name='weapons-detail'), #MODEL
+    path('compare/', compare, name='compare'), #Potential no Login
+    path('data/', data, name='data'), #Potential no login
+    
+    # CREATE/UPDATE (MODEL)
+    #no login views (more work)
+    # CREATE/UPDATE (Master/ in inventory or new page well see)
 ]

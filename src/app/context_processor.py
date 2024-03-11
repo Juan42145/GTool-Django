@@ -4,7 +4,7 @@ from .models import *
 def custom_context(request):
     return{
         'nav': {
-            'HOME': 'app:test',
+            'HOME': 'app:home',
             'DASHBOARD': 'app:dashboard',
             'INVENTORY': 'app:inventory',
             'PLANNER': 'app:planner',

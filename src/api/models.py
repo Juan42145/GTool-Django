@@ -50,6 +50,10 @@ class LocalSpecialty(SimpleModel):
     def code(self):
         return self.name
 
+    @property
+    def serialize(self):
+        return dict(super().serialize, data=self.region.name)
+
     class Meta:
         verbose_name_plural = 'local specialties'
 
@@ -59,6 +63,11 @@ class WeeklyBoss(SimpleModel):
 
 class WeeklyDrop(SimpleModel):
     weekly_boss = models.ForeignKey(WeeklyBoss, on_delete=models.PROTECT)
+    rarity = '5'
+
+    @property
+    def serialize(self):
+        return dict(super().serialize, data=self.weekly_boss.name)
 
 class WeaponType(SimpleModel):
     pass
@@ -97,9 +106,8 @@ class Enemy(models.Model):
 
     @property
     def serialize(self):
-        if self.elite:
+        if self.is_elite:
             return {
-                '1': '',
                 '2': self.low,
                 '3': self.mid,
                 '4': self.high,
@@ -109,7 +117,6 @@ class Enemy(models.Model):
                 '1': self.low,
                 '2': self.mid,
                 '3': self.high,
-                '4': '',
             }
 
     class Meta:
@@ -128,6 +135,7 @@ class Book(models.Model):
             '2': f'Teachings of {self.name}',
             '3': f'Guide to {self.name}',
             '4': f'Philosophies of {self.name}',
+            'data': self.region.name
         }
 
     def __str__(self):
@@ -151,6 +159,7 @@ class Trophy(models.Model):
                 '3': self.n3.replace('*',self.code),
                 '4': self.n4.replace('*',self.code),
                 '5': self.n5.replace('*',self.code),
+                'data': self.region.name
             }
         else:
             return {
@@ -158,6 +167,7 @@ class Trophy(models.Model):
                 '3': self.code.replace('*',self.n3),
                 '4': self.code.replace('*',self.n4),
                 '5': self.code.replace('*',self.n5),
+                'data': self.region.name
             }
 
     class Meta:

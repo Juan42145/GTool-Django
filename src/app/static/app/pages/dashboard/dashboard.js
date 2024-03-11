@@ -1,19 +1,20 @@
-let userInv = loadUser().INVENTORY;
-const D = (new Date()).getDay();
+setup(loadCharacters(),loadWeapons())
+function pageLoad(){
+	window.DBM = loadMaster()
+	window.REGION = Object.keys(DBM.ELEMENTS)
+	window.user = loadUser()
+	window.userInv = user.INVENTORY;
+
+	window.D = (new Date()).getDay();
+	
+	home()
+}
 
 /*HOME*/
-window.addEventListener('load',()=>{
-	Promise.all([mainDownload,loadCharacters(),loadWeapons()]).then(() => {
-		window.DBM = loadMaster()
-		window.REGION = Object.keys(DBM.ELEMENTS)
-		pageLoad()
-	})
-})
+function home() {
+	if (getCalc()) calculate();
 
-function pageLoad() {
-	if (myStorage.get('calc')) calculate();
-
-	Object.entries(myStorage.get('pivot')).forEach(cData => {
+	Object.entries(getPivot()).forEach(cData => {
 		let [category, items] = cData;
 
 		if (Object.keys(items).length === 0) return;
@@ -59,7 +60,7 @@ function makeRow(TBL, category, iData, ii, isPage) {
 	if (category === 'BOOKS' || category === 'TROPHIES' || category === 'WEEKLYS')
 		setData(category, item, NAME, isPage);
 
-	let tc = translate(category), ti = item// decode(category, item);
+	let tc = translate(category), ti = decode(category, item);
 	let calc = getInventory(tc, ti, materials);
 	Object.entries(materials).reverse().forEach(([rank, value], mi) => {
 		let index = mi + 3;
@@ -111,7 +112,7 @@ function translate(category) {
 }
 
 function decode(category, item) {
-	return category === 'WEEKLYS' ? item.split(' ')[1] : item;
+	return category === 'WEEKLY_DROPS' ? item.split(' ')[1] : item;
 }
 
 function getInventory(category, item, materials) {

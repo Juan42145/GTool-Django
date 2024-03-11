@@ -22,15 +22,16 @@ class DictViewSet(viewsets.ReadOnlyModelViewSet):
 class MasterView(views.APIView):
     def get(self, request, format=None):
         dict = {}
-        def serialize(cls, code = None, property = 'serialize', id = 'name'):
+        def serialize(cls, property = 'serialize', code = None, queryset = None, id = 'name'):
             code = code or str(cls._meta.verbose_name_plural).upper().replace(' ','_')
+            queryset = queryset or cls.objects.all()
             data = {}
-            for obj in cls.objects.all():
+            for obj in queryset:
                 data[getattr(obj, id)] = getattr(obj, property)
             dict[code] = data
         
         serialize(Element)
-        serialize(Element, 'GEMS', 'serialize_gem')
+        serialize(Element, 'serialize_gem', 'GEMS', Element.objects.exclude(name="-").order_by('inv_order'))
         serialize(WeaponType)
         serialize(Region)
         serialize(Boss)
@@ -41,6 +42,8 @@ class MasterView(views.APIView):
         serialize(WeeklyDrop)
         serialize(Trophy)
         serialize(Resource)
+        serialize(Stat)
+        serialize(Model)
         return response.Response(dict)
 
 class ConstantView(views.APIView):

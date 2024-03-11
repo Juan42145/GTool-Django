@@ -1,6 +1,6 @@
 <nav id="nav">
 	{% if user.is_authenticated %}
-		<a class="nav__btn nav__btn--home" href="#">{{ user.get_username }}</a>
+		<a class="nav__btn nav__btn--home" href="#"></a>
 	{% endif %}
 	<button class="nav__btn nav__btn--resin" onclick="document.getElementById('resin-dialog').showModal()">&diams;</button>
 	<button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button>
@@ -22,25 +22,24 @@
 
 	{% if user.is_authenticated %}
 		<form method="post" action="{% url 'logout' %}">{% csrf_token %}
-			<button class="" onclick="myStorage.clear()" type="submit">logout</button>
+			<button class="" onclick="reset()" type="submit">logout</button>
 		</form>
 	{% endif %}
 </nav>
 
 <header id="header">
 	<button class="header__menu" onclick="openNav()">&equiv;</button>
-	{% if action and form %}
+	{% block action %}
 		<div class="header__button">
 			<div class="header__button--icon"></div>
-			<input class="header__button--input" type="button" value="Save" onclick="">
-			</form>
+			<input class="header__button--input" type="button" value="Save" onclick="saveUser()">
 		</div>
-	{% endif %}
+	{% endblock %}
 </header>
 
-{% if action and form %}
+{% block dialog %}
 	<dialog id="dialog" class="alert" onclick="(()=>{
 		this.close();
 		this.innerHTML = ''
 	})()"></dialog>
-{% endif %}
+{% endblock %}

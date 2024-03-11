@@ -1,19 +1,26 @@
-/**--STORAGE-- */
-Storage.prototype.set = function (key, obj) {
-	return this.setItem(key, JSON.stringify(obj));
-}
-
-Storage.prototype.get = function (key) {
-	return JSON.parse(this.getItem(key));
-}
-
-Storage.prototype.has = function (key) {
-	return this.get(key) !== null;
-}
-
 /**--GLOBAL VARIABLES */
 const myStorage = localStorage;
 const mainDownload = Promise.all([loadMaster(),loadImages(),loadStatic()])
+
+/**--STORAGE-- */
+function set(key, obj){myStorage.setItem(key, JSON.stringify(obj))}
+function get(key){return JSON.parse(myStorage.getItem(key))}
+function has(key){return get(key) !== null}
+function reset(){myStorage.clear()}
+
+/**--STORAGE VARIABLES-- */
+function setTotals(totals){set('totals', totals)}
+function getTotals(){return get('totals')}
+
+function setPivot(pivot){set('pivot', pivot)}
+function getPivot(){return get('pivot')}
+
+function setCalculator(calculator){set('calculator', calculator)}
+function getCalculator(){return get('calculator')}
+
+function setCalc(calc){set('calc', calc)}
+function getCalc(){return get('calc')}
+function hasCalc(){return has('calc')}
 
 /**--DICTIONARIES-- */
 const invCategories = [
@@ -40,71 +47,74 @@ function toPlural(category) {
 		'BOSS': 'BOSSES',
 		'COMMON': 'COMMON',
 		'LOCAL_SPECIALTY': 'LOCAL_SPECIALTIES',
+
+		'ELEMENT': 'ELEMENTS',
+		'WEAPON_TYPE': 'WEAPON_TYPES',
+		'MODEL': 'MODELS',
+		'REGION': 'REGIONS',
+		'WEEKLY_BOSS': 'WEEKLY_BOSSES',
+		'STAT': 'STATS',
 	}
 	return category in dict? dict[category]: category;
 }
 
 function converge(category){
-	return category == 'ELITE' || category == 'COMMON'? 'ENEMIES': category;
+	return category == 'ELITE' || category == 'COMMON'? 'ENEMIES': category
 }
 
-function translate(category){
-	return converge(toPlural(category))
-}
+function translate(category){return converge(toPlural(category))}
 
 //**DATA PROCESSING */
-function processTotals(user) {
-	//Calculate totals using user inventory is it exist otherwise use DB and fill with 0
+function generateTotals(user) {
+	//Calculate totals using DBM and values from user inventory
 	let DBM = loadMaster()
 	let totals = {}
-	invCategories.forEach((category) => {
-		Object.entries(DBM[category]).forEach(([item, materials]) => {
-			let counter, total = 0
-			let inv = userGet(user, ['INVENTORY',category,item])
-			if (inv !== undefined) [counter, total] = getTotals(inv)
-			else counter = Object.keys(materials).length			
-			if (counter > 1) userSet(totals, [category, item], total);
+	invCategories.forEach((iCategory) => {
+		Object.entries(DBM[iCategory]).forEach(([mItem, mMaterials]) => {
+			let iMaterials = userGet(user.INVENTORY, [iCategory,mItem], {})
+			let [counter, total] = calcTotals(mMaterials, iMaterials)
+			if (counter > 1) userSet(totals, [iCategory, mItem], total);
 		});
 	});	
-	storeTotals(totals)
+	setTotals(totals)
 }
 
-function getTotals(materials){
+function calcTotals(mMaterials, iMaterials){
+	//Iterate over DBM materials and fill with user values
 	let counter = 0, total = 0;
-	Object.values(materials).reverse().forEach((value) => {
+	Object.keys(mMaterials).reverse().forEach((rank) => {
+		value = userGet(iMaterials, rank, 0)
 		total += value / (3 ** counter); counter++;
 	});
 	return [counter, total]
 }
 
 /**--USER CLIENT STORAGE */
-function storeUser(user) {
-	myStorage.set('user', user);
-}
-
-function storeTotals(totals) {
-	myStorage.set('totals', totals);
-}
+function storeUser(user) {set('user', user)}
 
 function loadUser() {
-	if (myStorage.has('user')) return myStorage.get('user')
+	if (has('user')) return get('user')
 	else {
 		const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
-		myStorage.set('user', USER_DATA)
-		processTotals(USER_DATA)
+		getOrCreate(USER_DATA, 'INVENTORY')
+		getOrCreate(USER_DATA, 'CHARACTERS')
+		getOrCreate(USER_DATA, 'WEAPONS')
+		set('user', USER_DATA)
+		generateTotals(USER_DATA)
 		return USER_DATA
 	}
 }
 
+function getOrCreate(object, property, defaultValue={}){
+	if (!object[property]) object[property] = defaultValue
+	return object[property]
+}
+
 function userSet(userObject, path, value){
-	function getOrCreate(object, property, defaultValue={}){
-		if (!object[property]) object[property] = defaultValue
-		return object[property]
-	}
 	let cur = userObject
 	lastProp = path.pop()
 	path.forEach(property => cur = getOrCreate(cur, property))
-	getOrCreate(cur, lastProp, value)
+	cur[lastProp] = value
 }
 
 function userGet(userObject, path, defaultValue){
@@ -164,8 +174,13 @@ function getCookie(name) {
 
 function saveUser(){
 	const USER_ID = JSON.parse(document.getElementById('json_user_id').textContent)
-	user = myStorage.get('user')
-	alert('Saving')
+	const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
+	user = get('user')
+	if (JSON.stringify(user) === JSON.stringify(USER_DATA)){
+		toasty('Nothing to Save')
+		return
+	}
+	console.log('Saving')
 	request('/api/profile/'+USER_ID,{
 		method: "PATCH",
 		headers: {
@@ -173,17 +188,17 @@ function saveUser(){
 			'X-CSRFToken': getCookie('csrftoken')
 		},
 		body: JSON.stringify({
-			data: user.data
+			data: user
 		})
-	}).then(data => alert('Saved'))
+	}).then(() => toast('Saved'))
 }
 
 /**--LOAD-- */
 function loader(url, key){
-	return myStorage.has(key)? myStorage.get(key): 
+	return has(key)? get(key): 
 	request(url).then(data => {
 		console.log('Loaded', key)
-		myStorage.set(key, data)
+		set(key, data)
 		return data
 	})
 }
