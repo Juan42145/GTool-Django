@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/GTool/wsgi.py",
+      "src": "GTool/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.12" }
     },
@@ -10,18 +10,18 @@
       "src": "build_files.sh",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "src/staticfiles_build"
+        "distDir": "staticfiles_build"
       }
     }
   ],
   "routes": [
     {
-      "src": "src/static/(.*)",
-      "dest": "src/static/$1"
+      "src": "static/(.*)",
+      "dest": "static/$1"
     },
     {
-      "src": "src/(.*)",
-      "dest": "src/GTool/wsgi.py"
+      "src": "(.*)",
+      "dest": "GTool/wsgi.py"
     }
   ]
 }
