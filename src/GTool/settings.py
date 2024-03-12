@@ -82,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'GTool.wsgi.application'
+WSGI_APPLICATION = 'GTool.wsgi.app'
 
 
 # Database
