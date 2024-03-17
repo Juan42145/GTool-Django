@@ -9,6 +9,13 @@ def test(request, *args, **kwargs):
     }
     return render(request, 'app/test.html', context)
 
+def home(request, *args, **kwargs):
+    context = {
+        # 'styles': [],
+        # 'scripts': ['app/home.js'],
+    }
+    return render(request, 'app/home.html', context)
+
 @login_required
 def dashboard(request, *args, **kwargs):
     context = {

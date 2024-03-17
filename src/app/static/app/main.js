@@ -38,11 +38,11 @@ function focusInput(e) {
 /**--INVENTORY-- */
 function processTotals(category, item) {
 	let mMaterials = loadMaster()[category][item]
-	let iMaterials = userGet(loadUser().INVENTORY, [category,item], {})
+	let iMaterials = loadUser().INVENTORY?.[category]?.[item] ?? {}
 	let [counter, total] = calcTotals(mMaterials,iMaterials)
 	if (counter > 1) {
-		let totalInv = document.getElementById('I_' + item)
-		if (totalInv) totalInv.textContent = Math.floor(total).toLocaleString('en-us')
+		const Total = document.getElementById('I_' + item)
+		if (Total) Total.textContent = Math.floor(total).toLocaleString('en-us')
 		let totals = getTotals()
 		totals[category][item] = total;
 		setTotals(totals)
@@ -98,42 +98,47 @@ function getError() {
 
 /**--NAVBAR-- */
 function openNav() {
-	const NAV = document.getElementById('nav');
-	NAV.style.width = '100%'; NAV.style.left = '0';
+	const Nav = document.getElementById('nav');
+	const Backdrop = Nav.querySelector('#backdrop')
+	Nav.style.width = 'bloc';
+	Nav.style.width = '90%';
+	Backdrop.classList.add('backdrop')
 }
 
 function closeNav() {
-	const NAV = document.getElementById('nav');
-	NAV.style.width = '0'; NAV.style.left = '-1rem';
+	const Nav = document.getElementById('nav');
+	const Backdrop = Nav.querySelector('#backdrop')
+	Nav.style.width = null;
+	Backdrop.classList.remove('backdrop')
 }
 
 function makeResinDialog() {
-	const results = document.getElementById('resin-results')
-	const input = document.getElementById('resin-input')
-	results.innerHTML = '';
-	let v = +input.value;
-	resinCalc(results, v, 'init')
+	const Results = document.getElementById('resin-results')
+	const Input = document.getElementById('resin-input')
+	Results.innerHTML = '';
+	let v = +Input.value;
+	resinCalc(Results, v, 'init')
 	while (v >= 40) {
-		resinCalc(results, v - 20, 'end')
+		resinCalc(Results, v - 20, 'end')
 		v -= 40;
-		resinCalc(results, v, 'loop')
+		resinCalc(Results, v, 'loop')
 	}
 	if (v >= 20) {
 		v -= 20;
-		resinCalc(results, v, 'end')
+		resinCalc(Results, v, 'end')
 	}
 }
 
-function resinCalc(CONT, value, type) {
+function resinCalc(Cont, value, type) {
 	let d = new Date();
 	if (value < 160) d.setMinutes(d.getMinutes() + 8 * (159 - value))
 	let day = (new Date()).getDay() == d.getDay() ? 'Today' : 'Tomorrow';
 	let time = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
 
-	const resin = create(CONT, 'div', { 'class': 'resc resc--' + type })
-	resin.innerHTML = value
-	const full = create(CONT, 'div', { 'class': 'resc resc--' + type })
-	full.innerHTML = day + ' ' + time
+	const Resin = create(Cont, 'div', { 'class': 'resc resc--' + type })
+	Resin.innerHTML = value
+	const Full = create(Cont, 'div', { 'class': 'resc resc--' + type })
+	Full.innerHTML = day + ' ' + time
 }
 
 /**--TOOLTIP-- */
@@ -266,8 +271,7 @@ function calcA(category, [phase, target]) {
 	if (error || phase >= target) return;
 	let p = phase ? CALCDATA[phase] : 0;
 	let t = CALCDATA[target];
-	const value = vsub(t, p);
-	return value;
+	return vsub(t, p);
 }
 
 function calcT(category, talent) {
@@ -282,8 +286,7 @@ function calcT(category, talent) {
 			v[i] = vsub(t, c);
 		}
 	}
-	const value = vadd(v[0], v[1], v[2]);
-	return value;
+	return vadd(v[0], v[1], v[2]);
 }
 
 function calcW(category, [phase, target, rarity]) {
@@ -292,8 +295,7 @@ function calcW(category, [phase, target, rarity]) {
 	if (error || phase >= target) return;
 	let p = phase ? CALCDATA[phase] : 0;
 	let t = CALCDATA[target];
-	const value = vsub(t, p);
-	return value;
+	return vsub(t, p);
 }
 
 /**--PIVOT-- */

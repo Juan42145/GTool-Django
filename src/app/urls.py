@@ -3,7 +3,7 @@ from .views import *
 
 app_name = 'app'
 urlpatterns = [
-    path('', test, name='home'),
+    path('', home, name='home'),
     path('domains/', test, name='domains'), #index No login
     path('dashboard/', dashboard, name='dashboard'),
     path('dashboard/<str:category>/', dashboard_detail, name='dashboard-detail'),

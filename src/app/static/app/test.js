@@ -3,5 +3,6 @@
 // console.log('DB',data.DB)
 // console.log('IMAGE',data.IMAGE)
 // console.log('STATIC',data.STATIC)
-console.log('USER',JSON.parse(document.getElementById('json_user_data').textContent))
-console.log('USERID',JSON.parse(document.getElementById('json_user_id').textContent))
+
+// console.log('USER',JSON.parse(document.getElementById('json_user_data').textContent))
+// console.log('USERID',JSON.parse(document.getElementById('json_user_id').textContent))

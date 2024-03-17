@@ -1,6 +1,6 @@
 /**--GLOBAL VARIABLES */
 const myStorage = localStorage;
-const mainDownload = Promise.all([loadMaster(),loadImages(),loadStatic()])
+const mainDownload = Promise.all([loadMaster(),loadImages()])
 
 /**--STORAGE-- */
 function set(key, obj){myStorage.setItem(key, JSON.stringify(obj))}
@@ -67,11 +67,11 @@ function translate(category){return converge(toPlural(category))}
 //**DATA PROCESSING */
 function generateTotals(user) {
 	//Calculate totals using DBM and values from user inventory
-	let DBM = loadMaster()
+	const DBM = loadMaster()
 	let totals = {}
 	invCategories.forEach((iCategory) => {
 		Object.entries(DBM[iCategory]).forEach(([mItem, mMaterials]) => {
-			let iMaterials = userGet(user.INVENTORY, [iCategory,mItem], {})
+			let iMaterials = user.INVENTORY?.[iCategory]?.[mItem] ?? {}
 			let [counter, total] = calcTotals(mMaterials, iMaterials)
 			if (counter > 1) userSet(totals, [iCategory, mItem], total);
 		});
@@ -83,7 +83,7 @@ function calcTotals(mMaterials, iMaterials){
 	//Iterate over DBM materials and fill with user values
 	let counter = 0, total = 0;
 	Object.keys(mMaterials).reverse().forEach((rank) => {
-		value = userGet(iMaterials, rank, 0)
+		value = iMaterials[rank] ?? 0
 		total += value / (3 ** counter); counter++;
 	});
 	return [counter, total]
@@ -115,15 +115,6 @@ function userSet(userObject, path, value){
 	lastProp = path.pop()
 	path.forEach(property => cur = getOrCreate(cur, property))
 	cur[lastProp] = value
-}
-
-function userGet(userObject, path, defaultValue){
-	let cur = userObject
-	for (property of path){
-		cur = cur[property]
-		if (cur == undefined) return defaultValue 
-	}
-	return cur
 }
 
 /**--ALERT-- */

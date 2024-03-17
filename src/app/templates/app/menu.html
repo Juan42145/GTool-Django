@@ -1,45 +1,101 @@
-<nav id="nav">
-	{% if user.is_authenticated %}
-		<a class="nav__btn nav__btn--home" href="#"></a>
-	{% endif %}
-	<button class="nav__btn nav__btn--resin" onclick="document.getElementById('resin-dialog').showModal()">&diams;</button>
-	<button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button>
+{% load static %}
+<nav id="nav" class="nav">
+	<div id="backdrop" onclick="closeNav()"></div>
+	<aside class="nav__container">
+		<section class="nav__content">
+			<div class="nav__top">
+				<button class="btn nav__btn icon-box" onclick="//reset(); window.location.reload()">
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+				</button>
+				{% if user.is_authenticated %}
+					<a class="nav__profile" href="#">
+						<div class="btn nav__btn icon-box">
+							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+						</div>
+						<p class="nav__username" >{{user.username}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01234567890123456789 bbbbbbbbbbbbbbbbbb</p>
+					</a>
+				{% endif %}
+			</div>
+			<div class="nav__links">
+				{% for page, link in nav.items %}{% url link as url %}
+					<a
+						{% if page == 'HOME' and request.path == "/" or url != "/" and url in request.path|urlencode %}
+							href="javascript:void(0)" class=" nav__link nav__link--active"
+						{% else %}
+							href="{{ url }}" class="nav__link" 
+						{% endif %}
+					>
+						<div class="icon-box">
+							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+						</div>
+						<p>{{ page|upper }}</p>
+					</a>
+				{% endfor %}
+			</div>
+			<div class="nav__bottom">
+				{% if user.is_authenticated %}
+					<form method="post" action="{% url 'logout' %}">{% csrf_token %}
+						<button class="btn" onclick="console.log('logout')" type="submit">
+							<div class="icon-box">
+								<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+							</div>
+							<p>Log out</p>
+						</button>
+					</form>
+				{% endif %}
+			</div>
+		</section>
+	</aside>
 
-	<dialog id='resin-dialog'>
-		<button class="nav__btn dialog--close" onclick="this.parentElement.close()">&times;</button>
-		<div id="resin-results" class="dialog--div"></div>
-		<input id="resin-input" class="dialog--input" type="text" pattern: "\\d*" oninput="makeResinDialog()">
-	</dialog>
-
-	{% for page, link in nav.items %}
-		{% url link as url %}
-		<a
-			{% if page == 'HOME' and request.path == "/" or url != "/" and url in request.path|urlencode %} href="javascript:void(0)" class="nav-active"
-			{% else %} href="{{ url }}"
-			{% endif %}
-		>{{ page|upper }}</a>
-	{% endfor %}
-
-	{% if user.is_authenticated %}
-		<form method="post" action="{% url 'logout' %}">{% csrf_token %}
-			<button class="" onclick="reset()" type="submit">logout</button>
-		</form>
-	{% endif %}
 </nav>
+{% comment %} <button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button> {% endcomment %}
 
-<header id="header">
-	<button class="header__menu" onclick="openNav()">&equiv;</button>
-	{% block action %}
+<header class="header">
+	<button class="btn header__btn icon-box" onclick="document.getElementById('resin-dialog').showModal()">
+		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+	</button>
+	{% block header-switch %}
+		<div class="filter">
+			<input type="checkbox" class="filter__btn" onchange="update(this)">
+		</div>
+	{% endblock %}
+	{% if user.is_authenticated %}
 		<div class="header__button">
 			<div class="header__button--icon"></div>
 			<input class="header__button--input" type="button" value="Save" onclick="saveUser()">
 		</div>
-	{% endblock %}
+	{% endif %}
 </header>
 
-{% block dialog %}
-	<dialog id="dialog" class="alert" onclick="(()=>{
-		this.close();
-		this.innerHTML = ''
-	})()"></dialog>
-{% endblock %}
+<footer class="footer">
+	<button class="footer__menu icon-box" onclick="openNav()">
+		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+	</button>
+	{% for page, link in nav.items %}
+	{% if page|upper in "DASHBOARD INVENTORY PLANNER CHARACTERS WEAPONS" %}
+		{% url link as url %}
+		<a
+			{% if page == 'HOME' and request.path == "/" or url != "/" and url in request.path|urlencode %}
+				href="javascript:void(0)" class="footer__link footer__link--active"
+			{% else %}
+				href="{{ url }}" class="footer__link" 
+			{% endif %}
+		>
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+			</div>
+			<p>{{ page|title }}</p>
+		</a>
+	{% endif %}{% endfor %}
+</footer>
+
+<dialog id='resin-dialog' class="resin">
+	<button class="btn resin__btn" onclick="this.parentElement.close()">&times;</button>
+	<div id="resin-results" class="resin__display"></div>
+	<input id="resin-input" class="resin__input" type="text" pattern: "\\d*" oninput="makeResinDialog()">
+</dialog>
+
+<dialog id="dialog" class="alert" onclick="(()=>{
+	this.close();
+	this.innerHTML = ''
+})()"></dialog>
