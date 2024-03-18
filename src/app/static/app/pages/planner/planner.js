@@ -146,10 +146,10 @@ function isTotal(category){
 
 function updateC(name, attr, value){
 	userSet(userChar,[name,attr], value)
-  setCalc(true); storeUser(user);
+  setCalc(true); storeUserC(user. userChar);
 }
 
 function updateW(name, attr, value){
 	userSet(userWpn,[name,attr], value)
-	setCalc(true); storeUser(user);
+	setCalc(true); storeUserW(user, userWpn);
 }

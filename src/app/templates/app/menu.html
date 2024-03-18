@@ -4,7 +4,7 @@
 	<aside class="nav__container">
 		<section class="nav__content">
 			<div class="nav__top">
-				<button class="btn nav__btn icon-box" onclick="//reset(); window.location.reload()">
+				<button class="btn nav__btn icon-box" onclick="reset(); window.location.reload()">
 					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
 				</button>
 				{% if user.is_authenticated %}
@@ -46,17 +46,20 @@
 			</div>
 		</section>
 	</aside>
-
 </nav>
-{% comment %} <button class="nav__btn nav__btn--close" onclick="closeNav()">&times;</button> {% endcomment %}
 
 <header class="header">
 	<button class="btn header__btn icon-box" onclick="document.getElementById('resin-dialog').showModal()">
 		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
 	</button>
 	{% block header-switch %}
-		<div class="filter">
-			<input type="checkbox" class="filter__btn" onchange="update(this)">
+		<div class="switch">
+			<input type="checkbox" class="switch__input" onchange="toggleSwitch(this)" checked=true id="switch">
+			{% comment %} <label class="switch__cont" for="switch">
+				<div class="switch__slider icon-box">
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+				</div>
+			</label> {% endcomment %}
 		</div>
 	{% endblock %}
 	{% if user.is_authenticated %}

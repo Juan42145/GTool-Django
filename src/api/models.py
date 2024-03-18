@@ -197,7 +197,7 @@ class Character(models.Model):
 
     @property
     def weekly_boss(self):
-        return self.weekly_drop.weekly_boss
+        return self.weekly_drop.weekly_boss if self.weekly_drop else ''
 
     def __str__(self):
         return self.name

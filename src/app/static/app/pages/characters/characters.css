@@ -2,9 +2,9 @@
 	place-self: stretch;
 	overflow-x: hidden;
 	overflow-y: auto;
-  }
-  
-  .options{
+}
+
+.options{
 	--options_banner: var(--clr-void);
 	--options_bg: var(--clr-lightnavy);
 	--options_tx: var(--clr-white);
@@ -145,7 +145,7 @@
 	text-align: center;
   }
   
-  .icon{
+  .c_icon{
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -176,13 +176,6 @@
   
   .tag.max{
 	color: var(--max);
-  }
-  
-  /*TABLE*/
-  input[type=checkbox]{
-	-webkit-appearance: auto;
-	width: 2rem;
-	height: 2rem;
   }
   
   /*TABLE*/
@@ -234,12 +227,6 @@
 	padding: 0 0.4rem;
 	color: var(--table_tx);
 	vertical-align: middle;
-  }
-  
-  input[type=checkbox]{
-	-webkit-appearance: auto;
-	width: 2rem;
-	height: 2rem;
   }
   
   table .image{

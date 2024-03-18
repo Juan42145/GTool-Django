@@ -9,11 +9,11 @@ urlpatterns = [
     path('dashboard/<str:category>/', dashboard_detail, name='dashboard-detail'),
     path('inventory/', inventory, name='inventory'),
     path('planner/', planner, name='planner'),
-    path('planner/<str:kind>/<str:name>', planner_detail, name='planner-detail'),
+    path('planner/<str:kind>/<str:name>/', planner_detail, name='planner-detail'),
     path('characters/', characters, name='characters'),
-    path('characters/<str:name>', test, name='characters-detail'), #MODEL
+    path('characters/<str:name>/', character_detail, name='character-detail'), #MODEL
     path('weapons/', weapons, name='weapons'),
-    path('weapons/<str:name>', test, name='weapons-detail'), #MODEL
+    path('weapons/<str:name>/', test, name='weapons-detail'), #MODEL
     path('compare/', compare, name='compare'), #Potential no Login
     path('data/', data, name='data'), #Potential no login
     

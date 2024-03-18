@@ -2,51 +2,47 @@
 
 {% block content %}
 
-<div id="char-menu">
+<div class="options">
+	{% comment %} <div class="mode">
+		<button onclick="switcher(this, true)" class="selected">
+			<svg viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3"></path></svg>
+		</button>
+		<button onclick="switcher(this,false)" >
+			<svg viewBox="0 0 24 24"><path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z"></path></svg>
+		</button>
+	</div> {% endcomment %}
+	<button class="owned" onclick="filterOwned(this)">Owned</button>
+	<select onchange="getSort(value)">
+		<option disabled selected hidden>Sort by ...</option>
+		<option value="0">Release Date</option>
+		<option value="1">Name</option>
+		<option value="2">Ascension</option>
+		<option value="3">Rarity</option>
+		<option value="4">Constellations</option>
+	</select>
+	<button class="arrow" onclick="setReverse(this)"></button>
+</div>
 
-	<div class="options">
-		<div class="mode">
-			<button onclick="switcher(this, true)" class="selected">
-				<svg viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3"></path></svg>
-			</button>
-			<button onclick="switcher(this,false)" >
-				<svg viewBox="0 0 24 24"><path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z"></path></svg>
-			</button>
-		</div>
-		<button class="owned" onclick="filterOwned(this)">Owned</button>
-		<select onchange="getSort(value)">
-			<option disabled selected hidden>Sort by ...</option>
-			<option value="0">Release Date</option>
-			<option value="1">Name</option>
-			<option value="2">Ascension</option>
-			<option value="3">Rarity</option>
-			<option value="4">Constellations</option>
-		</select>
-		<button class="arrow" onclick="setFlip(this)"></button>
-	</div>
+<div id="characters">
+</div>
 
-	<div id="characters">
-	</div>
-	
-	<div class="table-cont">
-		<table id="table" class="hide">
-			<thead>
-				<th onclick="sortTable(this, 1)"></th>
-				<th></th>
-				<th>Name</th>
-				<th colspan="2">P</th>
-				<th colspan="2">N</th>
-				<th colspan="2">S</th>
-				<th colspan="2">B</th>
-				<th onclick="sortTable(this, 2)">HP</th>
-				<th onclick="sortTable(this, 3)">ATK</th>
-				<th onclick="sortTable(this, 4)">DEF</th>
-				<th onclick="sortTable(this, 5)">STAT</th>
-			</thead>
-			<tbody id="table__body"></tbody>
-		</table>
-	</div>
-
+<div class="table-cont">
+	<table id="table" class="hide">
+		<thead>
+			<th onclick="sortTable(this, 1)"></th>
+			<th></th>
+			<th>Name</th>
+			<th colspan="2">P</th>
+			<th colspan="2">N</th>
+			<th colspan="2">S</th>
+			<th colspan="2">B</th>
+			<th onclick="sortTable(this, 2)">HP</th>
+			<th onclick="sortTable(this, 3)">ATK</th>
+			<th onclick="sortTable(this, 4)">DEF</th>
+			<th onclick="sortTable(this, 5)">STAT</th>
+		</thead>
+		<tbody id="table__body"></tbody>
+	</table>
 </div>
 
 {% endblock content %}

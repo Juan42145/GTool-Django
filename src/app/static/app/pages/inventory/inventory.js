@@ -41,7 +41,7 @@ function inv(){
 				INP.addEventListener('blur',()=>{
 					INP.value = +INP.value;
 					userSet(userInv, [category, item, rank], +INP.value)
-					storeUser(user)
+					storeUserI(user, userInv)
 					processTotals(category, item);
 				}, false);
 				INP.addEventListener('focus', (e)=>{focusInput(e)})

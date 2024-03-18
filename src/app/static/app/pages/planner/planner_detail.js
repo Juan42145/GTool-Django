@@ -159,7 +159,7 @@ function makeInv(CONT, og_category, og_item, og_materials, og_isInv, uid){
       INP.value = +INP.value
       
       userSet(userInv, [category,item,rank], +INP.value)
-			storeUser(user)
+			storeUserI(user, userInv)
 
       processTotals(category, item); makePage(gn,gb);
       //makeData(CONT, og_category, og_item, og_materials, og_isInv, uid);
@@ -241,12 +241,12 @@ function consume(calc, attr){
 function incrementC(attr){
   if(attr !== 'PHASE' && !userChar[gn][attr]) userChar[gn][attr] = 1;
   userChar[gn][attr]++;
-	setCalc(true); storeUser(user);
+	setCalc(true); storeUserC(user, userChar);
 }
 
 function incrementW(attr){
   userWpn[gn][attr]++;
-	setCalc(true); storeUser(user)
+	setCalc(true); storeUserW(user, userWpn)
 }
 
 function closePage(){

@@ -21,12 +21,24 @@ window.addEventListener('load',()=>{
 /**--CUSTOM FUNCTION-- */
 function create(parent, element, attr) {
 	//Create HTML Element
-	const E = document.createElement(element); parent.append(E);
-	if (!attr) return E;
+	const Element = document.createElement(element); parent.append(Element);
+	if (!attr) return Element;
 	Object.entries(attr).forEach(([attribute, value]) => {
-		E.setAttribute(attribute, value);
+		Element.setAttribute(attribute, value);
 	})
-	return E;
+	return Element;
+}
+
+function createImg(parent, cls, src){
+	const Element = create(parent, 'img', {'class':cls,'src':src})
+	setError(Element)
+	return Element
+}
+
+function createTxt(parent, element, attr, text){
+	const Element = create(parent, element, attr)
+	Element.textContent = text;
+	return Element
 }
 
 function focusInput(e) {
@@ -73,8 +85,11 @@ function getImageLink(group, text = ''){
 }
 
 function getImage(category, item, rank) {
-	if (item === '') return getError();
+	if (!item) return getError();
 	const DBM = loadMaster()
+	if (rank === undefined){
+		rank = Object.keys(DBM[category][item]).reduce((key, v) => v < key ? v : key);
+	}
 	return getImageLink(category, DBM[category][item][rank]);
 }
 
@@ -142,6 +157,11 @@ function resinCalc(Cont, value, type) {
 }
 
 /**--TOOLTIP-- */
+function makeTooltip(Element, content){
+  Element.addEventListener('mouseover', ()=>tooltip.show(content))
+  Element.addEventListener('mouseout', ()=>tooltip.hide())
+}
+
 var tooltip = function () {
 	var id = 'tt'; var dy = 3; var dx = 3; var maxw = 300; var tt, c, h, w;
 	return {

@@ -119,7 +119,7 @@ function makeRow(wpn){
   FARM.checked = state?.FARM ?? false;
   FARM.addEventListener('change', ()=>{
     userWpn[name].FARM = FARM.checked;
-    setCalc(true); storeUser(user);
+    setCalc(true); storeUserW(user, userWpn);
   }, false);
 
   CELL = create(ROW, 'td', {'class':'img'})

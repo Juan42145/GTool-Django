@@ -90,12 +90,15 @@ function calcTotals(mMaterials, iMaterials){
 }
 
 /**--USER CLIENT STORAGE */
-function storeUser(user) {set('user', user)}
+function storeUserC(user, userC) {user.CHARACTERS = userC; set('user', user)}
+function storeUserW(user, userW) {user.WEAPONS = userW; set('user', user)}
+function storeUserI(user, userI) {user.INVENTORY = userI; set('user', user)}
 
 function loadUser() {
 	if (has('user')) return get('user')
 	else {
 		const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
+		set('savedUser', USER_DATA)
 		getOrCreate(USER_DATA, 'INVENTORY')
 		getOrCreate(USER_DATA, 'CHARACTERS')
 		getOrCreate(USER_DATA, 'WEAPONS')
@@ -164,13 +167,12 @@ function getCookie(name) {
 }
 
 function saveUser(){
-	const USER_ID = JSON.parse(document.getElementById('json_user_id').textContent)
-	const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
 	user = get('user')
-	if (JSON.stringify(user) === JSON.stringify(USER_DATA)){
+	if (JSON.stringify(user) === myStorage.getItem('savedUser')){//Use default getter to get stringify data
 		toasty('Nothing to Save')
 		return
 	}
+	const USER_ID = JSON.parse(document.getElementById('json_user_id').textContent)
 	console.log('Saving')
 	request('/api/profile/'+USER_ID,{
 		method: "PATCH",
@@ -181,7 +183,10 @@ function saveUser(){
 		body: JSON.stringify({
 			data: user
 		})
-	}).then(() => toast('Saved'))
+	}).then((profile) => {
+		toast('Saved')
+		set('savedUser', profile.data)
+	})
 }
 
 /**--LOAD-- */
