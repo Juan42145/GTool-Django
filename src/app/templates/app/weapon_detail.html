@@ -1,0 +1,59 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+
+<div id="wpn" data-color={{ object.rarity }}>
+  <a href="{% url 'app:weapons' %}" class="close">&times;</a>
+  <img id="wpn-img" data-img='WEAPON,{{ object.name }}'>
+  <div class="data">
+
+    <div class="contact">
+      <div>
+        <div id="name">{{ object.name }}</div>
+        <div class="edit">
+          <div id="refinement"></div>
+          <div id="modify" class="hide">
+            <button onclick="minus()">-</button>
+            <button onclick="plus()">+</button>
+          </div>
+        </div>
+        <button id="edit" onclick="editIn()">
+          <svg id="pencil" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path></svg>
+          <svg id="disk" class="hide" viewBox="0 0 24 24"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg>
+        </button>
+      </div>
+      <div>
+        <div data-stars={{ object.rarity }}></div>
+        <div>{{ object.weapon_type }}</div>
+      </div>
+    </div>
+    <div class="materials">
+      <div class="mat-title">Materials</div>
+      <div class="mat-img"><img id="TROPHY" data-img='TROPHIES,{{ object.trophy }}'></div>
+      <div class="mat-img"><img id="ELITE" data-img='ENEMIES,{{ object.elite }}'></div>
+      <div class="mat-img"><img id="COMMON" data-img='ENEMIES,{{ object.common }}'></div>
+    </div>
+
+    <div class="inputs">
+      <div class="farm">
+        <input type="checkbox" id="FARM" onchange="update(this)">
+        Farm
+      </div>
+      <div class="inp">
+        <div class="input-text">Phase</div>
+        <input type="text" pattern="\d*" id="PHASE" onchange="update(this)" onclick="focusInput(event)">
+        <input type="text" pattern="\d*" id="TARGET" onchange="update(this)" onclick="focusInput(event)">
+      </div>
+    </div>
+
+    <div class="stats">
+      <div>ATK</div>
+      <div>{{ object.stat }}</div>
+
+      <div>{{ object.stat_atk }}</div>
+      <div>{{ object.stat_value }}</div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

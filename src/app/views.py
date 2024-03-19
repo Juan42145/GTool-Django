@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from api.models import Character
+from api.models import Character, Weapon
 
 # Create your views here.
 def test(request, *args, **kwargs):
@@ -85,6 +85,16 @@ def weapons(request, *args, **kwargs):
         'scripts': ['app/pages/weapons/weapons.js'],
     }
     return render(request, 'app/weapons.html', context)
+
+@login_required
+def weapon_detail(request, name, *args, **kwargs):
+    object = get_object_or_404(Weapon, name=name)
+    context = {
+        'object': object,
+        'styles': ['app/pages/weapons/weapon_detail.css'],
+        'scripts': ['app/pages/weapons/weapon_detail.js'],
+    }
+    return render(request, 'app/weapon_detail.html', context)
 
 @login_required
 def compare(request, *args, **kwargs):

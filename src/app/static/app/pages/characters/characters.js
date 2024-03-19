@@ -71,9 +71,8 @@ function makeRow(character){
 	const Icon = createImg(Cell, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
 
 	if(state?.OWNED){
-		const Tag = create(Cell, 'p', {'class':'tag'});
-		Tag.textContent = 'C'+ +state?.CONSTELLATION;
-		if(state?.CONSTELLATION >= 6) Tag.classList.add('max')
+		const Tag = createTxt(Cell, 'p', {'class':'tag'}, 'C'+ +state.CONSTELLATION);
+		if(state.CONSTELLATION >= 6) Tag.classList.add('max')
 	}
 	else{
 		Row.classList.add('missing')

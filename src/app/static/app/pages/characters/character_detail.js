@@ -14,8 +14,10 @@ function buildDetail(){
 		let [group, value] = Element.dataset.img.split(',')
 		if (group === "CHARACTER"){
 			Element.src = getCharacter(value, true)
+			setError(Element)
 		} else{
 			Element.src = getImage(group, value)
+			setError(Element)
 			makeTooltip(Element, value)
 		}
 	})
