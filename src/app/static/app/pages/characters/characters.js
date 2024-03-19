@@ -60,7 +60,7 @@ function makeRow(character){
 	const Farm = create(Cell, 'input', {'class': 'farm', 'type':'checkbox'});
 	Farm.checked = state?.FARM;
 	Farm.addEventListener('change', ()=>{
-		userSet(userChar, [cName,'FARM'], Farm.checked)
+		uSet(userChar, [cName,'FARM'], Farm.checked)
 		setCalc(true); storeUserC(user, userChar);
 	}, false);
 
@@ -134,8 +134,10 @@ function sortName(a,b){
 }
 
 function sortAscension(a,b){
-	return (userChar[b[0]]?.PHASE ?? 0) - (userChar[a[0]]?.PHASE ?? 0)
-			|| (userChar[b[0]]?.OWNED ?? false) - (userChar[a[0]]?.OWNED ?? false);
+	aUsr = uGet(userChar[a[0]],'')
+	bUsr = uGet(userChar[b[0]],'')
+	return bUsr.PHASE - aUsr.PHASE
+			|| bUsr.OWNED - aUsr.OWNED
 }
 
 function sortRarity(a,b){
@@ -143,15 +145,19 @@ function sortRarity(a,b){
 }
 
 function sortConstellation(a,b){
-	return (userChar[b[0]]?.CONSTELLATION ?? '') - (userChar[a[0]]?.CONSTELLATION ?? '')
-			|| (userChar[b[0]]?.OWNED ?? false) - (userChar[a[0]]?.OWNED ?? false);
+	aUsr = uGet(userChar[a[0]],'')
+	bUsr = uGet(userChar[b[0]],'')
+	return bUsr.CONSTELLATION - aUsr.CONSTELLATION
+			|| bUsr.OWNED - aUsr.OWNED;
 }
 
 function sortF(a,b){
-	return userChar[b[0]]?.FARM - userChar[a[0]]?.FARM
-			|| userChar[b[0]]?.OWNED - userChar[a[0]]?.OWNED
+	aUsr = uGet(userChar[a[0]],'')
+	bUsr = uGet(userChar[b[0]],'')
+	return bUsr.FARM - aUsr.FARM
+			|| bUsr.OWNED - aUsr.OWNED
 			|| b[1].RARITY - a[1].RARITY
-			|| userChar[b[0]]?.PHASE - userChar[a[0]]?.PHASE
+			|| bUsr.PHASE - aUsr.PHASE
 }
 
 function sortHP(a,b){

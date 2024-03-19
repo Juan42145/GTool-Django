@@ -35,7 +35,7 @@ const invCategories = [
 ]
 
 function toPlural(category) {
-	let dict = {
+	const dict = {
 		'BOOK': 'BOOKS',
 		'TROPHY': 'TROPHIES',
 		'EXP': 'RESOURCES',
@@ -62,6 +62,10 @@ function converge(category){
 	return category == 'ELITE' || category == 'COMMON'? 'ENEMIES': category
 }
 
+function decode(category, item){
+  return category === 'WEEKLY_DROP'? item.split(' ')[1]: item;
+}
+
 function translate(category){return converge(toPlural(category))}
 
 //**DATA PROCESSING */
@@ -71,9 +75,9 @@ function generateTotals(user) {
 	let totals = {}
 	invCategories.forEach((iCategory) => {
 		Object.entries(DBM[iCategory]).forEach(([mItem, mMaterials]) => {
-			let iMaterials = user.INVENTORY?.[iCategory]?.[mItem] ?? {}
+			let iMaterials = user.INVENTORY?.[iCategory]?.[mItem]
 			let [counter, total] = calcTotals(mMaterials, iMaterials)
-			if (counter > 1) userSet(totals, [iCategory, mItem], total);
+			if (counter > 1) uSet(totals, [iCategory, mItem], total);
 		});
 	});	
 	setTotals(totals)
@@ -83,8 +87,8 @@ function calcTotals(mMaterials, iMaterials){
 	//Iterate over DBM materials and fill with user values
 	let counter = 0, total = 0;
 	Object.keys(mMaterials).reverse().forEach((rank) => {
-		value = iMaterials[rank] ?? 0
-		total += value / (3 ** counter); counter++;
+		let uValue = iMaterials?.[rank] ?? 0
+		total += uValue / (3 ** counter); counter++;
 	});
 	return [counter, total]
 }
@@ -113,11 +117,21 @@ function getOrCreate(object, property, defaultValue={}){
 	return object[property]
 }
 
-function userSet(userObject, path, value){
+function uSet(userObject, path, value){
 	let cur = userObject
 	lastProp = path.pop()
 	path.forEach(property => cur = getOrCreate(cur, property))
 	cur[lastProp] = value
+}
+
+function uGet(obj, defaultValue){
+	//Return default dict object
+	if (obj === undefined) obj = {}
+	return new Proxy(obj, {
+		get(target, key) {
+			return key in target? target[key]: defaultValue
+		}
+	})
 }
 
 /**--ALERT-- */

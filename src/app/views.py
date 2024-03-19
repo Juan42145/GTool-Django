@@ -54,7 +54,7 @@ def planner(request, *args, **kwargs):
 def planner_detail(request, kind, name, *args, **kwargs):
     context = {
         'styles': ['app/pages/planner/planner.css','app/pages/planner/planner_detail.css'],
-        'scripts': ['app/pages/planner/planner.js','app/pages/planner/planner_detail.js'],
+        'scripts': ['app/pages/planner/planner_detail.js'],
         'kind': kind,
         'name': name
     }

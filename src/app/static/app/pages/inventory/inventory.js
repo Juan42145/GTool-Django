@@ -40,7 +40,7 @@ function inv(){
 					'type':'text','pattern':'\\d*','value': value, 'data-column':rank})
 				INP.addEventListener('blur',()=>{
 					INP.value = +INP.value;
-					userSet(userInv, [category, item, rank], +INP.value)
+					uSet(userInv, [category, item, rank], +INP.value)
 					storeUserI(user, userInv)
 					processTotals(category, item);
 				}, false);

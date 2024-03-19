@@ -41,6 +41,13 @@ function createTxt(parent, element, attr, text){
 	return Element
 }
 
+function createNumInput(parent, attr, value){
+	Object.assign(attr, {'type':'text','pattern':'\\d*','value': value})
+	const Element = create(parent, 'input', attr)
+	Element.addEventListener('focus', (e)=>{focusInput(e)})
+	return Element
+}
+
 function focusInput(e) {
 	//Focus input at end and convert to empty string if 0/fasly
 	if(!+e.target.value) e.target.value = '';
@@ -50,7 +57,7 @@ function focusInput(e) {
 /**--INVENTORY-- */
 function processTotals(category, item) {
 	let mMaterials = loadMaster()[category][item]
-	let iMaterials = loadUser().INVENTORY?.[category]?.[item] ?? {}
+	let iMaterials = loadUser().INVENTORY?.[category]?.[item]
 	let [counter, total] = calcTotals(mMaterials,iMaterials)
 	if (counter > 1) {
 		const Total = document.getElementById('I_' + item)
@@ -215,6 +222,7 @@ function calculate() {
 	Object.entries(user.CHARACTERS).forEach(([character, state]) => {
 		if (!state.FARM) return;
 		const info = DBC[character];
+		state = uGet(state,'')
 		const ascension = [+state.PHASE, +state.TARGET];
 		const talent = [
 			[+state.NORMAL, +state.TNORMAL],
@@ -222,7 +230,6 @@ function calculate() {
 			[+state.BURST, +state.TBURST]
 		];
 		calculator.CHARACTERS[character] = {
-			ELEMENT: info.ELEMENT,
 			AFARM: calcCharA(info, ascension),
 			TFARM: calcCharT(info, talent)
 		}
@@ -233,8 +240,7 @@ function calculate() {
 		const info = DBW[weapon];
 		const phase = [+state.PHASE, +state.TARGET, info.RARITY];
 		calculator.WEAPONS[weapon] = {
-			RARITY: info.RARITY,
-			FARM: calcWpn(info, phase)
+			WFARM: calcWpn(info, phase)
 		}
 	})
 
@@ -320,7 +326,7 @@ function calcW(category, [phase, target, rarity]) {
 
 /**--PIVOT-- */
 function pivot(category, item, materials) {
-	let nonEmpty = Object.values(materials).some(v => {return v !== 0;});
+	let nonEmpty = Object.values(materials).some(v => v !== 0);
 	if (!nonEmpty) return
 	let mCategory = toPlural(category)
 	let calcPivot = getPivot()

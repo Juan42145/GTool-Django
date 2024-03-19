@@ -21,34 +21,34 @@ function buildDetail(){
 	})
 
 	cName = document.getElementById('name').textContent
-	let state = userChar[cName]
+	let state = uGet(userChar[cName],'')
 
 	let CONS = document.getElementById('constellation')
-	if(state?.OWNED){
+	if (state.OWNED){
 		CONS.classList.remove('hide');
-		CONS.textContent = 'C'+(state?.CONSTELLATION ?? 0);
-		if(state?.CONSTELLATION >= 6) CONS.classList.add('max')
+		CONS.textContent = 'C'+state.CONSTELLATION;
+		if (state.CONSTELLATION >= 6) CONS.classList.add('max')
 	} else{
 		CONS.classList.add('hide');
 		CONS.textContent = '';
 	}
 
-	document.getElementById('FARM').checked = state?.FARM
+	document.getElementById('FARM').checked = state.FARM
 
-	document.getElementById('PHASE').value = state?.PHASE ?? ''
-	document.getElementById('TARGET').value = state?.TARGET ?? ''
-	document.getElementById('NORMAL').value = state?.NORMAL ?? ''
-	document.getElementById('TNORMAL').value = state?.TNORMAL ?? ''
-	document.getElementById('SKILL').value = state?.SKILL ?? ''
-	document.getElementById('TSKILL').value = state?.TSKILL ?? ''
-	document.getElementById('BURST').value = state?.BURST ?? ''
-	document.getElementById('TBURST').value = state?.TBURST ?? ''
+	document.getElementById('PHASE').value = state.PHASE
+	document.getElementById('TARGET').value = state.TARGET
+	document.getElementById('NORMAL').value = state.NORMAL
+	document.getElementById('TNORMAL').value = state.TNORMAL
+	document.getElementById('SKILL').value = state.SKILL
+	document.getElementById('TSKILL').value = state.TSKILL
+	document.getElementById('BURST').value = state.BURST
+	document.getElementById('TBURST').value = state.TBURST
 }
 
 /**--INPUT UPDATE-- */
 function update(Element){
-	if(Element.id === 'FARM') userSet(userChar, [cName,Element.id], Element.checked)
-	else userSet(userChar, [cName,Element.id], Element.value)
+	if(Element.id === 'FARM') uSet(userChar, [cName,Element.id], Element.checked)
+	else uSet(userChar, [cName,Element.id], Element.value)
 
 	setCalc(true); storeUserC(user, userChar)
 }
@@ -82,7 +82,7 @@ function plus(){
 	let CONS = document.getElementById('constellation')
 	let constx = CONS.textContent, value;
 	if(constx === ''){
-		userSet(userChar, [cName,'OWNED'], true); value = 0;
+		uSet(userChar, [cName,'OWNED'], true); value = 0;
 	} else{
 		value = +constx.substring(1) + 1;
 	}
@@ -90,7 +90,7 @@ function plus(){
 	if(value >= 6) CONS.classList.add('max')
 
 	CONS.textContent = 'C' + value;
-	userSet(userChar, [cName,'CONSTELLATION'], value)
+	uSet(userChar, [cName,'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }
 
@@ -99,7 +99,7 @@ function minus(){
 	let constx = CONS.textContent, value, string;
 	if(constx === '') return;
 	else if(constx === 'C0'){
-		value = ''; string = ''; userSet(userChar, [cName,'OWNED'], false)
+		value = ''; string = ''; uSet(userChar, [cName,'OWNED'], false)
 	} else {
 		value = +constx.substring(1) - 1; string = 'C' + value;
 	}
@@ -107,6 +107,6 @@ function minus(){
 	if(value < 6) CONS.classList.remove('max')
 
 	CONS.textContent = string;
-	userSet(userChar, [cName,'CONSTELLATION'], value)
+	uSet(userChar, [cName,'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }
