@@ -4,52 +4,45 @@ function pageLoad(){
 	window.user = loadUser()
 	window.userInv = user.INVENTORY;
 	
-	inv()
+	buildInventory()
 }
 
-/*INVENTORY*/
-function inv(){
-	Object.entries(DBM).forEach(([category, items]) => {
-		const SEC = document.getElementById(category);
-		if (!SEC) return
+/**--RENDER-- */
+function buildInventory(){
+	Object.entries(DBM).forEach(([mCategory, mItems]) => {
+		const Sec = document.getElementById(mCategory);
+		if (!Sec) return
 
-		const TITLE = create(SEC, 'div', {'class': 'section__title'});
-		TITLE.textContent = category;
+		const Title = createTxt(Sec, 'div', {'class': 'section__title'}, mCategory);
 
-		const TBL = create(SEC, 'div', {'class':'section__table'});
+		const Table = create(Sec, 'div', {'class':'section__table'});
 	
-		Object.entries(items).forEach(([item, materials], ii) => {
-			const ROW = create(TBL, 'div', {'class':'row'})
-			ROW.style = 'grid-row: '+(ii+1);
+		Object.entries(mItems).forEach(([mItem, mMaterials], indexItem) => {
+			const Row = create(Table, 'div', {'class':'row'})
+			Row.style = 'grid-row: '+(indexItem+1);
 
-			const NAME = create(ROW, 'div', {'class':'row__name'}); NAME.textContent = item;
+			const Name = createTxt(Row, 'div', {'class':'row__name'}, mItem)
 			
-			let total = userGet(getTotals(),[category,item])
+			let total = getTotals()[mCategory]?.[mItem]
 			if (total !== undefined){
-				const TOTAL = create(ROW, 'div', {'class':'row__total','id':'I_'+item})
-				TOTAL.textContent = Math.floor(total).toLocaleString('en-us');
+				const Total = createTxt(Row, 'div', {'class':'row__total','id':'I_'+mItem},
+					Math.floor(total).toLocaleString('en-us'))
 			}
-			Object.entries(materials).reverse().forEach(([rank, name], mi) => {
-				const CARD = create(ROW, 'div', {'class':'row__card r_'+rank})
+			Object.keys(mMaterials).reverse().forEach((rank) => {
+				if(isNaN(rank)) return
+				const Card = create(Row, 'div', {'class':'row__card r_'+rank})
 
-				const IMG = create(CARD, 'img', {'class':'row__card--img','src':getImage(category, item, rank)})
-				setError(IMG)
+				const Img = createImg(Card, 'row__card--img', getImage(mCategory, mItem, rank))
 				
-				value = userGet(userInv, [category, item, rank], 0)
-				const INP = create(CARD, 'input', {
-					'type':'text','pattern':'\\d*','value': value, 'data-column':rank})
-				INP.addEventListener('blur',()=>{
-					INP.value = +INP.value;
-					uSet(userInv, [category, item, rank], +INP.value)
+				value = userInv[mCategory]?.[mItem]?.[rank] ?? 0
+				const Input = createNumInput(Card, {'data-column':rank}, value)
+				Input.addEventListener('blur',()=>{
+					Input.value = +Input.value;
+					uSet(userInv, [mCategory, mItem, rank], +Input.value)
 					storeUserI(user, userInv)
-					processTotals(category, item);
+					processTotals(mCategory, mItem);
 				}, false);
-				INP.addEventListener('focus', (e)=>{focusInput(e)})
 			});
 		});
 	});
-}
-
-function save(){
-	store('Inventory', userInv); setInv();
 }

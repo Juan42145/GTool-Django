@@ -11,12 +11,13 @@ let isGrid
 
 /**--RENDER-- */
 function buildCharacters(){
-	let array = Object.entries(DBC).sort(sorting); if(isReverse) array.reverse();
+	let characters = Object.entries(DBC).sort(sorting)
+	if(isReverse) characters.reverse();
 	isGrid = document.getElementById('switch').checked
 	
 	document.getElementById('characters').innerHTML = '';
 	document.getElementById('table__body').innerHTML = '';
-	array.forEach(character => {
+	characters.forEach(character => {
 		if(showOwned && !userChar[character[0]]?.OWNED) return
 		isGrid? makeCard(character): makeRow(character);
 	});

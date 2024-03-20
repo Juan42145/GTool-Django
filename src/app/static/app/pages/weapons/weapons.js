@@ -22,11 +22,12 @@ function initWeapons(){
 
 /**--RENDER-- */
 function buildWeapons(){
-	let array = Object.entries(DBW).sort(sorting); if(isReverse) array.reverse();
+	let weapons = Object.entries(DBW).sort(sorting);
+	if(isReverse) weapons.reverse();
 	let isShowAll = document.getElementById('switch').checked;
 
 	document.getElementById('weapons').innerHTML = '';
-	array.forEach(weapon => {
+	weapons.forEach(weapon => {
 		if(!isShowAll && weapon[1].IS_WISH_ONLY) return
 		else if(showOwned && !userWpn[weapon[0]]?.OWNED) return
 		else if(filter !== 0 && weapon[1].WEAPON_TYPE !== wpnTypes[filter-1]) return

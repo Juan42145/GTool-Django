@@ -1,191 +1,210 @@
-setup(loadCharacters(),loadWeapons())
+setup(loadStatic(), loadCharacters(),loadWeapons())
 function pageLoad(){
 	window.DBM = loadMaster()
 	window.REGION = Object.keys(DBM.ELEMENTS)
 	window.user = loadUser()
 	window.userInv = user.INVENTORY;
-
-	window.D = (new Date()).getDay();
 	
 	home()
 }
+D = (new Date()).getDay();
 
-/*HOME*/
+/**--RENDER-- */
 function home() {
 	if (getCalc()) calculate();
 
-	Object.entries(getPivot()).forEach(cData => {
-		let [category, items] = cData;
+	Object.entries(getPivot()).forEach(pCategories => {
+		let [pCategory, pItems] = pCategories;
 
-		if (Object.keys(items).length === 0) return;
+		if (Object.keys(pItems).length === 0) return;
 
-		const SEC = document.getElementById(category);
-		SEC.classList.remove('hide'); SEC.innerHTML = '';
+		const Sec = document.getElementById(pCategory);
+		Sec.classList.remove('hide'); Sec.innerHTML = '';
 
-		const TITLE = create(SEC, 'div', { 'class': 'section__title' });
-		TITLE.textContent = category;
+		const Title = createTxt(Sec, 'div', { 'class': 'section__title'}, pCategory);
 
-		let isTotal = SEC.classList.contains('section--total')
-		SEC.addEventListener('click', () => window.open(SEC.dataset.url.replace('*',SEC.id),'_self'));
-		// SEC.addEventListener('click', () => window.open('/','_self'));
-		// SEC.addEventListener('click', () => page(cData, isTotal), false);
+		Sec.addEventListener('click', () =>
+		window.open(Sec.dataset.url.replace('*',Sec.id),'_self'));
+		
+		let isTotal = Sec.classList.contains('section--total')
+		const Table = create(Sec, 'div',
+			{ 'class': 'section__table js-table', 'data-total': isTotal })
 
-		const TBL = create(SEC, 'div', { 'class': 'section__table js-table', 'data-total': isTotal })
-
-		Object.entries(items).sort(sortOrder(category)).forEach((iData, ii) => {
-			makeRow(TBL, category, iData, ii, false);
+		Object.entries(pItems).sort(sortOrder(pCategory)).forEach((pItemData, indexItem) => {
+			makeRow(Table, pCategory, pItemData, indexItem, false);
 		});
 	});
 
 	resize()
 }
 
-function makeRow(TBL, category, iData, ii, isPage) {
-	let [item, materials] = iData;
+function makeRow(Table, pCategory, pItemData, indexItem, isPage) {
+	let [pItem, pMaterials] = pItemData;
 
-	let ROW = document.getElementById('r_' + item)
-	if (ROW && isPage) ROW.innerHTML = '';
-	else ROW = create(TBL, 'div', { 'class': 'row' })
+	let Row = document.getElementById('r_' + pItem)
+	if (Row && isPage) Row.innerHTML = '';
+	else Row = create(Table, 'div', { 'class': 'row' })
 
-	const NAME = create(ROW, 'div', { 'class': 'row__name' }); NAME.textContent = item;
+	const Name = createTxt(Row, 'div', { 'class': 'row__name' }, pItem)
 
-	if (isPage && TBL.dataset.total === 'true') {
-		ROW.style = 'grid-row: ' + (2 * ii + 1); NAME.style = 'grid-row: ' + (2 * ii + 1) + '/span 2'
+	if (isPage && Table.dataset.total === 'true') {
+		Row.style = 'grid-row: ' + (2 * indexItem + 1)
+		Name.style = 'grid-row: ' + (2 * indexItem + 1) + '/span 2'
 	}
-	else ROW.style = 'grid-row: ' + (ii + 1);
+	else Row.style = 'grid-row: ' + (indexItem + 1);
 
-	if (isPage) ROW.id = 'r_' + item;
-	if (category === 'RESOURCES') ROW.classList.add('row--long');
+	if (isPage) Row.id = 'r_' + pItem;
+	if (pCategory === 'RESOURCES') Row.classList.add('row--long');
 
-	if (category === 'BOOKS' || category === 'TROPHIES' || category === 'WEEKLYS')
-		setData(category, item, NAME, isPage);
+	if (pCategory === 'BOOKS' || pCategory === 'TROPHIES' || pCategory === 'WEEKLY_DROPS')
+		setData(pCategory, pItem, Name, isPage);
 
-	let tc = translate(category), ti = decode(category, item);
-	let calc = getInventory(tc, ti, materials);
-	Object.entries(materials).reverse().forEach(([rank, value], mi) => {
-		let index = mi + 3;
+	let category = translate(pCategory), item = decode(pCategory, pItem);
+	let [crafted, calc] = getInventory(category, item, pMaterials);
+	Object.entries(pMaterials).reverse().forEach(([rank, value], indexMat) => {
+		let index = indexMat + 3;
 		if (!value) return
 
-		const CARD = create(ROW, 'div', { 'class': 'row__card js-card r_' + rank })
+		const Card = create(Row, 'div', { 'class': 'row__card js-card r_' + rank })
 
-		if (isPage) CARD.style = 'grid-column: ' + index;
+		if (isPage) Card.style = 'grid-column: ' + index;
 
-		const IMG = create(CARD, 'img', { 'class': 'row__card--img', 'src': getImage(tc, ti, rank) })
-		setError(IMG)
+		const IMG = createImg(Card, 'row__card--img', getImage(category, item, rank))
 
-		const INV = create(CARD, 'div', { 'class': 'p row__card--inv' })
-		INV.textContent = calc[rank].toLocaleString('en-us');
-		const NEED = create(CARD, 'div', { 'class': 'p row__card--need' })
-		NEED.textContent = '/' + value.toLocaleString('en-us');
+		const INV = createTxt(Card, 'div', { 'class': 'p row__card--inv' },
+			crafted[rank].toLocaleString('en-us'))
+		const NEED = createTxt(Card, 'div', { 'class': 'p row__card--need' },
+			'/' + value.toLocaleString('en-us'))
 
-		if (calc[rank] >= value) CARD.classList.add('completed');
-		else CARD.classList.remove('completed');
+		if (crafted[rank] >= value) Card.classList.add('completed');
+		else Card.classList.remove('completed');
 	});
 
 	if (isPage && calc['runs']) {
-		const SPAN = create(NAME, 'span'); SPAN.textContent = calc['runs'];
+		const Span = createTxt(Name, 'span', {}, calc['runs'])
 	}
-	let complete = ROW.querySelectorAll('.js-card').length <= ROW.querySelectorAll('.completed').length;
-	if (complete) { NAME.classList.add('completed'); ROW.classList.add('completed') }
-	else { NAME.classList.remove('completed'); ROW.classList.remove('completed'); }
+	let complete = Row.querySelectorAll('.js-card').length <= Row.querySelectorAll('.completed').length;
+	if (complete) { Name.classList.add('completed'); Row.classList.add('completed') }
+	else { Name.classList.remove('completed'); Row.classList.remove('completed'); }
 
-	if (TBL.dataset.total === 'true') {
-		const TOTAL = create(ROW, 'div', { 'class': 'row__total' })
-		if (isPage) TOTAL.style = 'grid-row: ' + (2 * ii + 1) + '/span 2'
+	if (Table.dataset.total === 'true') {
+		const Total = create(Row, 'div', { 'class': 'row__total' })
+		if (isPage) Total.style = 'grid-row: ' + (2 * indexItem + 1) + '/span 2'
 
-		const INV = create(TOTAL, 'div', { 'class': 'p row__card--inv' })
-		INV.textContent = (Math.floor(calc[0] * 100) / 100).toLocaleString('en-us');;
-		const NEED = create(TOTAL, 'div', { 'class': 'p row__card--need' })
-		NEED.textContent = (Math.floor(calc['total'] * 100) / 100).toLocaleString('en-us');;
+		const INV = createTxt(Total, 'div', { 'class': 'p row__card--inv' },
+			(Math.floor(calc['total'] * 100) / 100).toLocaleString('en-us'))
+		const NEED = createTxt(Total, 'div', { 'class': 'p row__card--need' },
+			(Math.floor(calc['neededTotal'] * 100) / 100).toLocaleString('en-us'))
 
-		if (category == 'BOOKS' || category == 'TROPHIES')
-			setData(category, item, TOTAL, isPage);
+		if (pCategory == 'BOOKS' || pCategory == 'TROPHIES')
+			setData(pCategory, pItem, Total, isPage);
 
-		if (complete) TOTAL.classList.add('completed');
-		else TOTAL.classList.remove('completed');
+		if (complete) Total.classList.add('completed');
+		else Total.classList.remove('completed');
 	}
 	return complete;
 }
 
-function translate(category) {
-	return category == 'ELITE' || category == 'COMMON' ? 'ENEMIES' : category;
+function setData(pCategory, pItem, Element, isPage) {
+	let item = decode(pCategory, pItem)
+	let index = Object.keys(DBM[pCategory]).indexOf(item);
+	Element.classList.add('cell-color');
+	if (pCategory === 'WEEKLY_DROPS') {
+		Element.dataset.color = REGION[Math.floor(index / 6) + 1];
+	} else {
+		Element.dataset.color = REGION[Math.floor(index / 3) + 1];
+		if (!isPage && D !== 0 && (D - 1) % 3 !== index % 3)
+			Element.parentElement.classList.add('hide');
+	}
 }
 
-function decode(category, item) {
-	return category === 'WEEKLY_DROPS' ? item.split(' ')[1] : item;
-}
-
-function getInventory(category, item, materials) {
-	let inv = {}, len = Object.keys(materials).length - 1;
-	Object.entries(userInv[category][item]).forEach(([rank, value]) => {
-		inv[rank] = +value;
-	})
-	let calc = { ...inv }, totals = {}, agg = 0, flag = 0, fagi;
-	calc[0] = 0;
-	Object.entries(materials).forEach(([rank, value], mi) => {
-		calc[0] += +calc[rank] / (3 ** (len - mi)); totals[rank] = calc[0];
-		if (value !== 0) { flag = rank; fagi = mi; }
-		if (mi < len && value < inv[rank]) {
-			calc[rank] = +value; inv[+rank + 1] += Math.floor(inv[rank] - value) / 3;
+/**--INVENTORY CRAFTING PROCESSING-- */
+function getInventory(category, item, pMaterials) {
+	/*
+	crafted: copy that holds inventory after possible crafting
+	maxInv: copy that holds maximum inventory obtained through crafting (defaultdict)
+	*/
+	let iMaterials = userInv[category]?.[item]
+	let crafted = {...maxInv} = {...iMaterials};
+	maxInv = uGet(maxInv, 0)
+	let lastIndex = Object.keys(pMaterials).length - 1, highestRank, highestIndex
+	let invTotals = {} //Holds calculated total at each rank
+	let calc = {//rename??
+		total: 0, //Total needs to be calculated for when not all ranks are present
+		neededTotal: 0,
+		runs: ''
+	}
+	
+	Object.entries(pMaterials).forEach(([rank, value], indexMat) => {
+		if (value !== 0) [highestRank, highestIndex] = [rank, indexMat]
+		if (indexMat < lastIndex && maxInv[rank] > value){
+			//Next rank exists & inv > need value
+			crafted[rank] = +value
+			maxInv[+rank+1] += Math.floor((maxInv[rank] - value)/3);
 		} else {
-			calc[rank] = Math.floor(inv[rank]);
+			crafted[rank] = Math.floor(maxInv[rank]);
 		}
-		agg += value / (3 ** (len - mi));
-	});
 
-	calc[flag] = Math.floor(inv[flag]); calc[0] = totals[flag]; calc['total'] = agg;
-	if (item === 'EXP' || item === 'Ore') {
-		calc[0] = Math.floor(inv[0]); calc[flag] = Math.floor(inv[0])
+		let uValue = iMaterials?.[rank] ?? 0
+		let divisor = 3**(lastIndex - indexMat)
+		calc['total'] += uValue/divisor; invTotals[rank] = calc['total'];
+		calc['neededTotal'] += value/divisor;
+	});
+	crafted[highestRank] = Math.floor(maxInv[highestRank])
+	calc['total'] = invTotals[highestRank];
+	if (item === 'EXP' || item === 'Ore'){ //Pivot only has one rank for these
+		crafted[highestRank] = calc['total'] = Math.floor(getTotals()[category][item])
 	}
 
-	let diff = calc['total'] - calc[0]; calc['runs'] = '';
 	let gateD = category === 'BOOKS' || category === 'TROPHIES';
-	let gateM = category === 'WEEKLYS' || category === 'BOSSES' || category === 'GEMS';
+	let gateM = category === 'WEEKLY_DROPS' || category === 'BOSSES' || category === 'GEMS';
+	let diff = calc['neededTotal'] - calc['total'];
 	if (diff > 0 && (gateD || gateM)) {
-		divs = loadStatic().drop_rates[category][flag]; diff *= 3 ** (len - fagi);
-		let runs = Math.ceil(diff / divs), t;
+		dropRate = loadStatic().drop_rates[category][highestRank]
+		diff *= 3 ** (lastIndex - highestIndex); //convert diff to highest rank
+		let runs = Math.ceil(diff / dropRate), time;
 		switch (category) {
-			case 'WEEKLYS':
-				t = pluralize(runs, 'week');
+			case 'WEEKLY_DROPS':
+				time = pluralize(runs, 'week');
 				break;
 			case 'BOSSES':
 			case 'GEMS':
-				t = pluralize(Math.ceil(runs / 4.5), 'day');
+				time = pluralize(Math.ceil(runs / 4.5), 'day');//180 / 40 resin
 				break;
 			default:
-				t = pluralize(Math.ceil(runs / 9), 'day');
+				time = pluralize(Math.ceil(runs / 9), 'day');//180 / 90 resin
 		}
-		calc['runs'] = `(${pluralize(runs, 'run')} ~ ${t})`;
+		calc['runs'] = `(${pluralize(runs, 'run')} ~ ${time})`;
 	}
 	if (gateD) {
-		index = Object.keys(DBM[category]).indexOf(item);
-		let w = ['Mo/Th', 'Tu/Fr', 'We/Sa'];
-		calc['runs'] += ` [${w[index % 3]}]`;
+		let index = Object.keys(DBM[category]).indexOf(item);
+		let days = ['Mo/Th', 'Tu/Fr', 'We/Sa'];
+		calc['runs'] += ` [${days[index % 3]}]`;
 	}
-	return calc;
+	return [crafted, calc];
 }
 
 function pluralize(num, string) {
 	return num > 1 ? num + ' ' + string + 's' : num + ' ' + string;
 }
 
-function setData(category, item, COMP, isPage) {
-	let ti = decode(category, item), index = Object.keys(DBM[category]).indexOf(ti);
-	COMP.classList.add('cell-color');
-	if (category === 'WEEKLYS') {
-		COMP.dataset.color = REGION[Math.floor(index / 6) + 1];
-	} else {
-		COMP.dataset.color = REGION[Math.floor(index / 3) + 1];
-		if (!isPage && D !== 0 && (D - 1) % 3 !== index % 3)
-			COMP.parentElement.classList.add('hide');
+/**--SORT PIVOT-- */
+function sortOrder(pCategory) {
+	return function (a, b) {
+		let category = translate(pCategory)
+		a = decode(pCategory, a[0]), b = decode(pCategory, b[0]);
+		let items = Object.keys(DBM[category]);
+		return items.indexOf(a) - items.indexOf(b)
 	}
 }
 
-function update(inp) {
-	document.body.style.setProperty('--filter', inp.checked ? 'none' : 'contents')
+/**--SWITCH: CHANGE FILTER OBTAINED */
+function toggleSwitch(Element) {
+	document.body.style.setProperty('--filter', Element.checked ? 'none' : 'contents')
 	resize();
 }
 
+/**--RESIZE-- */
 function resize() {
 	let r = parseFloat(getComputedStyle(document.getElementById('home')).getPropertyValue('grid-auto-rows'))
 	let g = parseFloat(getComputedStyle(document.getElementById('home')).getPropertyValue('grid-column-gap'))
@@ -214,18 +233,6 @@ function resize() {
 	let prop = template.join('')
 
 	document.getElementById('home').style.gridTemplateColumns = prop;
-}
-
-function sortOrder(category) {
-	return function (a, b) {
-		let tc = translate(category)
-		let ta = decode(category, a[0]), tb = decode(category, b[0]);
-		let k = Object.keys(userInv[tc]); return k.indexOf(ta) - k.indexOf(tb)
-	}
-}
-
-function save() {
-	store('Inventory', userInv); setInv();
 }
 
 hQueries = [767, 1024, 1200]

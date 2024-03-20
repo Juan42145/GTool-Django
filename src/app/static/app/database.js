@@ -87,6 +87,7 @@ function calcTotals(mMaterials, iMaterials){
 	//Iterate over DBM materials and fill with user values
 	let counter = 0, total = 0;
 	Object.keys(mMaterials).reverse().forEach((rank) => {
+		if(isNaN(rank)) return
 		let uValue = iMaterials?.[rank] ?? 0
 		total += uValue / (3 ** counter); counter++;
 	});

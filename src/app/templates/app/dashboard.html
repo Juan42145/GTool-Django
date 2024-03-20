@@ -2,10 +2,6 @@
 
 {% block content %}
 
-<div class="filter">
-	<input type="checkbox" class="filter__btn" onchange="update(this)">
-</div>
-
 <div id='home' class="home">
 	<div id="var"></div>
 	{% url 'app:dashboard-detail' '*' as url %}
@@ -19,4 +15,5 @@
 	<div id="BOSSES" data-url="{{url}}" class="section js-section hide"></div>
 	<div id="LOCAL_SPECIALTIES" data-url="{{url}}" class="section js-section hide"></div>
 </div>
+
 {% endblock content %}

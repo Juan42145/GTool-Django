@@ -193,21 +193,21 @@ function getInventory(category, item, cMaterials){
 	let iMaterials = userInv[category]?.[item]
 	let crafted = {...maxInv} = {...iMaterials};
 	maxInv = uGet(maxInv, 0)
-	let len = Object.keys(cMaterials).length, highestRank = 0;
-	Object.entries(cMaterials).forEach(([rank, value], mIndex) => {
-		maxInvRank = maxInv[rank]
+	let lastIndex = Object.keys(cMaterials).length - 1, highestRank;
 
+	Object.entries(cMaterials).forEach(([rank, value], indexMat) => {
 		if(value !== 0) highestRank = rank;
-		if(mIndex+1 < len && maxInvRank > value){//Next rank exists & inv > need value
+		if(indexMat < lastIndex && maxInv[rank] > value){
+			//Next rank exists & inv > need value
 			crafted[rank] = +value
-			maxInv[+rank+1] += Math.floor(maxInvRank - value)/3;
+			maxInv[+rank+1] += Math.floor((maxInv[rank] - value)/3);
 		} else{
-			crafted[rank] = Math.floor(maxInvRank);
+			crafted[rank] = Math.floor(maxInv[rank]);
 		}
 	});
 	crafted[highestRank] = Math.floor(maxInv[highestRank]);
-	if(item === 'EXP' || item === 'Ore'){
-		// crafted[highestRank] = Math.floor(maxInv[0])//inv 0 is total
+	if(item === 'EXP' || item === 'Ore'){ //Calculator only has one rank for these
+		crafted[highestRank] = Math.floor(getTotals()[category][item])
 	}
 	return crafted;
 }

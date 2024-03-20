@@ -19,11 +19,11 @@ window.addEventListener('load',()=>{
 })
 
 /**--CUSTOM FUNCTION-- */
-function create(parent, element, attr) {
+function create(parent, element, attributes) {
 	//Create HTML Element
 	const Element = document.createElement(element); parent.append(Element);
-	if (!attr) return Element;
-	Object.entries(attr).forEach(([attribute, value]) => {
+	if (!attributes) return Element;
+	Object.entries(attributes).forEach(([attribute, value]) => {
 		Element.setAttribute(attribute, value);
 	})
 	return Element;
@@ -35,15 +35,15 @@ function createImg(parent, cls, src){
 	return Element
 }
 
-function createTxt(parent, element, attr, text){
-	const Element = create(parent, element, attr)
+function createTxt(parent, element, attributes, text){
+	const Element = create(parent, element, attributes)
 	Element.textContent = text;
 	return Element
 }
 
-function createNumInput(parent, attr, value){
-	Object.assign(attr, {'type':'text','pattern':'\\d*','value': value})
-	const Element = create(parent, 'input', attr)
+function createNumInput(parent, attributes, value){
+	Object.assign(attributes, {'type':'text','pattern':'\\d*','value': value})
+	const Element = create(parent, 'input', attributes)
 	Element.addEventListener('focus', (e)=>{focusInput(e)})
 	return Element
 }
@@ -331,8 +331,8 @@ function pivot(category, item, materials) {
 	let mCategory = toPlural(category)
 	let calcPivot = getPivot()
 	let pivotItems = calcPivot[mCategory]
-	pivotItems[item] = item in pivotItems? vadd(pivotItems[item], materials):
-										materials;
+	pivotItems[item] = item in pivotItems?
+		vadd(pivotItems[item], materials): materials;
 	setPivot(calcPivot)
 }
 

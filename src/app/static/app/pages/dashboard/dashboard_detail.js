@@ -7,180 +7,159 @@ function pageLoad(){
 	
 	page()
 }
+let pCategory
 
 function page(){
-	const SEC = document.querySelector('.section');
-	let pivot = getPivot()[SEC.id]
-	let cData = [SEC.id, pivot]
-	let isTotal = SEC.classList.contains('section--total');
-  gc = cData; gt = isTotal;
-  pMQ.forEach(mq => {mq.addEventListener('change',handleMedia)})
-  makePage(cData, isTotal);
+	pCategory = document.getElementById('page').dataset.category
+	pMQ.forEach(mq => {mq.addEventListener('change',handleMedia)})
+	makePage();
 }
 
-function makePage(cData, isTotal){
-  let [category, items] = cData;
+/**--RENDER-- */
+function makePage(){
+	let isTotal = Object.keys(getTotals()).includes(translate(pCategory))
+	console.log(isTotal)
 
-  document.getElementById('home').classList.add('hide');
-  let PAGE = document.getElementById('page'); PAGE.classList.remove('hide');
+	if(!isTotal) document.getElementById('page').classList.add('page--nt')
 
-  if(category ==='RESOURCES') isTotal = true;
-  PAGE.classList = 'page p_'+category
-  if(!isTotal) PAGE.classList.add('page--nt')
-  else PAGE.classList.remove('page--nt')
+	const Page = document.getElementById('page-container'); Page.innerHTML = '';
+	const Table = create(Page, 'div', {'class':'section__table section__table--inv','data-total':isTotal})
+	
+	Object.entries(getPivot()[pCategory]).sort(sortOrder(pCategory)).forEach((pItemData, indexItem) => {
+		let complete = makeRow(Table, pCategory, pItemData, indexItem, true);
+		makeInv(Table, pCategory, pItemData, indexItem, complete);
+	})
 
-  PAGE = document.getElementById('page-container'); PAGE.innerHTML = '';
-  const TBL = create(PAGE, 'div', {'class':'section__table section__table--inv','data-total':isTotal})
-  
-  Object.entries(items).sort(sortOrder(category)).forEach((iData, ii) => {
-    let complete = makeRow(TBL, category, iData, ii, true);
-    makeInv(TBL, category, iData, ii, complete);
-  })
+	if(pCategory === 'RESOURCES'){
+		let aMora = ['Mora',{'3':0}], tMora = ['Mora',{'3':0}], wMora = ['Mora',{'3':0}];
+		Object.values(getCalculator().CHARACTERS).forEach(character => {
+			aMora[1][3] += character.AFARM.MORA[1]? character.AFARM.MORA[1][3]: 0;
+			tMora[1][3] += character.TFARM.MORA[1]? character.TFARM.MORA[1][3]: 0;
+		})
+		Object.values(getCalculator().WEAPONS).forEach(weapon => {
+			wMora[1][3] += weapon.WFARM.MORA[1]? weapon.WFARM.MORA[1][3]: 0;
+		})
 
-  if(category === 'RESOURCES'){
-    let cMora = ['Mora',{'3':0}], tMora = ['Mora',{'3':0}], wMora = ['Mora',{'3':0}];
-    Object.values(getCalculator().CHARACTERS).forEach(char => {
-      cMora[1][3] += char.AFARM.MORA[1]? char.AFARM.MORA[1][3]: 0;
-      tMora[1][3] += char.TFARM.MORA[1]? char.TFARM.MORA[1][3]: 0;
-    })
-    Object.values(getCalculator().WEAPONS).forEach(wpn => {
-      wMora[1][3] += wpn.FARM.MORA[1]? wpn.FARM.MORA[1][3]: 0;
-    })
+		const Div = create(Page, 'div', {'class':'page__dets'})
+		const Sec = create(Div, 'div', {'class':'section'})
 
-    const DIV = create(PAGE, 'div', {'class':'page__dets'})
-    const SEC = create(DIV, 'div', {'class':'section'})
+		const Title = createTxt(Sec, 'div', {'class': 'section__title'}, 'Mora')
 
-    const TITLE = create(SEC, 'div', {'class': 'section__title'})
-    TITLE.textContent = 'Mora'
+		const Details = create(Sec, 'div', {'class':'section__table','data-total':isTotal})
+		makeDets(Details, 'RESOURCES', 'Characters', aMora, 0);
+		makeDets(Details, 'RESOURCES', 'Talents', tMora, 1);
+		makeDets(Details, 'RESOURCES', 'Weapons', wMora, 2);
+	}
 
-    const DETS = create(SEC, 'div', {'class':'section__table','data-total':isTotal})
-    makeDets(DETS, 'RESOURCES', 'Characters', cMora, 0);
-    makeDets(DETS, 'RESOURCES', 'Talents', tMora, 1);
-    makeDets(DETS, 'RESOURCES', 'Weapons', wMora, 2);
-  }
+	if(pCategory === 'COMMON'){
+		let common = {'Characters': {}, 'Talents': {}, 'Weapons': {}};
+		Object.values(getCalculator().CHARACTERS).forEach(character => {
+			if(character.AFARM.COMMON[1])
+				pivot(common, 'Characters', character.AFARM.COMMON[0], character.AFARM.COMMON[1])
+			if(character.TFARM.COMMON[1])
+				pivot(common, 'Talents', character.TFARM.COMMON[0], character.TFARM.COMMON[1])
+		})
+		Object.values(getCalculator().WEAPONS).forEach(weapon => {
+			if(weapon.WFARM.COMMON[1])
+				pivot(common, 'Weapons', weapon.WFARM.COMMON[0], weapon.WFARM.COMMON[1])
+		})
 
-  if(category === 'COMMON'){
-    let common = {'Characters': {}, 'Talents': {}, 'Weapons': {}};
-    Object.values(getCalculator().CHARACTERS).forEach(char => {
-      if(char.AFARM.COMMON[1])
-        rolling(common, 'Characters', char.AFARM.COMMON[0], char.AFARM.COMMON[1])
-      if(char.TFARM.COMMON[1])
-        rolling(common, 'Talents', char.TFARM.COMMON[0], char.TFARM.COMMON[1])
-    })
-    Object.values(getCalculator().WEAPONS).forEach(wpn => {
-      if(wpn.FARM.COMMON[1])
-        rolling(common, 'Weapons', wpn.FARM.COMMON[0], wpn.FARM.COMMON[1])
-    })
+		const Div = create(Page, 'div', {'class':'page__dets'})
+		Object.entries(common).forEach(([farmName, cItems]) => {
+			const Sec = create(Div, 'div', {'class':'section'})
 
-    const DIV = create(PAGE, 'div', {'class':'page__dets'})
-    Object.entries(common).forEach(([section, items]) => {
-      const SEC = create(DIV, 'div', {'class':'section'})
+			const Title = createTxt(Sec, 'div', {'class':'section__title'}, farmName)
 
-      const TITLE = create(SEC, 'div', {'class':'section__title'})
-      TITLE.textContent = section;
+			const Details = create(Sec, 'div', {'class':'section__table','data-total':isTotal})
 
-      const DETS = create(SEC, 'div', {'class':'section__table','data-total':isTotal})
-
-      Object.entries(items).forEach(([item, materials], ii) => {
-        makeDets(DETS, 'ENEMIES', item, [item, materials], ii);
-      })
-    });
-  }
+			Object.entries(cItems).forEach(([cItem, cMaterials], indexItem) => {
+				makeDets(Details, 'ENEMIES', cItem, [cItem, cMaterials], indexItem);
+			})
+		});
+	}
 }
 
-function makeInv(TBL, category, iData, ii, complete){
-  let cName = category;
-  let [item, materials] = iData;
-  category = translate(category), item = decode(category, item)
-  materials = userInv[category][item];
-  let rowi = getComputedStyle(document.getElementById('page')).getPropertyValue('--rowi')
-  let coli = getComputedStyle(document.getElementById('page')).getPropertyValue('--coli')
+function makeInv(Table, pCategory, pItemData, indexItem, complete){
+	let pItem = pItemData[0]
+	let category = translate(pCategory), item = decode(pCategory, pItem)
+	let mMaterials = DBM[category][item];
+	let rowi = getComputedStyle(document.getElementById('page')).getPropertyValue('--rowi')
+	let coli = getComputedStyle(document.getElementById('page')).getPropertyValue('--coli')
 
-  const ROW = create(TBL, 'div', {'class':'row home-inv'})
+	const Row = create(Table, 'div', {'class':'row home-inv'})
 
-  if(TBL.dataset.total === 'true') ROW.style = 'grid-row: '+(2*ii + +rowi);
-  else ROW.style = 'grid-row: '+(ii+1);
+	if(Table.dataset.total === 'true') Row.style = 'grid-row: '+(2*indexItem + +rowi);
+	else Row.style = 'grid-row: '+(indexItem+1);
 
-  if(complete) ROW.classList.add('completed');
-  else ROW.classList.remove('completed');
+	if(complete) Row.classList.add('completed');
+	else Row.classList.remove('completed');
 
-  let index = +coli;
-  Object.entries(materials).reverse().forEach(([rank, value]) => {
-    if(value === '*' || rank === 'ROW' || rank === '0') return;
+	let index = +coli;
+	Object.keys(mMaterials).reverse().forEach((rank) => {
+		if(isNaN(rank)) return
+		const Card = create(Row, 'div', {'class':'row__card r_'+rank})
 
-    const CARD = create(ROW, 'div', {'class':'row__card r_'+rank})
+		if(Table.dataset.total === 'true') Card.style = 'grid-column: '+index;
+		else Card.style = 'grid-column: 5';
+		index++;
 
-    if(TBL.dataset.total === 'true') CARD.style = 'grid-column: '+index;
-    else CARD.style = 'grid-column: 5';
-    index++;
-
-    const IMG = create(CARD, 'img', {'class':'row__card--img','src':getImage(category, item, rank)})
-    setError(IMG)
-    
-    const INP = create(CARD, 'input', {
-      'type':'text','pattern':'\\d*','value': value, 'data-column':rank})
-    INP.addEventListener('blur',()=>{ if(INP.defaultValue === INP.value) return;
-      if(INP.value == '') INP.value = 0;
-      
-      userInv[category][item][rank] = +INP.value; store('Inventory', userInv);
-      caching('cacheI', category + '_' + rank + '_' + materials['ROW'], INP.value);
-
-      recalculate(category, item); makeRow(TBL, cName, iData, ii, true);
-    }, false);
-    INP.addEventListener('click', (e)=>{focusText(e)})
-  });
+		const Img = createImg(Card, 'row__card--img', getImage(category, item, rank))
+		
+		let value = userInv[category]?.[item]?.[rank] ?? 0
+		const Input = createNumInput(Card, {'data-column':rank}, value)
+		Input.addEventListener('blur',()=>{
+			if(Input.value == '') Input.value = 0;
+			
+			uSet(userInv, [category,item,rank], +Input.value)
+			storeUserI(user, userInv)
+			processTotals(category, item);
+			makeRow(Table, pCategory, pItemData, indexItem, true);
+		}, false);
+	});
 }
 
-function makeDets(TBL, category, itemName, iData, ii){
-  let [item, materials] = iData;
-  
-  const ROW = create(TBL, 'div', {'class':'row row--dets'})
-  ROW.style = 'grid-row: '+(ii+1);
+function makeDets(Table, category, displayName, cItemData, indexItem){
+	let [cItem, cMaterials] = cItemData; //No need to decode cItem no weekly drop
+	
+	const Row = create(Table, 'div', {'class':'row row--dets'})
+	Row.style = 'grid-row: '+(indexItem+1);
 
-  const NAME = create(ROW, 'div', {'class':'row__name'}); NAME.textContent = itemName;
+	const Name = createTxt(Row, 'div', {'class':'row__name'}, displayName)
 
-  let counter = total = 0;
-  Object.entries(materials).reverse().forEach(([rank, value], mi) => {
-    let index = mi+3;
-    total += value/(3**counter); counter++;
-    if(!value) return;
+	let counter = 0, total = 0;
+	Object.entries(cMaterials).reverse().forEach(([rank, value], indexMat) => {
+		let index = indexMat+3;
+		total += value/(3**counter); counter++;
+		if(!value) return;
 
-    const CARD = create(ROW, 'div', {'class':'row__card r_'+rank});
-    CARD.style = 'grid-column: '+index;
+		const Card = create(Row, 'div', {'class':'row__card r_'+rank});
+		Card.style = 'grid-column: '+index;
 
-    const IMG = create(CARD, 'img', {'class':'row__card--img','src':getImage(category, item, rank)})
-    setError(IMG)
+		const Img = createImg(Card, 'row__card--img', getImage(category, cItem, rank))
 
-    const NEED = create(CARD, 'div', {'class':'p'});
-    NEED.textContent = value.toLocaleString('en-us');
-  });
-  if(TBL.dataset.total === 'true'){
-    const TOTAL = create(ROW, 'div', {'class':'row__total'})
+		const Need = createTxt(Card, 'div', {'class':'p'}, value.toLocaleString('en-us'));
+	});
+	if(Table.dataset.total === 'true'){
+		const Total = create(Row, 'div', {'class':'row__total'})
 
-    const NEED = create(TOTAL, 'div', {'class':'p'});
-    NEED.textContent = Math.floor(total*100)/100;
-  }
+		const Need = createTxt(Total, 'div', {'class':'p'}, Math.floor(total*100)/100)
+	}
 }
 
-function rolling(pivot, category, item, value){
-  let flag = Object.values(value).some(v => {
-    return v !== 0;
-  });
-  if(flag) pivot[category][item] = item in pivot[category]? vadd(pivot[category][item], value): value;
+/**--PIVOT-- */
+function pivot(calcPivot, farmName, cItem, cMaterials){
+	let nonEmpty = Object.values(cMaterials).some(v => v !== 0);
+	if (!nonEmpty) return
+	let pivotItems = calcPivot[farmName]
+	pivotItems[cItem] = cItem in pivotItems?
+		vadd(pivotItems[cItem], cMaterials): cMaterials;
 }
 
-function closePage(){
-  pMQ.forEach(mq => {mq.removeEventListener('change',handleMedia)})
-  document.getElementById('home').classList.remove('hide')
-  document.getElementById('page').classList.add('hide')
-  home();
-}
-
+/**--RESIZE-- */
 pQueries = [767, 1024]
 pMQ = []
 pQueries.forEach(q => {pMQ.push(window.matchMedia(`(min-width: ${q}px)`))})
-let gc, gt;
 function handleMedia(){
-  console.log('handle')
-  makePage(gc, gt);
+	console.log('handle')
+	makePage();
 }
