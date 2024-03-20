@@ -1,5 +1,6 @@
 setup(loadStatic(), loadCharacters(), loadWeapons())
 function pageLoad(){
+	window.DBM = loadMaster()
 	window.DBC = loadCharacters();
 	window.DBW = loadWeapons();
 	window.user = loadUser()
@@ -40,7 +41,7 @@ function makePage(){
 		makeTBL(Page, farming.TFARM, true)
 		levelTln(Page)
 	} else{
-		makeTBL(Page, farming.FARM, true)
+		makeTBL(Page, farming.WFARM, true)
 		levelWpn(Page)
 	}
 }
@@ -59,7 +60,7 @@ function makeTBL(Page, costs, isInv){
 
 		let c = makeData(TCont, cCategory, cItem, cMaterials, isInv);
 		complete &&= c;
-		if(isInv) makeInv(TCont, cCategory, cItem, cMaterials);
+		if(isInv) makeInv(TCont, cCategory, cItem);
 	})
 	return complete && content
 }
@@ -112,11 +113,12 @@ function makeData(TCont, cCategory, cItem, cMaterials, isInv){
 	return complete;
 }
 
-function makeInv(TCont, cCategory, cItem, cMaterials){
+function makeInv(TCont, cCategory, cItem){
 	let category = translate(cCategory), item = decode(cCategory, cItem)
 	let iMaterials = userInv[category]?.[item];
 	let index = 1;
-	Object.keys(cMaterials).reverse().forEach((rank) => {
+	Object.keys(DBM[category][item]).reverse().forEach((rank) => {
+		if(isNaN(rank)) return
 		const Card = create(TCont, 'div', {'class':'card r_'+rank})
 		Card.style = 'grid-row: 2; grid-column: ' +index;
 		index++;
