@@ -34,6 +34,14 @@
 <body>
 	{% include 'app/menu.html' %}
 
+	<dialog id='resin-dialog' class="resin">
+		<button class="btn resin__btn" onclick="this.parentElement.close()">&times;</button>
+		<div id="resin-results" class="resin__display"></div>
+		<input id="resin-input" class="resin__input" type="text" pattern: "\\d*" oninput="makeResinDialog()">
+	</dialog>
+
+	<dialog id="dialog" class="alert" onclick="this.close(); this.innerHTML = ''"></dialog>
+
 	<main>
 		{% block content %}{% endblock %}
 	</main>

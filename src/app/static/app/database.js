@@ -1,6 +1,7 @@
-/**--GLOBAL VARIABLES */
+"use strict";
+/**--GLOBAL VARIABLES-- */
 const myStorage = localStorage;
-const mainDownload = Promise.all([loadMaster(),loadImages()])
+const mainDownload = Promise.all([loadMaster(), loadImages()])
 
 /**--STORAGE-- */
 function set(key, obj){myStorage.setItem(key, JSON.stringify(obj))}
@@ -23,7 +24,7 @@ function getCalc(){return get('calc')}
 function hasCalc(){return has('calc')}
 
 /**--DICTIONARIES-- */
-const invCategories = [
+const INV_CATEGORIES = [
 	'RESOURCES',
 	'ENEMIES',
 	'WEEKLY_DROPS',
@@ -34,8 +35,8 @@ const invCategories = [
 	'LOCAL_SPECIALTIES',
 ]
 
-function toPlural(category) {
-	const dict = {
+function toPlural(category){
+	const DICT = {
 		'BOOK': 'BOOKS',
 		'TROPHY': 'TROPHIES',
 		'EXP': 'RESOURCES',
@@ -43,9 +44,7 @@ function toPlural(category) {
 		'ORE': 'RESOURCES',
 		'GEM': 'GEMS',
 		'WEEKLY_DROP': 'WEEKLY_DROPS',
-		'ELITE': 'ELITE',
 		'BOSS': 'BOSSES',
-		'COMMON': 'COMMON',
 		'LOCAL_SPECIALTY': 'LOCAL_SPECIALTIES',
 
 		'ELEMENT': 'ELEMENTS',
@@ -55,31 +54,36 @@ function toPlural(category) {
 		'WEEKLY_BOSS': 'WEEKLY_BOSSES',
 		'STAT': 'STATS',
 	}
-	return category in dict? dict[category]: category;
+	return category in DICT ? DICT[category] : category;
 }
 
 function converge(category){
-	return category == 'ELITE' || category == 'COMMON'? 'ENEMIES': category
+	return category == 'ELITE' || category == 'COMMON' ? 'ENEMIES' : category
 }
 
 function decode(category, item){
-  return category === 'WEEKLY_DROP'? item.split(' ')[1]: item;
+  return category === 'WEEKLY_DROP' ? item.split(' ')[1] : item;
 }
 
 function translate(category){return converge(toPlural(category))}
 
-//**DATA PROCESSING */
-function generateTotals(user) {
+//**--DATA PROCESSING-- */
+function generateTotals(user){
 	//Calculate totals using DBM and values from user inventory
 	const DBM = loadMaster()
 	let totals = {}
-	invCategories.forEach((iCategory) => {
+	let weeklyTotals = uGet({}, 0)
+	INV_CATEGORIES.forEach((iCategory) => {
 		Object.entries(DBM[iCategory]).forEach(([mItem, mMaterials]) => {
 			let iMaterials = user.INVENTORY?.[iCategory]?.[mItem]
 			let [counter, total] = calcTotals(mMaterials, iMaterials)
-			if (counter > 1) uSet(totals, [iCategory, mItem], total);
+			if (iCategory === 'WEEKLY_DROPS'){
+				weeklyTotals[mMaterials.data] += total
+			}
+			else if (counter > 1) uSet(totals, [iCategory,mItem], total);
 		});
 	});	
+	totals.WEEKLY_BOSSES = weeklyTotals
 	setTotals(totals)
 }
 
@@ -87,22 +91,23 @@ function calcTotals(mMaterials, iMaterials){
 	//Iterate over DBM materials and fill with user values
 	let counter = 0, total = 0;
 	Object.keys(mMaterials).reverse().forEach((rank) => {
-		if(isNaN(rank)) return
-		let uValue = iMaterials?.[rank] ?? 0
-		total += uValue / (3 ** counter); counter++;
+		if (isNaN(rank)) return
+		const uValue = iMaterials?.[rank] ?? 0
+		total += uValue/(3**counter); counter++;
 	});
 	return [counter, total]
 }
 
-/**--USER CLIENT STORAGE */
-function storeUserC(user, userC) {user.CHARACTERS = userC; set('user', user)}
-function storeUserW(user, userW) {user.WEAPONS = userW; set('user', user)}
-function storeUserI(user, userI) {user.INVENTORY = userI; set('user', user)}
+/**--USER CLIENT STORAGE-- */
+function storeUserC(user, userC){user.CHARACTERS = userC; set('user', user)}
+function storeUserW(user, userW){user.WEAPONS = userW; set('user', user)}
+function storeUserI(user, userI){user.INVENTORY = userI; set('user', user)}
 
-function loadUser() {
+function loadUser(){
 	if (has('user')) return get('user')
-	else {
-		const USER_DATA = JSON.parse(document.getElementById('json_user_data').textContent)
+	else{
+		const USER_DATA =
+			JSON.parse(document.getElementById('json_user_data').textContent)
 		set('savedUser', USER_DATA)
 		getOrCreate(USER_DATA, 'INVENTORY')
 		getOrCreate(USER_DATA, 'CHARACTERS')
@@ -113,14 +118,14 @@ function loadUser() {
 	}
 }
 
-function getOrCreate(object, property, defaultValue={}){
+function getOrCreate(object, property, defaultValue = {}){
 	if (!object[property]) object[property] = defaultValue
 	return object[property]
 }
 
 function uSet(userObject, path, value){
 	let cur = userObject
-	lastProp = path.pop()
+	const lastProp = path.pop()
 	path.forEach(property => cur = getOrCreate(cur, property))
 	cur[lastProp] = value
 }
@@ -129,75 +134,73 @@ function uGet(obj, defaultValue){
 	//Return default dict object
 	if (obj === undefined) obj = {}
 	return new Proxy(obj, {
-		get(target, key) {
-			return key in target? target[key]: defaultValue
+		get(target, key){
+			return key in target ? target[key] : defaultValue
 		}
 	})
 }
 
 /**--ALERT-- */
-function toast(message) {
-	let TOAST = document.getElementById('dialog');
-	if (!TOAST.open) TOAST.showModal()
-	const MSG = create(TOAST, 'div', { 'class': 'alert__msg' });
-	MSG.textContent = message;
+function toast(message){
+	const Toast = document.getElementById('dialog');
+	if (!Toast.open) Toast.showModal()
+	/*Message*/createTxt(Toast, 'div', {'class':'alert__msg'}, message);
 }
 
-let timer;
-function toasty(message) {
-	let TOAST = document.getElementById('alerty');
-	if (!TOAST) TOAST = create(document.body, 'div', { 'id': 'alerty', 'class': 'alert alerty' });
-	const MSG = create(TOAST, 'div', { 'class': 'alert__msg' });
-	MSG.textContent = message;
-	clearTimeout(timer);
-	timer = setTimeout(() => TOAST.remove(), 1000)
-	setTimeout(() => MSG.remove(), 1000)
+let toastTimer;
+function toasty(message){
+	let Toast = document.getElementById('alerty');
+	if (!Toast)
+		Toast = create(document.body, 'div', {'id':'alerty', 'class':'alert alerty'})
+	const Message = createTxt(Toast, 'div', {'class':'alert__msg'}, message);
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(() => Toast.remove(), 1000)
+	setTimeout(() => Message.remove(), 1000)
 }
 
 /**--DATABASE-- */
 async function request(url, context = undefined){
 	console.log('request ', url)
-	return await fetch(url+'/',context)
+	return await fetch(url+'/', context)
 	.then(res => res.json())
-	.catch(e=>{
+	.catch(e => {
 		console.log('error', e)
 	})
 }
 
 /**--SAVE-- */
-function getCookie(name) {
+function getCookie(name){
 	let cookieValue = null;
-	if (document.cookie && document.cookie !== '') {
-			const cookies = document.cookie.split(';');
-			for (let i = 0; i < cookies.length; i++) {
-					const cookie = cookies[i].trim();
-					// Does this cookie string begin with the name we want?
-					if (cookie.substring(0, name.length + 1) === (name + '=')) {
-							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-							break;
-					}
+	if (document.cookie && document.cookie !== ''){
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++){
+			const cookie = cookies[i].trim();
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) === (name+'=')){
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
 			}
+		}
 	}
 	return cookieValue;
 }
 
 function saveUser(){
-	user = get('user')
-	if (JSON.stringify(user) === myStorage.getItem('savedUser')){//Use default getter to get stringify data
+	const user = get('user')
+	if (JSON.stringify(user) === myStorage.getItem('savedUser')){
+		//Use default getter to get stringify data
 		toasty('Nothing to Save')
 		return
 	}
 	const USER_ID = JSON.parse(document.getElementById('json_user_id').textContent)
 	console.log('Saving')
-	request('/api/profile/'+USER_ID,{
+	request('/api/profile/'+USER_ID, {
 		method: "PATCH",
 		headers: {
 			"Content-Type": "application/json",
 			'X-CSRFToken': getCookie('csrftoken')
 		},
-		body: JSON.stringify({
-			data: user
-		})
+		body: JSON.stringify({data:user})
 	}).then((profile) => {
 		toast('Saved')
 		set('savedUser', profile.data)
@@ -206,7 +209,7 @@ function saveUser(){
 
 /**--LOAD-- */
 function loader(url, key){
-	return has(key)? get(key): 
+	return has(key) ? get(key) :
 	request(url).then(data => {
 		console.log('Loaded', key)
 		set(key, data)

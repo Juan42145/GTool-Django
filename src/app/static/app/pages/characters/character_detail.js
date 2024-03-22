@@ -1,16 +1,17 @@
+"use strict";
 setup(loadCharacters())
 function pageLoad(){
 	window.DBC = loadCharacters()
 	window.user = loadUser()
 	window.userChar = user.CHARACTERS;
 	
-	buildDetail()
+	renderdDetail()
 }
 let cName
 
 /**--RENDER-- */
-function buildDetail(){
-	document.querySelectorAll('[data-img]').forEach((Element)=>{
+function renderdDetail(){
+	document.querySelectorAll('[data-img]').forEach((Element) => {
 		let [group, value] = Element.dataset.img.split(',')
 		if (group === "CHARACTER"){
 			Element.src = getCharacter(value, true)
@@ -23,16 +24,16 @@ function buildDetail(){
 	})
 
 	cName = document.getElementById('name').textContent
-	let state = uGet(userChar[cName],'')
+	const state = uGet(userChar[cName], '')
 
-	let CONS = document.getElementById('constellation')
+	let Constellation = document.getElementById('constellation')
 	if (state.OWNED){
-		CONS.classList.remove('hide');
-		CONS.textContent = 'C'+state.CONSTELLATION;
-		if (state.CONSTELLATION >= 6) CONS.classList.add('max')
+		Constellation.classList.remove('hide');
+		Constellation.textContent = 'C'+state.CONSTELLATION;
+		if (state.CONSTELLATION >= 6) Constellation.classList.add('max')
 	} else{
-		CONS.classList.add('hide');
-		CONS.textContent = '';
+		Constellation.classList.add('hide');
+		Constellation.textContent = '';
 	}
 
 	document.getElementById('FARM').checked = state.FARM
@@ -49,7 +50,7 @@ function buildDetail(){
 
 /**--INPUT UPDATE-- */
 function update(Element){
-	if(Element.id === 'FARM') uSet(userChar, [cName,Element.id], Element.checked)
+	if (Element.id === 'FARM') uSet(userChar, [cName,Element.id], Element.checked)
 	else uSet(userChar, [cName,Element.id], Element.value)
 
 	setCalc(true); storeUserC(user, userChar)
@@ -72,7 +73,7 @@ function editOut(){
 	document.getElementById('disk').classList.add('hide')
 	document.getElementById('modify').classList.add('hide')
 
-	if(userChar[cName]?.OWNED){
+	if (userChar[cName]?.OWNED){
 		document.getElementById('constellation').classList.remove('hide')
 	} else{
 		document.getElementById('constellation').classList.add('hide')
@@ -81,34 +82,34 @@ function editOut(){
 
 /**--CONSTELLATION UPDATE-- */
 function plus(){
-	let CONS = document.getElementById('constellation')
-	let constx = CONS.textContent, value;
-	if(constx === ''){
+	const Constellation = document.getElementById('constellation')
+	let constxt = Constellation.textContent, value;
+	if (constxt === ''){
 		uSet(userChar, [cName,'OWNED'], true); value = 0;
 	} else{
-		value = +constx.substring(1) + 1;
+		value = +constxt.substring(1) + 1;
 	}
 
-	if(value >= 6) CONS.classList.add('max')
+	if (value >= 6) Constellation.classList.add('max')
 
-	CONS.textContent = 'C' + value;
+	Constellation.textContent = 'C'+value;
 	uSet(userChar, [cName,'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }
 
 function minus(){
-	let CONS = document.getElementById('constellation')
-	let constx = CONS.textContent, value, string;
-	if(constx === '') return;
-	else if(constx === 'C0'){
+	const Constellation = document.getElementById('constellation')
+	let constxt = Constellation.textContent, value, string;
+	if (constxt === '') return;
+	else if (constxt === 'C0'){
 		value = ''; string = ''; uSet(userChar, [cName,'OWNED'], false)
-	} else {
-		value = +constx.substring(1) - 1; string = 'C' + value;
+	} else{
+		value = +constxt.substring(1) - 1; string = 'C'+value;
 	}
 
-	if(value < 6) CONS.classList.remove('max')
+	if (value < 6) Constellation.classList.remove('max')
 
-	CONS.textContent = string;
+	Constellation.textContent = string;
 	uSet(userChar, [cName,'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }

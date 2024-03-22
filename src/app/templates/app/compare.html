@@ -4,8 +4,7 @@
 
 <div id="compare" class="compare">
 	<div class="main">
-		<input id="owned" type="checkbox" onchange="compare()">
-		<select id="row" class="select select--row" onchange="compare()">
+		<select id="row" class="select select--row" onchange="renderCompare()">
 			<option disabled selected hidden>...</option>
 			<option>Element</option>
 			<option>Weapon Type</option>
@@ -19,7 +18,7 @@
 			<option>Weekly Drop</option>
 			<option>Stat</option>
 		</select>
-		<select id="col" class="select select--col" onchange="compare()">
+		<select id="col" class="select select--col" onchange="renderCompare()">
 			<option>...</option>
 			<option>Rarity</option>
 			<option>Element</option>
@@ -39,6 +38,5 @@
 	<div id="rows" class="area"></div>
 	<div id="table" class="area"></div>
 </div>
-
 
 {% endblock content %}

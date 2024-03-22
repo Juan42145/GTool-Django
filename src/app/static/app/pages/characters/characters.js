@@ -1,25 +1,26 @@
+"use strict";
 setup(loadCharacters())
 function pageLoad(){
 	window.DBC = loadCharacters()
 	window.user = loadUser()
 	window.userChar = user.CHARACTERS;
 	
-	buildCharacters()
+	renderCharacters()
 }
-let showOwned = false, isReverse = false; sorting = ()=>{}
+let showOwned = false, isReverse = false, sorting = ()=>{}
 let isGrid
 
 /**--RENDER-- */
-function buildCharacters(){
-	let characters = Object.entries(DBC).sort(sorting)
-	if(isReverse) characters.reverse();
+function renderCharacters(){
+	const characters = Object.entries(DBC).sort(sorting)
+	if (isReverse) characters.reverse();
 	isGrid = document.getElementById('switch').checked
 	
 	document.getElementById('characters').innerHTML = '';
 	document.getElementById('table__body').innerHTML = '';
 	characters.forEach(character => {
-		if(showOwned && !userChar[character[0]]?.OWNED) return
-		isGrid? makeCard(character): makeRow(character);
+		if (showOwned && !userChar[character[0]]?.OWNED) return
+		isGrid ? makeCard(character) : makeRow(character);
 	});
 }
 
@@ -28,20 +29,18 @@ function makeCard(character){
 
 	const Container = document.getElementById('characters')
 	const Card = create(Container, 'div', {'class':'card c_'+cInfo.RARITY});
-	Card.addEventListener('click', () => window.open(cName,'_self'));
+	Card.addEventListener('click', () => window.open(cName, '_self'));
 
-	if(state?.OWNED){
-		const Tag = create(Card, 'p', {'class':'tag'});
-		Tag.textContent = 'C'+ +state?.CONSTELLATION;
-		if(state?.CONSTELLATION >= 6) Tag.classList.add('max')
-	}
-	else{
+	if (state?.OWNED){
+		const Tag = createTxt(Card, 'p', {'class':'tag'}, 'C'+ +state.CONSTELLATION);
+		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
+	} else{
 		Card.classList.add('missing');
 	}
 
-	const Icon = createImg(Card, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
-	const Img = createImg(Card, 'image', getCharacter(cName))
-	const Name = createTxt(Card, 'p', {'class':'name'}, cName)
+	/*Icon*/createImg(Card, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT))
+	/*cImg*/createImg(Card, 'image', getCharacter(cName))
+	/*Name*/createTxt(Card, 'p', {'class':'name'}, cName)
 }
 
 function makeRow(character){
@@ -49,83 +48,83 @@ function makeRow(character){
 	
 	const Container = document.getElementById('table__body')
 	const Row = create(Container, 'tr', {'class':'c_'+cInfo.RARITY})
-	Row.addEventListener('click', (e)=>{
-		if(e.target.classList == 'farm') return;
-		window.open(cName,'_self');
+	Row.addEventListener('click', (e) => {
+		if (e.target.classList == 'farm') return;
+		window.open(cName, '_self');
 	}, false);
 
 	let Cell;
 
 	Cell = create(Row, 'td', {'class':'farm'})
 	
-	const Farm = create(Cell, 'input', {'class': 'farm', 'type':'checkbox'});
+	const Farm = create(Cell, 'input', {'class':'farm', 'type':'checkbox'});
 	Farm.checked = state?.FARM;
-	Farm.addEventListener('change', ()=>{
+	Farm.addEventListener('change', () => {
 		uSet(userChar, [cName,'FARM'], Farm.checked)
 		setCalc(true); storeUserC(user, userChar);
 	}, false);
 
 	Cell = create(Row, 'td', {'class':'img'})
 	
-	const Img = createImg(Cell, 'image', getCharacter(cName))
+	/*cImg*/createImg(Cell, 'image', getCharacter(cName))
+	/*Icon*/createImg(Cell, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
 
-	const Icon = createImg(Cell, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
-
-	if(state?.OWNED){
+	if (state?.OWNED){
 		const Tag = createTxt(Cell, 'p', {'class':'tag'}, 'C'+ +state.CONSTELLATION);
-		if(state.CONSTELLATION >= 6) Tag.classList.add('max')
-	}
-	else{
+		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
+	} else{
 		Row.classList.add('missing')
 	}
 
-	const Name = createTxt(Row, 'td', {}, cName);
+	/*Name*/createTxt(Row, 'td', {}, cName);
 
-	const Phase = createTxt(Row, 'td', {'class':'sf'}, state?.PHASE);
-	const TPhase = createTxt(Row, 'td', {'class':'goal'}, state?.TARGET);
+	/*Phase*/createTxt(Row, 'td', {'class':'sf'}, state?.PHASE);
+	/*TPhase*/createTxt(Row, 'td', {'class':'goal'}, state?.TARGET);
 
-	const Normal = createTxt(Row, 'td', {}, state?.NORMAL);
-	const TNormal = createTxt(Row, 'td', {'class':'goal'}, state?.TNORMAL);
+	/*Normal*/createTxt(Row, 'td', {}, state?.NORMAL);
+	/*TNormal*/createTxt(Row, 'td', {'class':'goal'}, state?.TNORMAL);
 
-	const Skill = createTxt(Row, 'td', {}, state?.SKILL);
-	const TSkill = createTxt(Row, 'td', {'class':'goal'}, state?.TSKILL);
+	/*Skill*/createTxt(Row, 'td', {}, state?.SKILL);
+	/*TSkill*/createTxt(Row, 'td', {'class':'goal'}, state?.TSKILL);
 
-	const Burst = createTxt(Row, 'td', {}, state?.BURST);
-	const TBurst = createTxt(Row, 'td', {'class':'sl goal'}, state?.TBURST);
+	/*Burst*/createTxt(Row, 'td', {}, state?.BURST);
+	/*TBurst*/createTxt(Row, 'td', {'class':'sl goal'}, state?.TBURST);
 	
-	const HP = createTxt(Row, 'td', {}, cInfo.STAT_HP);
-	const ATK = createTxt(Row, 'td', {}, cInfo.STAT_ATK);
-	const DEF = createTxt(Row, 'td', {}, cInfo.STAT_DEF);
-	const STAT = createTxt(Row, 'td', {}, cInfo.STAT + ' ' + cInfo.STAT_VALUE);
+	/*HP*/createTxt(Row, 'td', {}, cInfo.STAT_HP);
+	/*ATK*/createTxt(Row, 'td', {}, cInfo.STAT_ATK);
+	/*DEF*/createTxt(Row, 'td', {}, cInfo.STAT_DEF);
+	/*STAT*/createTxt(Row, 'td', {}, cInfo.STAT+' '+cInfo.STAT_VALUE);
 }
 
-/**--REVERSE */
+/**--REVERSE-- */
 function setReverse(btn){
 	isReverse = !isReverse; btn.classList.toggle('isReverse')
-	buildCharacters();
+	renderCharacters();
 }
 
 /**--FILTERS-- */
 function filterOwned(Element){
 	showOwned = !showOwned; Element.classList.toggle('selected')
-	buildCharacters()
+	renderCharacters()
 }
 
 /**--SORTS-- */
 function getSort(value){
-	let sorts = [()=>{}, sortName, sortAscension, sortRarity, sortConstellation]
+	const sorts = [()=>{}, sortName, sortAscension, sortRarity, sortConstellation]
 	sorting = sorts[value]; isReverse = false
-	buildCharacters();
+	renderCharacters();
 	//Remove table header if using sort on table view
-	let prev = document.getElementsByClassName('sort-header')[0]
-	if(prev) prev.classList.remove('sort-header')
+	const Prev = document.getElementsByClassName('sort-header')[0]
+	if (Prev) Prev.classList.remove('sort-header')
 }
 
 function sortTable(head, value){
-	let sorts = [()=>{}, sortF, sortHP, sortATK, sortDEF, sortStat]
-	let prev = document.getElementsByClassName('sort-header')[0]
-	if(prev) prev.classList.remove('sort-header')
-	sorting = sorts[value]; head.classList.add('sort-header'); buildCharacters();
+	const sorts = [()=>{}, sortFarm, sortHP, sortATK, sortDEF, sortStat]
+	sorting = sorts[value];
+	const Prev = document.getElementsByClassName('sort-header')[0]
+	if (Prev) Prev.classList.remove('sort-header')
+	head.classList.add('sort-header')
+	renderCharacters();
 }
 
 /**--SORT FUNCTIONS-- */
@@ -134,8 +133,8 @@ function sortName(a,b){
 }
 
 function sortAscension(a,b){
-	aUsr = uGet(userChar[a[0]],'')
-	bUsr = uGet(userChar[b[0]],'')
+	let aUsr = uGet(userChar[a[0]], '')
+	let bUsr = uGet(userChar[b[0]], '')
 	return bUsr.PHASE - aUsr.PHASE
 			|| bUsr.OWNED - aUsr.OWNED
 }
@@ -145,15 +144,15 @@ function sortRarity(a,b){
 }
 
 function sortConstellation(a,b){
-	aUsr = uGet(userChar[a[0]],'')
-	bUsr = uGet(userChar[b[0]],'')
+	let aUsr = uGet(userChar[a[0]], '')
+	let bUsr = uGet(userChar[b[0]], '')
 	return bUsr.CONSTELLATION - aUsr.CONSTELLATION
 			|| bUsr.OWNED - aUsr.OWNED;
 }
 
-function sortF(a,b){
-	aUsr = uGet(userChar[a[0]],'')
-	bUsr = uGet(userChar[b[0]],'')
+function sortFarm(a,b){
+	let aUsr = uGet(userChar[a[0]], '')
+	let bUsr = uGet(userChar[b[0]], '')
 	return bUsr.FARM - aUsr.FARM
 			|| bUsr.OWNED - aUsr.OWNED
 			|| b[1].RARITY - a[1].RARITY
@@ -177,11 +176,11 @@ function sortStat(a,b){
 			|| b[1].STAT_VALUE.localeCompare(a[1].STAT_VALUE);
 }
 
-/**--SWITCH: CHANGE DISPLAY MODE */
+/**--SWITCH: CHANGE DISPLAY MODE-- */
 function toggleSwitch(Element){
 	isGrid = Element.checked;
 	const Table = document.getElementById('table').classList
 	if (isGrid) Table.add('hide')
 	else Table.remove('hide')
-	buildCharacters();
+	renderCharacters();
 }

@@ -603,6 +603,7 @@ TOOLTIP
 #tt {
 	position: absolute;
 	display: block;
+	z-index: 100;
 }
 
 #ttcont {

@@ -1,3 +1,4 @@
+"use strict";
 setup(loadStatic(), loadCharacters(), loadWeapons())
 function pageLoad(){
 	window.DBM = loadMaster()
@@ -16,26 +17,27 @@ let objName, isChar
 function page(){
 	const data = document.getElementById('page').dataset
 	objName = data.name; isChar = data.kind === 'character'
-	makePage();
+	renderDetail();
 }
 
-function makePage(){
-	if(getCalc()) calculate(); let calculator = getCalculator();
+function renderDetail(){
+	if (getCalc()) calculate(); let calculator = getCalculator();
 	
 	document.getElementById('page').dataset.color =
-		isChar? DBC[objName].ELEMENT: DBW[objName].RARITY;
+		isChar ? DBC[objName].ELEMENT : DBW[objName].RARITY;
 	const Page = document.getElementById('page-container'); Page.innerHTML = '';
 
 	const Data = create(Page, 'div', {'class':'page__data'})
-	const Name = createTxt(Data, 'div', {'class':'page__data--objName'}, objName)
-	const Img = createImg(Data, 'page__data--image',
-		isChar? getCharacter(objName): getWeapon(objName))
+	/*Name*/createTxt(Data, 'div', {'class':'page__data--objName'}, objName)
+	/*Img*/createImg(Data, 'page__data--image',
+		isChar ? getCharacter(objName) : getWeapon(objName))
 	
-	farming = isChar? calculator.CHARACTERS[objName]: calculator.WEAPONS[objName]
-	// Object.values(farming).forEach((costs)=>{
+	const farming = isChar ?
+		calculator.CHARACTERS[objName] : calculator.WEAPONS[objName]
+	// Object.values(farming).forEach((costs) => {
 	// 	makeTBL(Page, costs, true)
 	// })
-	if(isChar){
+	if (isChar){
 		makeTBL(Page, farming.AFARM, true)
 		levelChar(Page)
 		makeTBL(Page, farming.TFARM, true)
@@ -48,19 +50,19 @@ function makePage(){
 
 function makeTBL(Page, costs, isInv){
 	const Table = create(Page, 'div', {'class':'tbl'})
-	if(!isInv) Table.classList.add('tbl--level')
+	if (!isInv) Table.classList.add('tbl--level')
 	let complete = true, content = false;
 	Object.entries(costs).forEach(([cCategory, [cItem, cMaterials]]) => {
-		if(!cMaterials) return;
-		let nonEmpty = Object.values(cMaterials).some(v => v !== 0);
-		if(!nonEmpty) return
+		if (!cMaterials) return;
+		const nonEmpty = Object.values(cMaterials).some(v => v !== 0);
+		if (!nonEmpty) return
 
 		content = true;
-		const TCont = create(Table, 'div', {'class':'tbl__cont',})
+		const TCont = create(Table, 'div', {'class':'tbl__cont'})
 
 		let c = makeData(TCont, cCategory, cItem, cMaterials, isInv);
 		complete &&= c;
-		if(isInv) makeInv(TCont, cCategory, cItem);
+		if (isInv) makeInv(TCont, cCategory, cItem);
 	})
 	return complete && content
 }
@@ -68,48 +70,47 @@ function makeTBL(Page, costs, isInv){
 function makeData(TCont, cCategory, cItem, cMaterials, isInv){
 	let category = translate(cCategory), item = decode(cCategory, cItem);
 	let iMaterials = uGet(userInv[category]?.[item], 0)
-	let calc = 
-		isInv? getInventory(category, item, cMaterials): iMaterials;
+	const calc = isInv ?
+		getInventory(category, item, cMaterials) : iMaterials;
 	let convert = []
-	Object.entries(cMaterials).reverse().forEach(([rank, value], mi) => {
-		let prevConv = convert[+rank+1]? convert[+rank+1] : 0;
+	Object.entries(cMaterials).reverse().forEach(([rank, value], indexMat) => {
+		let prevConv = convert[+rank + 1] ? convert[+rank + 1] : 0;
 		convert[rank] = prevConv*3 + value - iMaterials[rank];
-		convert[rank] = convert[rank] < 0? 0: convert[rank]
+		convert[rank] = convert[rank] < 0 ? 0 : convert[rank]
 
-		if(!value) { //Add converter to empty cards
-			if(convert[rank] && isInv){
+		if (!value){ //Add converter to empty cards
+			if (convert[rank] && isInv){
 				const Card = create(TCont, 'div', {'class':'card converter'})
-				Card.style = 'grid-row: 1; grid-column: '+ (+mi+1);
-				Card.addEventListener('mouseover', ()=>tooltip.show(cItem + ' ' + convert[rank]))
-				Card.addEventListener('mouseout', ()=>tooltip.hide())
+				Card.style = 'grid-row: 1; grid-column: '+(indexMat + 1);
+				makeTooltip(Card, cItem+' '+convert[rank])
 			}
 			return
 		};
 		const Card = create(TCont, 'div', {'class':'card js-card r_'+rank})
-		Card.style = 'grid-row: 1; grid-column: '+ (+mi+1);
-		if(cCategory === 'MORA') Card.classList.add('card--long');
+		Card.style = 'grid-row: 1; grid-column: '+(indexMat+1);
+		if (cCategory === 'MORA') Card.classList.add('card--long');
 
 		let tt = cItem
-		Card.addEventListener('mouseover', ()=>tooltip.show(tt))
-		Card.addEventListener('mouseout', ()=>tooltip.hide())
+		makeTooltip(Card, tt)
 
-		const Img = createImg(Card, 'card__image', getImage(category,item,rank))
+		/*Img*/createImg(Card, 'card__image', getImage(category,item,rank))
 
-		const Inv = createTxt(Card, 'div', {'class':'card__inv p'},
+		/*Inv*/createTxt(Card, 'div', {'class':'card__inv p'},
 			calc[rank].toLocaleString('en-us'))
-		const Need = createTxt(Card, 'div', {'class':'card__need p'},
-			'/' + value.toLocaleString('en-us'))
+		/*Need*/createTxt(Card, 'div', {'class':'card__need p'},
+			'/'+value.toLocaleString('en-us'))
 
-		if(calc[rank] >= value){
+		if (calc[rank] >= value){
 			Card.classList.add('completed');
-			if(isInv) tt += ' ' + convert[rank]
+			if (isInv) tt += ' '+convert[rank]
 		}
 
-		if(iMaterials[rank] >= value) Card.classList.add('obtained');
+		if (iMaterials[rank] >= value) Card.classList.add('obtained');
 		
 	});
 
-	let complete = TCont.querySelectorAll('.js-card').length <= TCont.querySelectorAll('.completed').length;
+	const numCards = TCont.querySelectorAll('.js-card').length
+	let complete = numCards <= TCont.querySelectorAll('.completed').length;
 	return complete;
 }
 
@@ -118,97 +119,99 @@ function makeInv(TCont, cCategory, cItem){
 	let iMaterials = userInv[category]?.[item];
 	let index = 1;
 	Object.keys(DBM[category][item]).reverse().forEach((rank) => {
-		if(isNaN(rank)) return
+		if (isNaN(rank)) return
 		const Card = create(TCont, 'div', {'class':'card r_'+rank})
-		Card.style = 'grid-row: 2; grid-column: ' +index;
+		Card.style = 'grid-row: 2; grid-column: '+index;
 		index++;
 
-		const Img = createImg(Card, 'card__image', getImage(category, item, rank))
+		/*Img*/createImg(Card, 'card__image', getImage(category, item, rank))
 		
 		let uValue = iMaterials?.[rank] ?? 0
 		const Input = createNumInput(Card, {'data-column':rank}, uValue)
-		Input.addEventListener('blur',()=>{
+		Input.addEventListener('blur',() => {
 			Input.value = +Input.value
 			
 			uSet(userInv, [category,item,rank], +Input.value)
 			storeUserI(user, userInv)
-
-			processTotals(category, item); makePage();
+			processTotals(category, item); renderDetail();
 		}, false);
 	});
 }
 
 function levelChar(Page){
-	const state = uGet(userChar[objName],''); const info = DBC[objName];
-	let start = +state.PHASE, end = (start+1) <= +state.TARGET? start+1: +state.TARGET;
-	let costs = calcCharA(info, [start,end], false)
+	const state = uGet(userChar[objName], ''); const info = DBC[objName];
+	let start = +state.PHASE
+	let end = (start + 1) <= state.TARGET ? start + 1 : +state.TARGET;
+	let costs = calcCharA(info, [start, end], false)
 	makeLevel(Page, costs, 'PHASE')
 }
 
 function levelTln(Page){
 	const GT = create(Page, 'div', {'class':'group--tln'});
-	const state = uGet(userChar[objName],''); const info = DBC[objName];
+	const state = uGet(userChar[objName], ''); const info = DBC[objName];
 	let start, end, costs;
-	start = state.NORMAL? +state.NORMAL: 1;
-	end = (start+1) <= +state.TNORMAL? start+1: +state.TNORMAL;
-	costs = calcCharT(info, [[start,end],[0,0],[0,0]], false);
+	start = state.NORMAL ? +state.NORMAL : 1;
+	end = (start + 1) <= state.TNORMAL ? start + 1 : +state.TNORMAL;
+	costs = calcCharT(info, [[start, end], [0, 0], [0, 0]], false);
 	makeLevel(GT, costs, 'NORMAL')
-	start = state.SKILL? +state.SKILL: 1;
-	end = (start+1) <= +state.TSKILL? start+1: +state.TSKILL;
-	costs = calcCharT(info, [[0,0],[start,end],[0,0]], false);
+	start = state.SKILL ? +state.SKILL : 1;
+	end = (start + 1) <= state.TSKILL ? start + 1 : +state.TSKILL;
+	costs = calcCharT(info, [[0, 0], [start, end], [0, 0]], false);
 	makeLevel(GT, costs, 'SKILL')
-	start = state.BURST? +state.BURST: 1;
-	end = (start+1) <= +state.TBURST? start+1: +state.TBURST;
-	costs = calcCharT(info, [[0,0],[0,0],[start,end]], false);
+	start = state.BURST ? +state.BURST : 1;
+	end = (start + 1) <= state.TBURST ? start + 1 : +state.TBURST;
+	costs = calcCharT(info, [[0, 0], [0, 0], [start, end]], false);
 	makeLevel(GT, costs, 'BURST')
 }
 
 function levelWpn(Page){
-	const state = uGet(userWpn[objName],''); const info = DBW[objName];
-	let start = +state.PHASE, end = (start+1) <= +state.TARGET? start+1: +state.TARGET;
-	let costs = calcWpn(info, [start,end,info.RARITY], false)
+	const state = uGet(userWpn[objName], ''); const info = DBW[objName];
+	let start = +state.PHASE
+	let end = (start + 1) <= state.TARGET ? start + 1 : +state.TARGET;
+	let costs = calcWpn(info, [start, end, info.RARITY], false)
 	makeLevel(Page, costs, 'PHASE')
 }
 
 function makeLevel(Page, costs, attribute){
 	const LVL = create(Page, 'div', {'class':'level'});
 	let isComplete = makeTBL(LVL, costs, false)
-	if(!isComplete) return
+	if (!isComplete) return
 
-	let uAttributes = isChar? uGet(userChar[objName], 0): uGet(userWpn[objName], 0)
-	let l = (isChar && attribute !== 'PHASE' && !uAttributes[attribute])?
-			1:
-			+uAttributes[attribute];
-	let inc = ' (' + l + ' ⇒ ' + (l+1) + ')'
+	let uAttributes = isChar ?
+		uGet(userChar[objName], 0) : uGet(userWpn[objName], 0)
+	let l = (isChar && attribute !== 'PHASE' && !uAttributes[attribute]) ?
+			1 : +uAttributes[attribute];
+	let inc = ' ('+l+' ⇒ '+(l + 1)+')'
 
 	const BTN = create(LVL, 'button', {'class':'lvlbtn'})
 	BTN.textContent = 'Level Up '+attribute+inc;
-	BTN.addEventListener('click', ()=>{consume(costs, attribute)})
+	BTN.addEventListener('click', () => consume(costs, attribute))
 }
 
 /**--INVENTORY CRAFTING PROCESSING-- */
 function getInventory(category, item, cMaterials){
 	/*
 	crafted: copy that holds inventory after possible crafting
-	maxInv: copy that holds maximum inventory obtained through crafting (defaultdict)
+	maxInv: copy that holds maximum inventory obtained through crafting
 	*/
 	let iMaterials = userInv[category]?.[item]
-	let crafted = {...maxInv} = {...iMaterials};
-	maxInv = uGet(maxInv, 0)
-	let lastIndex = Object.keys(cMaterials).length - 1, highestRank;
+	const crafted = {...iMaterials};
+	const maxInv = uGet({...iMaterials}, 0) //defaultdict
+	const lastIndex = Object.keys(cMaterials).length - 1
+	let highestRank;
 
 	Object.entries(cMaterials).forEach(([rank, value], indexMat) => {
-		if(value !== 0) highestRank = rank;
-		if(indexMat < lastIndex && maxInv[rank] > value){
+		if (value !== 0) highestRank = rank;
+		if (indexMat < lastIndex && maxInv[rank] > value){
 			//Next rank exists & inv > need value
 			crafted[rank] = +value
-			maxInv[+rank+1] += Math.floor((maxInv[rank] - value)/3);
+			maxInv[+rank + 1] += Math.floor((maxInv[rank] - value)/3);
 		} else{
 			crafted[rank] = Math.floor(maxInv[rank]);
 		}
 	});
 	crafted[highestRank] = Math.floor(maxInv[highestRank]);
-	if(item === 'EXP' || item === 'Ore'){ //Calculator only has one rank for these
+	if (['EXP', 'Ore'].includes(item)){ //Calculator only has one rank for these
 		crafted[highestRank] = Math.floor(getTotals()[category][item])
 	}
 	return crafted;
@@ -219,21 +222,22 @@ function consume(costs, attribute){
 	Object.entries(costs).forEach(([cCategory, [cItem, cMaterials]]) => {
 		let category = translate(cCategory), item = decode(cCategory, cItem)
 		Object.entries(cMaterials).forEach(([rank, value]) => {
-			if(!value) return
+			if (!value) return
 			userInv[category][item][rank] -= value;
 		})
 	})
 
 	storeUserI(user, userInv)
 
-	if(isChar) incrementC(attribute)
+	if (isChar) incrementC(attribute)
 	else incrementW(attribute)
 	toasty('Leveled Up '+attribute)
-	makePage();
+	renderDetail();
 }
 
 function incrementC(cAttribute){
-	let defaultValue = cAttribute !== 'PHASE' && !userChar[objName][cAttribute]? 1:0
+	let defaultValue = cAttribute !== 'PHASE' && !userChar[objName][cAttribute] ?
+		1 : 0
 	let cValue = userChar[objName][cAttribute] ?? defaultValue
 	cValue++
 	uSet(userChar[objName], [cAttribute], cValue);
