@@ -8,19 +8,19 @@ function pageLoad(){
 	renderCharacters()
 }
 let showOwned = false, isReverse = false, sorting = ()=>{}
-let isGrid
+let isTable
 
 /**--RENDER-- */
 function renderCharacters(){
 	const characters = Object.entries(DBC).sort(sorting)
 	if (isReverse) characters.reverse();
-	isGrid = document.getElementById('switch').checked
+	isTable = document.getElementById('switch').checked
 	
 	document.getElementById('characters').innerHTML = '';
 	document.getElementById('table__body').innerHTML = '';
 	characters.forEach(character => {
 		if (showOwned && !userChar[character[0]]?.OWNED) return
-		isGrid ? makeCard(character) : makeRow(character);
+		isTable ? makeRow(character) : makeCard(character);
 	});
 }
 
@@ -178,9 +178,9 @@ function sortStat(a,b){
 
 /**--SWITCH: CHANGE DISPLAY MODE-- */
 function toggleSwitch(Element){
-	isGrid = Element.checked;
+	isTable = Element.checked;
 	const Table = document.getElementById('table').classList
-	if (isGrid) Table.add('hide')
-	else Table.remove('hide')
+	if (isTable) Table.remove('hide')
+	else Table.add('hide')
 	renderCharacters();
 }

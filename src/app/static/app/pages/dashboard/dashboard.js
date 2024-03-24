@@ -209,7 +209,7 @@ function sortOrder(pCategory){
 /**--SWITCH: CHANGE FILTER OBTAINED */
 function toggleSwitch(Element){
 	document.body.style.setProperty('--filter', Element.checked ?
-		'none' : 'contents')
+		'contents' : 'none')
 	resize();
 }
 

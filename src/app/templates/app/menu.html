@@ -5,14 +5,14 @@
 		<section class="nav__content">
 			<div class="nav__top">
 				<button class="btn nav__btn icon-box" onclick="reset(); window.location.reload()">
-					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Reload" /></svg>
 				</button>
 				{% if user.is_authenticated %}
-					<a class="nav__profile" href="#">
-						<div class="btn nav__btn icon-box">
-							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+					<a class="nav__profile" href="javascript:void(0)">
+						<div class="btn icon-box">
+							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Profile" /></svg>
 						</div>
-						<p class="nav__username" >{{user.username}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01234567890123456789 bbbbbbbbbbbbbbbbbb</p>
+						<p class="nav__username" >{{user.username}}</p>
 					</a>
 				{% endif %}
 			</div>
@@ -26,7 +26,7 @@
 						{% endif %}
 					>
 						<div class="icon-box">
-							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+							<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#{{ page }}" /></svg>
 						</div>
 						<p>{{ page|upper }}</p>
 					</a>
@@ -35,11 +35,8 @@
 			<div class="nav__bottom">
 				{% if user.is_authenticated %}
 					<form method="post" action="{% url 'logout' %}">{% csrf_token %}
-						<button class="btn" onclick="console.log('logout')" type="submit">
-							<div class="icon-box">
-								<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
-							</div>
-							<p>Log out</p>
+						<button class="btn btn--clear icon-box" onclick="console.log('logout')" type="submit">
+								<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Logout" /></svg>
 						</button>
 					</form>
 				{% endif %}
@@ -49,28 +46,31 @@
 </nav>
 
 <header class="header">
-	<button class="btn header__btn icon-box" onclick="document.getElementById('resin-dialog').showModal()">
-		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+	<button class="btn btn--clear icon-box" onclick="document.getElementById('resin-dialog').showModal()">
+		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Resin" /></svg>
 	</button>
 	<div class="switch">
-		<input type="checkbox" class="switch__input" onchange="toggleSwitch(this)" checked=true id="switch">
-		{% comment %} <label class="switch__cont" for="switch">
+		<input type="checkbox" class="switch__input" onchange="toggleSwitch(this)" id="switch">
+		<label class="switch__cont" for="switch">
 			<div class="switch__slider icon-box">
-				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+				<svg class="icon switch__icon--unchecked"><use href="{%static 'app/assets/sprites.svg'%}#X" /></svg>
+				<svg class="icon switch__icon--checked"><use href="{%static 'app/assets/sprites.svg'%}#Check" /></svg>
 			</div>
-		</label> {% endcomment %}
+		</label>
 	</div>
 	{% if user.is_authenticated %}
-		<div class="header__button">
-			<div class="header__button--icon"></div>
-			<input class="header__button--input" type="button" value="Save" onclick="saveUser()">
-		</div>
+		<button class="btn header__btn" onclick="saveUser()">
+			<div class="header__icon icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Save" /></svg>
+			</div>
+			<div class="header__btn-txt">Save</div>
+		</button>
 	{% endif %}
 </header>
 
 <footer class="footer">
 	<button class="footer__menu icon-box" onclick="openNav()">
-		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Menu" /></svg>
 	</button>
 	{% for page, link in nav.items %}
 	{% if page|upper in "DASHBOARD INVENTORY PLANNER CHARACTERS WEAPONS" %}
@@ -83,9 +83,8 @@
 			{% endif %}
 		>
 			<div class="icon-box">
-				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#temp" /></svg>
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#{{ page }}" /></svg>
 			</div>
-			<p>{{ page|title }}</p>
 		</a>
 	{% endif %}{% endfor %}
 </footer>

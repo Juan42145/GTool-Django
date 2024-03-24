@@ -149,16 +149,15 @@ function makeResinDialog(){
 	const Results = document.getElementById('resin-results')
 	const Input = document.getElementById('resin-input')
 	Results.innerHTML = '';
-	let value = +Input.value;
+	let value = Input.value > 160 ? 160 : +Input.value
 	calcResin(Results, value, 'init')
-	while (value >= 40){
-		calcResin(Results, value - 20, 'end')
-		value -= 40;
-		calcResin(Results, value, 'loop')
-	}
-	if (value >= 20){
-		value -= 20;
-		calcResin(Results, value, 'end')
+	const baseline = value
+	while (value >= 10){
+		value -= 10
+		let tag = (baseline - value) % 40
+		if (tag === 30) tag = 10
+		else if (tag === 0) tag = 40
+		calcResin(Results, value, tag)
 	}
 }
 
@@ -168,8 +167,10 @@ function calcResin(Element, value, type){
 	const day = (new Date()).getDay() == date.getDay() ? 'Today' : 'Tomorrow';
 	const time = date.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})
 
-	/*Resin*/createTxt(Element, 'div', {'class':'resc resc--'+type}, value)
-	/*Time*/createTxt(Element, 'div', {'class':'resc resc--'+type}, day+' '+time)
+	const ResinCalc = create(Element, 'div',
+		{'class':'resin__calc resin__calc--'+type})
+	createTxt(ResinCalc, 'div', {'class':'resin__value'}, value)
+	createTxt(ResinCalc, 'div', {}, day+' '+time)
 }
 
 /**--TOOLTIP-- */

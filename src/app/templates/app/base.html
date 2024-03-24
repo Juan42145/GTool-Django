@@ -35,9 +35,15 @@
 	{% include 'app/menu.html' %}
 
 	<dialog id='resin-dialog' class="resin">
-		<button class="btn resin__btn" onclick="this.parentElement.close()">&times;</button>
-		<div id="resin-results" class="resin__display"></div>
-		<input id="resin-input" class="resin__input" type="text" pattern: "\\d*" oninput="makeResinDialog()">
+		<div class="resin__header">
+			<button class="btn resin__btn icon-box" onclick="document.getElementById('resin-dialog').close()">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#X" /></svg>
+			</button>
+		</div>
+		<div class="resin__body">
+			<div id="resin-results" class="resin__display"></div>
+			<input id="resin-input" class="resin__input" type="text" pattern="\d*" oninput="makeResinDialog()">
+		</div>
 	</dialog>
 
 	<dialog id="dialog" class="alert" onclick="this.close(); this.innerHTML = ''"></dialog>
