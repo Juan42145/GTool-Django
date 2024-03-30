@@ -62,7 +62,8 @@ function converge(category){
 }
 
 function decode(category, item){
-  return category === 'WEEKLY_DROP' ? item.split(' ')[1] : item;
+  return ['WEEKLY_DROP', 'WEEKLY_DROPS'].includes(category) ?
+		item.split(' ')[1] : item;
 }
 
 function translate(category){return converge(toPlural(category))}
@@ -151,7 +152,7 @@ let toastTimer;
 function toasty(message){
 	let Toast = document.getElementById('alerty');
 	if (!Toast)
-		Toast = create(document.body, 'div', {'id':'alerty', 'class':'alert alerty'})
+		Toast = create(document.body, 'div', {'id':'alerty', 'class':'alert'})
 	const Message = createTxt(Toast, 'div', {'class':'alert__msg'}, message);
 	clearTimeout(toastTimer);
 	toastTimer = setTimeout(() => Toast.remove(), 1000)

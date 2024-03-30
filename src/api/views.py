@@ -31,7 +31,7 @@ class MasterView(views.APIView):
             dict[code] = data
         
         serialize(Element)
-        serialize(Element, 'serialize_gem', 'GEMS', Element.objects.exclude(name="-").order_by('inv_order'))
+        serialize(Element, 'serialize_gem', 'GEMS', Element.objects.all().order_by('inv_order'))
         serialize(WeaponType)
         serialize(Region)
         serialize(Boss)

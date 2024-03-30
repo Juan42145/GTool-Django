@@ -5,9 +5,9 @@
 {% url 'app:planner-detail' 'character' '*' as c_url %}
 {% url 'app:planner-detail' 'weapon' '*' as w_url %}
 
-<div id="farm" class="farm">
-	<div id="Characters" class="characters" data-url="{{c_url}}"></div>
-	<div id="Weapons" class="weapons" data-url="{{w_url}}"></div>
+<div class="planner">
+	<section id="Characters" class="planner__section" data-url="{{c_url}}"></section>
+	<section id="Weapons" class="planner__section" data-url="{{w_url}}"></section>
 </div>
 
 {% endblock content %}

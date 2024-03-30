@@ -30,6 +30,16 @@ function create(parent, element, attributes){
 	return Element;
 }
 
+function createIcon(parent, id, link){
+	link = link || '/static/app/assets/sprites.svg'
+	const SvgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+	const UseElement = document.createElementNS('http://www.w3.org/2000/svg', 'use')
+	SvgElement.setAttribute('class', 'icon')
+	UseElement.setAttribute('href', link+id)
+	SvgElement.append(UseElement)
+	parent.append(SvgElement)
+}
+
 function createImg(parent, cls, src){
 	const Element = create(parent, 'img', {'class':cls, 'src':src})
 	setError(Element)
@@ -241,17 +251,18 @@ function calculate(){
 			[+state.BURST, +state.TBURST]
 		];
 		calculator.CHARACTERS[character] = {
-			AFARM: calcCharA(info, ascension),
-			TFARM: calcCharT(info, talents)
+			AFARM: calcCharA(info, ascension, !state.PAUSE),
+			TFARM: calcCharT(info, talents, !state.PAUSE)
 		}
 	})
 
 	Object.entries(user.WEAPONS).forEach(([weapon, state]) => {
 		if (!state.FARM) return;
 		const info = DBW[weapon];
+		state = uGet(state, '')
 		const phase = [+state.PHASE, +state.TARGET, info.RARITY];
 		calculator.WEAPONS[weapon] = {
-			WFARM: calcWpn(info, phase)
+			WFARM: calcWpn(info, phase, !state.PAUSE)
 		}
 	})
 
@@ -294,6 +305,7 @@ function calcWpn(info, phase, isPivot){
 function generateCosts(props, calcFunc, uData, isPivot = true){
 	const costs = {}
 	Object.entries(props).forEach(([category, item]) => {
+		if (!item) return
 		let materials = calcFunc(category, uData)
 		costs[category] = [item, materials]
 		if (materials && isPivot) pivot(category, item, materials)
