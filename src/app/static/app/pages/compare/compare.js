@@ -158,16 +158,16 @@ function makeTotals(cells, nRows, nCols, totals){
 	for(let r = 0; r < nRows; r++){
 		cells[r][nCols].classList = 'total'
 		const Card = create(cells[r][nCols], 'div')
-		createTxt(Card, 'div', {}, totals[0][r])
+		createTxt(Card, 'div', '', totals[0][r])
 	}
 	for(let c = 0; c < nCols; c++){
 		cells[nRows][c].classList = 'total'
 		const Card = create(cells[nRows][c], 'div')
-		createTxt(Card, 'div', {}, totals[1][c])
+		createTxt(Card, 'div', '', totals[1][c])
 	}
 	cells[nRows][nCols].classList = 'total total--sum'
 	const Card = create(cells[nRows][nCols], 'div')
-	createTxt(Card, 'div', {}, totals[0].reduce((a,b)=>(a + b),0))
+	createTxt(Card, 'div', '', totals[0].reduce((a,b)=>(a + b),0))
 }
 
 /*--READ INVENTORY-- */

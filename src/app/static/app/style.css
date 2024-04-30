@@ -45,9 +45,12 @@
 	--clr-ecru-tone: hsl(41, 15%, 69%);
 
 	/*Acents*/
-
-
+	--clr-red: hsl(0, 100%, 75%);
+	--clr-cyan: hsl(180, 100%, 50%);
+	
 	/*Custom*/
+	--shadow: 0 0 0.75em rgba(0,0,0,.8);
+
 	--anemo: #4a7e7f;
 	--geo: #ba8b4d;
 	--electro: #6559a4;
@@ -124,7 +127,8 @@ body{
 }
 
 header{
-	order: 1
+	order: 1;
+	z-index: 10;
 }
 
 main{
@@ -134,7 +138,8 @@ main{
 }
 
 footer{
-	order: 3
+	order: 3;
+	z-index: 10;
 }
 
 /* 
@@ -284,7 +289,8 @@ dialog{
 }
 
 dialog::backdrop{
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(5px);
 }
 
 /* Other */
@@ -319,7 +325,7 @@ NAVBAR
 	--nav-logout-bgclr: var(--clr-comet-dkr);
 
 	position: fixed;
-	z-index: 10;
+	z-index: 99;
 	overflow: hidden;
 	width: 0%;
 	height: 100%;
@@ -448,7 +454,6 @@ RESIN DIALOG
 	max-height: 80vh;
 	border-radius: 1em;
 	color: var(--resin-txclr);
-	background-color: var(--resin-bgclr);
 	font-weight: bolder;
 }
 
@@ -466,6 +471,7 @@ RESIN DIALOG
 	min-height: 0;
 	gap: 1em;
 	padding: 1em 4em;
+	background-color: var(--resin-bgclr);
 }
 
 .resin__btn{
@@ -540,6 +546,7 @@ HEADER
 	place-items: center;
 	gap: 1em;
 	padding: 0.1em 0.8em;
+	box-shadow: var(--shadow);
 	background-color: var(--header-bgclr);
 }
 
@@ -586,6 +593,7 @@ FOOTER
 	grid-auto-flow: column;
 	place-content: center;
 	gap: 1em;
+	box-shadow: var(--shadow);
 	color: var(--footer-txclr);
 	background-color: var(--footer-bgclr);
 }
@@ -632,7 +640,7 @@ ALERT
 	--alert-bdclr: var(--clr-ecru);
 
 	position: absolute;
-	z-index: 99;
+	z-index: 100;
 	place-self: center;
 	width: 40em;
 	color: var(--alert-txclr);
@@ -661,15 +669,14 @@ TOOLTIP
 	--tooltip-bgcolor: var(--clr-comet-dkr);
 
 	position: absolute;
-	z-index: 100;
+	z-index: 98;
 }
 
 #ttcont{
-	opacity: 0.9;
 	padding: 0.2em 0.3em;
 	border-radius: 0.25em;
 	color: var(--tooltip-txcolor);
-	background: var(--tooltip-bgcolor);
+	background: color-mix(in hsl, var(--tooltip-bgcolor) 75%, transparent);
 }
 
 /* 

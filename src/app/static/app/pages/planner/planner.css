@@ -2,19 +2,16 @@
 	--planner-gap: 1em;
 
 	--panel-txclr: var(--clr-white);
+	--panel-header-bgclr: var(--clr-comet-dkr);
+	--panel-btn-bdclr: var(--clr-comet-ltst);
 
-	--bar-bgclr: var(--clr-comet-dkr);
-	--bar-btn-border: var(--clr-comet-ltst);
-
-	--image-shadowclr: var(--clr-black);
 	--image-size: 10em;
 
-	--input-labelclr: color-mix(in hsl, var(--clr-black) 50%, transparent);
-	--input-bgclr: color-mix(in hsl, var(--clr-black) 30%, transparent);
-	--input-bgclr-lt: color-mix(in hsl, var(--clr-black) 70%, transparent);
+	--input-labelclr: color-mix(in hsl, var(--clr-black), transparent);
+	--input-bgclr: color-mix(in hsl, var(--clr-black) 70%, transparent);
 
 	--farm-bdclr: var(--clr-black);
-	--farm-need-bgclr: var(--clr-black);
+	--farm-required-bgclr: var(--clr-black);
 	--farm-gap: 0.5em;
 
 	display: flex;
@@ -45,12 +42,12 @@ PANEL
 	opacity: 0.5;
 }
 
-.panel__bar{
+.panel__header{
 	display: flex;
 	place-items: center;
 	padding: 0.75em 0.5em;
 	gap: 0.5em;
-	background-color: var(--bar-bgclr);
+	background-color: var(--panel-header-bgclr);
 }
 
 .panel__content{
@@ -96,7 +93,7 @@ PANEL ELEMENTS
 
 .panel__btn{
 	--invert: 0;
-	--btn-bdclr: var(--bar-btn-border);
+	--btn-bdclr: var(--panel-btn-bdclr);
 	font-size: 1em;
 	min-height: 0;
 	border-width: 0.3em;
@@ -107,33 +104,34 @@ PANEL ELEMENTS
 	width: var(--image-size);
 	height: var(--image-size);
 	border-radius: 0.75em;
-	box-shadow: 0 0 0.75em var(--image-shadowclr);
+	box-shadow: var(--shadow);
 }
 
 .panel__inputs{
 	font-size: 1.2em;
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 3em));
+	grid-template-columns: minmax(0, 3em) 1fr minmax(0, 3em);
 	place-content: center;
-	gap: 0.4em 1.5em;
+	gap: 0.4em 0.2em;
 }
 
 .panel__label{
-	grid-column: span 2;
+	grid-column: span 3;
 	background: linear-gradient(to right, transparent, var(--input-labelclr) 25% 75%, transparent);
-	/* color: black; */
 	font-weight: bold;
 	text-align: center;
+}
+
+.panel__arrow{
+	display: grid;
+	place-content: center;
+	font-size: 0.5em;
 }
 
 .panel__input{
 	border-radius: 2em;
 	background-color: var(--input-bgclr);
 	text-align: center;
-}
-
-.panel__input:nth-child(2n){
-	background-color: var(--input-bgclr-lt);
 }
 
 .panel__farm{
@@ -148,7 +146,7 @@ PANEL ELEMENTS
 	background-color: var(--farm-bdclr);
 }
 
-.panel__category{
+.panel__item-group{
 	display: flex;
 	gap: var(--farm-gap)
 }
@@ -163,12 +161,11 @@ PANEL ELEMENTS
 	width: 4em;
 }
 
-.material__need{
+.material__required{
 	font-size: 1em;
-	opacity: 0.75;
 	width: 100%;
 	text-align: center;
-	background-color: var(--farm-need-bgclr);
+	background-color: color-mix(in hsl, var(--farm-required-bgclr), transparent);
 }
 
 /* 

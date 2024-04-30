@@ -1,10 +1,26 @@
 {% extends "app/base.html" %}
+{% load static %}
 
 {% block content %}
 
 <div id="page" class="page" data-kind="{{kind}}" data-name="{{name}}">
-  <a href="javascript:void(0)" class="page__close" onclick="window.open({% url 'app:planner' %},'_self')">&times;</a>
-  <div id="page-container" class="page-container">
+	<details>
+		<summary class="page__summary">
+			<div class="page__header">
+				<img id="page-image" class="page__image">
+				<div class="page__name">{{name}}</div>
+				<a class="btn page__close icon-box" href="{% url 'app:planner' %}">
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#X"/></svg>
+				</a>
+			</div>
+		</summary>
+		<div id="page-edit" class="page__edit"></div>
+	</details>
+  <div id="page-inventory" class="page__inventory"></div>
+  <div id="upgrade" class="page__upgrade">
+		<div id="upgrade-area" class="upgrade__area"></div>
+		<div id="upgrade-next" class="upgrade__next hide"></div>
+	</div>
 </div>
 
 {% endblock content %}

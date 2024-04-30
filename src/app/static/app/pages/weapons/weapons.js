@@ -61,20 +61,20 @@ function makeRow(weapon){
 	/*Img*/createImg(Cell, 'img', getWeapon(wName))
 
 	if (state?.OWNED){
-		const Tag = createTxt(Cell, 'p', {'class':'tag'}, 'R'+ +state.REFINEMENT);
+		const Tag = createTxt(Cell, 'p', 'tag', 'R'+ +state.REFINEMENT);
 		let max = wInfo.MAX ? wInfo.MAX : 5;
 		if (state.REFINEMENT >= max) Tag.classList.add('max')
 	}
 	else Row.classList.add('missing')
 
-	/*Name*/createTxt(Row, 'td', {'class':'name'}, wName);
+	/*Name*/createTxt(Row, 'td', 'name', wName);
 
-	/*Phase*/createTxt(Row, 'td', {'class':'phase'}, state?.PHASE);
+	/*Phase*/createTxt(Row, 'td', 'phase', state?.PHASE);
 
-	/*Type*/createTxt(Row, 'td', {'class':'type'}, wInfo.WEAPON_TYPE);
-	/*Atk*/createTxt(Row, 'td', {'class':'atk'}, wInfo.STAT_ATK);
-	/*Stat*/createTxt(Row, 'td', {'class':'stat'}, wInfo.STAT);
-	/*Value*/createTxt(Row, 'td', {'class':'value'}, +wInfo.STAT_VALUE);
+	/*Type*/createTxt(Row, 'td', 'type', wInfo.WEAPON_TYPE);
+	/*Atk*/createTxt(Row, 'td', 'atk', wInfo.STAT_ATK);
+	/*Stat*/createTxt(Row, 'td', 'stat', wInfo.STAT);
+	/*Value*/createTxt(Row, 'td', 'value', +wInfo.STAT_VALUE);
 }
 
 /**--FILTERS-- */

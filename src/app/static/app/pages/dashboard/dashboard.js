@@ -24,7 +24,7 @@ function renderDashboard(){
 		const Sec = document.getElementById(pCategory);
 		Sec.classList.remove('hide'); Sec.innerHTML = '';
 
-		/*Title*/createTxt(Sec, 'div', {'class':'section__title'}, pCategory);
+		/*Title*/createTxt(Sec, 'div', 'section__title', pCategory);
 
 		Sec.addEventListener('click', () =>
 			window.open(Sec.dataset.url.replace('*', Sec.id), '_self'));
@@ -48,7 +48,7 @@ function makeRow(Table, pCategory, pItemData, indexItem, isPage){
 	if (Row && isPage) Row.innerHTML = '';
 	else Row = create(Table, 'div', {'class':'row'})
 
-	const Name = createTxt(Row, 'div', {'class':'row__name'}, pItem)
+	const Name = createTxt(Row, 'div', 'row__name', pItem)
 
 	if (isPage && Table.dataset.total === 'true'){
 		Row.style = 'grid-row: '+(2*indexItem + 1)
@@ -73,16 +73,16 @@ function makeRow(Table, pCategory, pItemData, indexItem, isPage){
 
 		/*Img*/createImg(Card, 'row__card--img', getImage(category, item, rank))
 
-		/*Inv*/createTxt(Card, 'div', {'class':'p row__card--inv'},
+		/*Inv*/createTxt(Card, 'div', 'p row__card--inv',
 			crafted[rank].toLocaleString('en-us'))
-		/*Need*/createTxt(Card, 'div', {'class':'p row__card--need'},
+		/*Need*/createTxt(Card, 'div', 'p row__card--need',
 			'/'+value.toLocaleString('en-us'))
 
 		if (crafted[rank] >= value) Card.classList.add('completed');
 		else Card.classList.remove('completed');
 	});
 
-	if (isPage && calc['runs']) /*Runs*/createTxt(Name, 'span', {}, calc['runs'])
+	if (isPage && calc['runs']) /*Runs*/createTxt(Name, 'span', '', calc['runs'])
 	
 	const numCards = Row.querySelectorAll('.js-card').length
 	let complete = numCards <= Row.querySelectorAll('.completed').length;
@@ -98,9 +98,9 @@ function makeRow(Table, pCategory, pItemData, indexItem, isPage){
 		const Total = create(Row, 'div', {'class':'row__total'})
 		if (isPage) Total.style = 'grid-row: '+(2*indexItem + 1)+'/span 2'
 
-		/*Inv*/createTxt(Total, 'div', {'class':'p row__card--inv'},
+		/*Inv*/createTxt(Total, 'div', 'p row__card--inv',
 			(Math.floor(calc['total']*100)/100).toLocaleString('en-us'))
-		/*Need*/createTxt(Total, 'div', {'class':'p row__card--need'},
+		/*Need*/createTxt(Total, 'div', 'p row__card--need',
 			(Math.floor(calc['neededTotal']*100)/100).toLocaleString('en-us'))
 
 		if (['BOOKS', 'TROPHIES'].includes(pCategory))

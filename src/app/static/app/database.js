@@ -143,9 +143,9 @@ function uGet(obj, defaultValue){
 
 /**--ALERT-- */
 function toast(message){
-	const Toast = document.getElementById('dialog');
+	const Toast = document.getElementById('alert');
 	if (!Toast.open) Toast.showModal()
-	/*Message*/createTxt(Toast, 'div', {'class':'alert__msg'}, message);
+	/*Message*/createTxt(Toast, 'div', 'alert__msg', message);
 }
 
 let toastTimer;
@@ -153,7 +153,7 @@ function toasty(message){
 	let Toast = document.getElementById('alerty');
 	if (!Toast)
 		Toast = create(document.body, 'div', {'id':'alerty', 'class':'alert'})
-	const Message = createTxt(Toast, 'div', {'class':'alert__msg'}, message);
+	const Message = createTxt(Toast, 'div', 'alert__msg', message);
 	clearTimeout(toastTimer);
 	toastTimer = setTimeout(() => Toast.remove(), 1000)
 	setTimeout(() => Message.remove(), 1000)

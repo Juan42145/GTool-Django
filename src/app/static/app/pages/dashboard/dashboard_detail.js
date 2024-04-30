@@ -43,7 +43,7 @@ function renderDetail(){
 		const Div = create(Page, 'div', {'class':'page__dets'})
 		const Sec = create(Div, 'div', {'class':'section'})
 
-		/*Title*/createTxt(Sec, 'div', {'class':'section__title'}, 'Mora')
+		/*Title*/createTxt(Sec, 'div', 'section__title', 'Mora')
 
 		const Details = create(Sec, 'div', {'class':'section__table'})
 		makeDets(Details, 'RESOURCES', 'Characters', aMora, 0);
@@ -69,7 +69,7 @@ function renderDetail(){
 		const Div = create(Page, 'div', {'class':'page__dets'})
 		Object.entries(common).forEach(([farmName, cItems]) => {
 			const Sec = create(Div, 'div', {'class':'section'})
-			/*Title*/createTxt(Sec, 'div', {'class':'section__title'}, farmName)
+			/*Title*/createTxt(Sec, 'div', 'section__title', farmName)
 
 			const Details = create(Sec, 'div', {'class':'section__table'})
 			Object.entries(cItems).forEach(([cItem, cMaterials], indexItem) => {
@@ -126,7 +126,7 @@ function makeDets(Table, category, displayName, cItemData, indexItem){
 	const Row = create(Table, 'div', {'class':'row row--dets'})
 	Row.style = 'grid-row: '+(indexItem+1);
 
-	/*Name*/createTxt(Row, 'div', {'class':'row__name'}, displayName)
+	/*Name*/createTxt(Row, 'div', 'row__name', displayName)
 
 	let counter = 0, total = 0;
 	Object.entries(cMaterials).reverse().forEach(([rank, value], indexMat) => {
@@ -138,11 +138,11 @@ function makeDets(Table, category, displayName, cItemData, indexItem){
 		Card.style = 'grid-column: '+index;
 
 		/*Img*/createImg(Card, 'row__card--img', getImage(category, cItem, rank))
-		/*Need*/createTxt(Card, 'div', {'class':'p'}, value.toLocaleString('en-us'));
+		/*Need*/createTxt(Card, 'div', 'p', value.toLocaleString('en-us'));
 	});
 	if (Table.dataset.total === 'true'){
 		const Total = create(Row, 'div', {'class':'row__total'})
-		/*Need*/createTxt(Total, 'div', {'class':'p'}, Math.floor(total*100)/100)
+		/*Need*/createTxt(Total, 'div', 'p', Math.floor(total*100)/100)
 	}
 }
 

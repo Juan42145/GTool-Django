@@ -25,24 +25,23 @@ function makeTable(Cont, type, categories){
 	const HCatg = create(Head,'tr')
 	const HRank = create(Head, 'tr')
 
-	/*Title*/createTxt(HCatg, 'th', {'rowspan':2, 'class':'title'}, type)
+	/*Title*/createTxt(HCatg, 'th', 'title', type, {'rowspan':2})
 
 	Object.entries(categories).forEach(([category, levels], indexCat) => {
 		let headerRanks = Object.keys(Object.values(levels)[0])
 		let cClass = indexCat % 2 ? 'odd' : 'even';
 		let isTotal = headerRanks.length > 1;
 
-		/*CHeader*/createTxt(HCatg, 'th',
-			{'colspan':headerRanks.length + isTotal, 'class':cClass}, category)
+		/*CHeader*/createTxt(HCatg, 'th', cClass, category, {'colspan':headerRanks.length + isTotal})
 
-		headerRanks.forEach(rank => createTxt(HRank, 'th', {'class':cClass}, rank))
-		if (isTotal) createTxt(HRank, 'th', {'class':cClass}, 'Total')
+		headerRanks.forEach(rank => createTxt(HRank, 'th', cClass, rank))
+		if (isTotal) createTxt(HRank, 'th', cClass, 'Total')
 
 		Object.entries(levels).forEach(([level, materials], indexLevel) => {
 			let LevelRow = document.getElementById(type+level)
 			if(!LevelRow){
 				LevelRow = create(Bod, 'tr', {'id':type+level})
-				/*RHeader*/createTxt(LevelRow, 'th', {}, level)
+				/*RHeader*/createTxt(LevelRow, 'th', '', level)
 			}
 
 			const prev = (levels[level - 1] && !isCum) ?
@@ -53,10 +52,10 @@ function makeTable(Cont, type, categories){
 			values.forEach((value, indexVal) => {
 				if (prev) value -= +prev[indexVal]
 				if (value === 0) value = '';
-				/*cell*/createTxt(LevelRow, 'td', {'class':cClass}, value)
+				/*cell*/createTxt(LevelRow, 'td', cClass, value)
 				total += +value/(3**(max - indexVal))
 			})
-			if (isTotal) createTxt(LevelRow, 'td', {'class':cClass+' total'},
+			if (isTotal) createTxt(LevelRow, 'td', cClass+' total',
 										(Math.floor(total*100)/100).toLocaleString('en-us'))
 		})
 	})

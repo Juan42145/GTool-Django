@@ -32,7 +32,7 @@ function makeCard(character){
 	Card.addEventListener('click', () => window.open(cName, '_self'));
 
 	if (state?.OWNED){
-		const Tag = createTxt(Card, 'p', {'class':'tag'}, 'C'+ +state.CONSTELLATION);
+		const Tag = createTxt(Card, 'p', 'tag', 'C'+ +state.CONSTELLATION);
 		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
 	} else{
 		Card.classList.add('missing');
@@ -40,7 +40,7 @@ function makeCard(character){
 
 	/*Icon*/createImg(Card, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT))
 	/*cImg*/createImg(Card, 'image', getCharacter(cName))
-	/*Name*/createTxt(Card, 'p', {'class':'name'}, cName)
+	/*Name*/createTxt(Card, 'p', 'name', cName)
 }
 
 function makeRow(character){
@@ -70,30 +70,30 @@ function makeRow(character){
 	/*Icon*/createImg(Cell, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
 
 	if (state?.OWNED){
-		const Tag = createTxt(Cell, 'p', {'class':'tag'}, 'C'+ +state.CONSTELLATION);
+		const Tag = createTxt(Cell, 'p', 'tag', 'C'+ +state.CONSTELLATION);
 		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
 	} else{
 		Row.classList.add('missing')
 	}
 
-	/*Name*/createTxt(Row, 'td', {}, cName);
+	/*Name*/createTxt(Row, 'td', '', cName);
 
-	/*Phase*/createTxt(Row, 'td', {'class':'sf'}, state?.PHASE);
-	/*TPhase*/createTxt(Row, 'td', {'class':'goal'}, state?.TARGET);
+	/*Phase*/createTxt(Row, 'td', 'sf', state?.PHASE);
+	/*TPhase*/createTxt(Row, 'td', 'goal', state?.TARGET);
 
-	/*Normal*/createTxt(Row, 'td', {}, state?.NORMAL);
-	/*TNormal*/createTxt(Row, 'td', {'class':'goal'}, state?.TNORMAL);
+	/*Normal*/createTxt(Row, 'td', '', state?.NORMAL);
+	/*TNormal*/createTxt(Row, 'td', 'goal', state?.TNORMAL);
 
-	/*Skill*/createTxt(Row, 'td', {}, state?.SKILL);
-	/*TSkill*/createTxt(Row, 'td', {'class':'goal'}, state?.TSKILL);
+	/*Skill*/createTxt(Row, 'td', '', state?.SKILL);
+	/*TSkill*/createTxt(Row, 'td', 'goal', state?.TSKILL);
 
-	/*Burst*/createTxt(Row, 'td', {}, state?.BURST);
-	/*TBurst*/createTxt(Row, 'td', {'class':'sl goal'}, state?.TBURST);
+	/*Burst*/createTxt(Row, 'td', '', state?.BURST);
+	/*TBurst*/createTxt(Row, 'td', 'sl goal', state?.TBURST);
 	
-	/*HP*/createTxt(Row, 'td', {}, cInfo.STAT_HP);
-	/*ATK*/createTxt(Row, 'td', {}, cInfo.STAT_ATK);
-	/*DEF*/createTxt(Row, 'td', {}, cInfo.STAT_DEF);
-	/*STAT*/createTxt(Row, 'td', {}, cInfo.STAT+' '+cInfo.STAT_VALUE);
+	/*HP*/createTxt(Row, 'td', '', cInfo.STAT_HP);
+	/*ATK*/createTxt(Row, 'td', '', cInfo.STAT_ATK);
+	/*DEF*/createTxt(Row, 'td', '', cInfo.STAT_DEF);
+	/*STAT*/createTxt(Row, 'td', '', cInfo.STAT+' '+cInfo.STAT_VALUE);
 }
 
 /**--REVERSE-- */

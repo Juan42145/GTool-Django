@@ -44,7 +44,7 @@ function makePlanner(isChar){
 		
 		const Article = create(Section, 'article', {'class':cls, 'data-color':color})
 
-		const Bar = create(Article, 'div', {'class':'panel__bar'})
+		const Bar = create(Article, 'div', {'class':'panel__header'})
 		const Content = create(Article, 'div', {'class':'panel__content'})
 		const Image = create(Content, 'div', {'class':'panel__image-container'})
 		const Summary = create(Content, 'div', {'class':'panel__summary'})
@@ -56,22 +56,22 @@ function makePlanner(isChar){
 		const Pause = create(Bar, 'button', {'class':'btn panel__btn icon-box'})
 		createIcon(Pause, '#Check')
 		Pause.addEventListener('click', () => pauseObject(isChar, name, Article))
-		/*Name*/createTxt(Bar, 'div', {'class':'panel__name'}, name);
+		/*Name*/createTxt(Bar, 'div', 'panel__name', name);
 		const Remove = create(Bar, 'button', {'class':'btn panel__btn icon-box'})
 		createIcon(Remove, '#X')
 		Remove.addEventListener('click', () => removeObject(isChar, name))
 
 		/*cImg*/createImg(Image, 'panel__image r_'+rarity, image)
 
-		makeInputs(Summary, 'Levels', name, kind, farm, {
-			PHASE: state.PHASE, TARGET: state.TARGET});
+		makeInputs(Summary, 'Levels', name, kind, farm, [
+			{PHASE: state.PHASE, TARGET: state.TARGET}]);
 		makeFarm(Farm, name, kind, farm);
 		
 		if (isChar){
-			makeInputs(Summary, 'Talents', name, kind, 'TFARM', {
-				NORMAL: state.NORMAL, TNORMAL: state.TNORMAL,
-				SKILL: state.SKILL, TSKILL: state.TSKILL,
-				BURST: state.BURST, TBURST: state.TBURST});
+			makeInputs(Summary, 'Talents', name, kind, 'TFARM', [
+				{NORMAL: state.NORMAL, TNORMAL: state.TNORMAL},
+				{SKILL: state.SKILL, TSKILL: state.TSKILL},
+				{BURST: state.BURST, TBURST: state.TBURST}]);
 			
 			create(Farm, 'div', {'class':'panel__farm--divider'})
 			makeFarm(Farm, name, kind, 'TFARM');
@@ -79,41 +79,49 @@ function makePlanner(isChar){
 	});
 }
 
-function makeInputs(Root, label, name, kind, farm, uValues){
+function makeInputs(Root, label, name, kind, farm, pairs){
 	const Div = create(Root, 'div', {'class':'panel__inputs'})
-	createTxt(Div, 'div', {'class':'panel__label'}, label)
-	Object.entries(uValues).forEach(([uAttribute, uValue]) => {
-		const Input = createNumInput(Div, {'class':'panel__input'}, uValue)
-		Input.addEventListener('blur',() => {
-			const updater = kind === 'CHARACTERS' ? updateC : updateW
-			updater(name, uAttribute, Input.value);
-			makeFarm(Root, name, kind, farm);
-		}, false);
+	createTxt(Div, 'div', 'panel__label', label)
+	pairs.forEach((pair) => {
+		const uValues = Object.entries(pair)
+		makeInput(Div, name, kind, farm, uValues[0])
+		const Arrow = create(Div, 'div', {'class':'panel__arrow'})
+		createIcon(Arrow, '#Arrow')
+		makeInput(Div, name, kind, farm, uValues[1])
 	});
+}
+
+function makeInput(Div, name, kind, farm, [uAttribute, uValue]){
+	const Input = createNumInput(Div, {'class':'panel__input'}, uValue)
+	Input.addEventListener('blur',() => {
+		const updater = kind === 'CHARACTERS' ? updateC : updateW
+		updater(name, uAttribute, Input.value);
+		makeFarm(null, name, kind, farm);
+	}, false);
 }
 
 function makeFarm(Root, name, kind, farm){
 	if (getCalc()) calculate();
 
 	const farmID = 'f_'+farm+name.replaceAll(' ', '_')
-	let FARM = document.getElementById(farmID)
-	if (FARM) FARM.innerHTML = '';
-	else FARM = create(Root, 'div', {'class':'panel__farm', 'id':farmID})
+	let Farm = document.getElementById(farmID)
+	if (Farm) Farm.innerHTML = '';
+	else Farm = create(Root, 'div', {'class':'panel__farm', 'id':farmID})
 	
 	let calcCosts = getCalculator()[kind][name][farm];
 	Object.entries(calcCosts).forEach(([cCategory, [cItem, cMaterials]]) => {
 		if (!cMaterials) return
 		let category = translate(cCategory), item = decode(cCategory, cItem);
 		
-		const Category = create(FARM, 'div', {'class':'panel__category'})
+		const Group = create(Farm, 'div', {'class':'panel__item-group'})
 		Object.entries(cMaterials).reverse().forEach(([rank, value]) => {
 			if (value === 0) return;
-			makeTooltip(Category, cItem)
+			makeTooltip(Group, cItem)
 	
-			const Card = create(Category, 'div', {'class':'material'})
+			const Card = create(Group, 'div', {'class':'material'})
 
 			createImg(Card, 'material__image r_'+rank, getImage(category, item, rank))
-			createTxt(Card, 'p', {'class':'material__need'}, value)
+			createTxt(Card, 'p', 'material__required', value)
 		});
 	});
 }

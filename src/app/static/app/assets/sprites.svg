@@ -60,6 +60,18 @@
 </symbol>
 
 
+<symbol id="Arrow" viewBox="0 0 24 24">
+	<path d="M23.25 12l-11.25-11.25v6.75h-12v9h12v6.75z"></path>
+</symbol>
+
+<symbol id="Craft" viewBox="0 0 24 24">
+	<image href="/static/app/assets/sprites/UI_Alchemy.webp" height="24" width="24"/>
+</symbol>
+
+<symbol id="Convert" viewBox="0 0 24 24">
+	<image href="/static/app/assets/sprites/Icon_Converting.webp" height="24" width="24"/>
+</symbol>
+
 <symbol id="view_list" viewBox="0 0 24 24">
 	<path d="M9 5.016h12v3.984h-12v-3.984zM9 18.984v-3.984h12v3.984h-12zM9 14.016v-4.031h12v4.031h-12zM3.984 9v-3.984h4.031v3.984h-4.031zM3.984 18.984v-3.984h4.031v3.984h-4.031zM3.984 14.016v-4.031h4.031v4.031h-4.031z"></path>
 </symbol>

@@ -40,13 +40,19 @@ function createIcon(parent, id, link){
 	parent.append(SvgElement)
 }
 
+function createDiv(parent, cls = '', attributes = {}){
+	if (cls != '') Object.assign(attributes, {'class':cls})
+	return create(parent, 'div', attributes)
+}
+
 function createImg(parent, cls, src){
 	const Element = create(parent, 'img', {'class':cls, 'src':src})
 	setError(Element)
 	return Element
 }
 
-function createTxt(parent, element, attributes, text){
+function createTxt(parent, element, cls, text, attributes = {}){
+	if (cls != '') Object.assign(attributes, {'class':cls})
 	const Element = create(parent, element, attributes)
 	Element.textContent = text;
 	return Element
@@ -63,6 +69,12 @@ function focusInput(e){
 	//Focus input at end and convert to empty string if 0/fasly
 	if (!+e.target.value) e.target.value = '';
 	e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+}
+
+function capitalize(word){
+	word = word.toLowerCase()
+	const capitalized = word.charAt(0).toUpperCase() + word.slice(1)
+	return capitalized
 }
 
 /**--INVENTORY-- */
@@ -179,8 +191,8 @@ function calcResin(Element, value, type){
 
 	const ResinCalc = create(Element, 'div',
 		{'class':'resin__calc resin__calc--'+type})
-	createTxt(ResinCalc, 'div', {'class':'resin__value'}, value)
-	createTxt(ResinCalc, 'div', {}, day+' '+time)
+	createTxt(ResinCalc, 'div', 'resin__value', value)
+	createTxt(ResinCalc, 'div', '', day+' '+time)
 }
 
 /**--TOOLTIP-- */
@@ -286,7 +298,7 @@ function calcCharT(info, talents, isPivot){
 	const props = {
 		BOOK: info.BOOK,
 		COMMON: info.COMMON,
-		WEEKLY_DROP: info.WEEKLY_BOSS+' '+info.WEEKLY_DROP,
+		WEEKLY_DROP: info.WEEKLY_DROP ? info.WEEKLY_BOSS+' '+info.WEEKLY_DROP : null,
 		MORA: 'Mora',
 	}
 	return generateCosts(props, calcT, talents, isPivot)
@@ -326,7 +338,7 @@ function calcA(category, [phase, target]){
 function calcT(category, talents){
 	const CALCDATA = loadStatic().calculation_data.TALENT[category]
 	const error = talents.some(talent => talent.some(i => i < 0 || i > 10));
-	if (error || (!talents[0][1] && !talents[1][1] && !talents[2][1])) return;
+	if (error || talents.every(talent => talent[1] < 2)) return;
 	let v = [0, 0, 0];
 	for (let i = 0; i < 3; i++){
 		if (talents[i][0] < talents[i][1]){
@@ -335,7 +347,7 @@ function calcT(category, talents){
 			v[i] = vsub(t, c);
 		}
 	}
-	return vadd(v[0], v[1], v[2]);
+	return vadd(...v);
 }
 
 function calcW(category, [phase, target, rarity]){
