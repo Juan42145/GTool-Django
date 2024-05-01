@@ -43,7 +43,7 @@ function makeRow(weapon){
 	const Row = create(Container, 'tr', {'class':'w_'+wInfo.RARITY})
 	Row.addEventListener('click', (e) => {
 		if (e.target.classList == 'farm') return;
-		window.open(wName, '_self');
+		redirect(wName);
 	}, false);
 
 	let Cell;

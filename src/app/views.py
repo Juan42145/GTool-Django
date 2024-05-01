@@ -30,7 +30,7 @@ def dashboard_detail(request, category, *args, **kwargs):
     context = {
         'styles': ['app/pages/dashboard/dashboard.css','app/pages/dashboard/dashboard_detail.css'],
         'scripts': ['app/pages/dashboard/dashboard.js','app/pages/dashboard/dashboard_detail.js'],
-        'category': category
+        'category': category.replace('_',' ')
     }
     return render(request, 'app/dashboard_detail.html', context)
 
@@ -56,7 +56,7 @@ def planner_detail(request, kind, name, *args, **kwargs):
         'styles': ['app/pages/planner/planner_detail.css'],
         'scripts': ['app/pages/planner/planner_detail.js'],
         'kind': kind,
-        'name': name
+        'name': name.replace('_',' ')
     }
     return render(request, 'app/planner_detail.html', context)
 
@@ -70,7 +70,7 @@ def characters(request, *args, **kwargs):
 
 @login_required
 def character_detail(request, name, *args, **kwargs):
-    object = get_object_or_404(Character, name=name)
+    object = get_object_or_404(Character, name=name.replace('_',' '))
     context = {
         'object': object,
         'styles': ['app/pages/characters/character_detail.css'],
@@ -88,7 +88,7 @@ def weapons(request, *args, **kwargs):
 
 @login_required
 def weapon_detail(request, name, *args, **kwargs):
-    object = get_object_or_404(Weapon, name=name)
+    object = get_object_or_404(Weapon, name=name.replace('_',' '))
     context = {
         'object': object,
         'styles': ['app/pages/weapons/weapon_detail.css'],

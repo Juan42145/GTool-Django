@@ -51,7 +51,7 @@ function makePlanner(isChar){
 		const Farm = create(Content, 'div', {'class':'panel__farming'})
 		
 		Image.addEventListener('click', () =>
-			window.open(Section.dataset.url.replace('*', name), '_self'));
+			redirect(Section.dataset.url.replace('*', name)));
 
 		const Pause = create(Bar, 'button', {'class':'btn panel__btn icon-box'})
 		createIcon(Pause, '#Check')

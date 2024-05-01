@@ -77,6 +77,10 @@ function capitalize(word){
 	return capitalized
 }
 
+function redirect(url){
+	window.open(url.replaceAll(' ','_'), '_self');
+}
+
 /**--INVENTORY-- */
 function processTotals(category, item){
 	let mItems = loadMaster()[category]

@@ -27,7 +27,7 @@ function renderDashboard(){
 		/*Title*/createTxt(Sec, 'div', 'section__title', pCategory);
 
 		Sec.addEventListener('click', () =>
-			window.open(Sec.dataset.url.replace('*', Sec.id), '_self'));
+			redirect(Sec.dataset.url.replace('*', Sec.id)));
 		
 		const isTotal = Sec.classList.contains('section--total')
 		const Table = create(Sec, 'div',

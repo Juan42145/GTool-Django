@@ -29,7 +29,7 @@ function makeCard(character){
 
 	const Container = document.getElementById('characters')
 	const Card = create(Container, 'div', {'class':'card c_'+cInfo.RARITY});
-	Card.addEventListener('click', () => window.open(cName, '_self'));
+	Card.addEventListener('click', () => redirect(cName));
 
 	if (state?.OWNED){
 		const Tag = createTxt(Card, 'p', 'tag', 'C'+ +state.CONSTELLATION);
@@ -50,7 +50,7 @@ function makeRow(character){
 	const Row = create(Container, 'tr', {'class':'c_'+cInfo.RARITY})
 	Row.addEventListener('click', (e) => {
 		if (e.target.classList == 'farm') return;
-		window.open(cName, '_self');
+		redirect(cName);
 	}, false);
 
 	let Cell;
