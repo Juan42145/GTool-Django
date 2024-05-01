@@ -78,7 +78,7 @@ function capitalize(word){
 }
 
 function redirect(uri){
-	window.open(uri, '_self');
+	window.open(uri+'/', '_self');
 }
 
 /**--INVENTORY-- */
