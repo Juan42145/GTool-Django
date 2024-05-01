@@ -77,8 +77,8 @@ function capitalize(word){
 	return capitalized
 }
 
-function redirect(url){
-	window.open(url.replaceAll(' ','_'), '_self');
+function redirect(uri){
+	window.open(encodeURI(uri), '_self');
 }
 
 /**--INVENTORY-- */
