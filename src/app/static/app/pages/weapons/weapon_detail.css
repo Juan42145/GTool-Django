@@ -2,6 +2,7 @@
   --char_btn_bg: rgba(26,26,26,0.75);
   --char_btn_tx: var(--clr-white);
 
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;

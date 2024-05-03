@@ -20,6 +20,7 @@
   
 	font-size: var(--rem);
   
+	position: relative;
 	padding: 3em;
 	padding-top: calc(var(--btn-sz) + 2*var(--btn-border));
 	padding-left: 0;
