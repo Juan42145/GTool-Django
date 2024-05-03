@@ -238,7 +238,8 @@ function renderUpgrade(){
 			defaultTalent(state.SKILL),
 			defaultTalent(state.BURST)
 		]
-		attributeData.slice(1).forEach(([label,[_,to]]) => {
+		attributeData.forEach(([label,[_,to]]) => {
+			if (label === 'Phase') return
 			talentLasts[label] = to
 		})
 		talentLasts.forEach((goal, i) => {
@@ -647,13 +648,15 @@ function getMaxUpgrades(){
 					else break loop
 				}
 			}
+			let talentsUpgradable = false
 			for (let i = 0; i < 3; i++){
 				let talentUpgradable = uData[i][1] !== uData[i][0]
 				upgradable ||= talentUpgradable
+				talentsUpgradable ||= talentUpgradable
 				attributeData.push([i, uData[i]])
-				if (talentUpgradable){
-					upgradeCosts = mergeCosts([upgradeCosts, calcCharT(info, uData, false)])
-				}
+			}
+			if (talentsUpgradable){
+				upgradeCosts = mergeCosts([upgradeCosts, calcCharT(info, uData, false)])
 			}
 		}
 	}
