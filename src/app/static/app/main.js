@@ -94,7 +94,7 @@ function processTotals(category, item){
 		let weeklyTotal = Object.entries(mItems)
 											.filter(([_, wkdMats]) => wkdMats.data === mMaterials.data)
 											.reduce((acc, [wkdItem, _]) => {
-												return acc + iItems?.[wkdItem]?.[5] ?? 0
+												return acc + (iItems?.[wkdItem]?.[5] ?? 0)
 											}, 0)
 		totals.WEEKLY_BOSSES[mMaterials.data] = weeklyTotal
 		setTotals(totals)
@@ -257,10 +257,9 @@ function calculate(){
 	};
 	setPivot(calcPivot);
 
-	Object.entries(user.CHARACTERS).forEach(([character, state]) => {
-		if (!state.FARM) return;
-		const info = DBC[character];
-		state = uGet(state, '')
+	Object.entries(DBC).reverse().forEach(([character, info]) => {
+		if (!user.CHARACTERS[character] || !user.CHARACTERS[character].FARM) return;
+		let state = uGet(user.CHARACTERS[character], '')
 		const ascension = [+state.PHASE, +state.TARGET];
 		const talents = [
 			[+state.NORMAL, +state.TNORMAL],
@@ -273,10 +272,9 @@ function calculate(){
 		}
 	})
 
-	Object.entries(user.WEAPONS).forEach(([weapon, state]) => {
-		if (!state.FARM) return;
-		const info = DBW[weapon];
-		state = uGet(state, '')
+	Object.entries(DBW).reverse().forEach(([weapon, info]) => {
+		if (!user.WEAPONS[weapon] || !user.WEAPONS[weapon].FARM) return;
+		let state = uGet(user.WEAPONS[weapon], '')
 		const phase = [+state.PHASE, +state.TARGET, info.RARITY];
 		calculator.WEAPONS[weapon] = {
 			WFARM: calcWpn(info, phase, !state.PAUSE)
