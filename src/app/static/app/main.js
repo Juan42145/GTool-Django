@@ -172,11 +172,13 @@ function closeNav(){
 	Backdrop.classList.remove('backdrop')
 }
 
+const MAX_RESIN = 200;
+
 function makeResinDialog(){
 	const Results = document.getElementById('resin-results')
 	const Input = document.getElementById('resin-input')
 	Results.innerHTML = '';
-	let value = Input.value > 160 ? 160 : +Input.value
+	let value = Input.value > MAX_RESIN ? MAX_RESIN : +Input.value
 	calcResin(Results, value, 'init')
 	const baseline = value
 	while (value >= 10){
@@ -190,7 +192,7 @@ function makeResinDialog(){
 
 function calcResin(Element, value, type){
 	const date = new Date();
-	if (value < 160) date.setMinutes(date.getMinutes() + 8*(159 - value))
+	if (value < MAX_RESIN) date.setMinutes(date.getMinutes() + 8*(MAX_RESIN - 1 - value))
 	const day = (new Date()).getDay() == date.getDay() ? 'Today' : 'Tomorrow';
 	const time = date.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})
 
