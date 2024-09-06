@@ -5,7 +5,15 @@ function pageLoad(){
 	window.user = loadUser()
 	window.userInv = user.INVENTORY;
 	
-	window.REGION = Object.keys(DBM.ELEMENTS)
+	window.REGION = {
+    "Mondstadt": "Anemo",
+    "Liyue": "Geo",
+    "Inazuma": "Electro",
+    "Sumeru": "Dendro",
+    "Fontaine": "Hydro",
+    "Natlan": "Pyro",
+    "Snezhnaya": "Cryo",
+	}
 	renderDetail()
 }
 let pCategory, isTotal

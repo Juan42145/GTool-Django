@@ -5,7 +5,15 @@ function pageLoad(){
 	window.user = loadUser()
 	window.userInv = user.INVENTORY;
 	
-	window.REGION = Object.keys(DBM.ELEMENTS)
+	window.REGION = {
+    "Mondstadt": "Anemo",
+    "Liyue": "Geo",
+    "Inazuma": "Electro",
+    "Sumeru": "Dendro",
+    "Fontaine": "Hydro",
+    "Natlan": "Pyro",
+    "Snezhnaya": "Cryo",
+	}
 	renderDashboard()
 }
 const DAYS = ['Mo/Th', 'Tu/Fr', 'We/Sa']
@@ -117,9 +125,9 @@ function setDatasetStyle(pCategory, pItem, Element, isPage){
 	let index = Object.keys(DBM[pCategory]).indexOf(item);
 	Element.classList.add('cell-color');
 	if (pCategory === 'WEEKLY_DROPS'){
-		Element.dataset.color = REGION[Math.floor(index/6) + 1];
+		Element.dataset.color = Object.values(REGION)[Math.floor(index/6)];
 	} else{
-		Element.dataset.color = REGION[Math.floor(index/3) + 1];
+		Element.dataset.color = REGION[DBM[pCategory][pItem].data];
 		if (!isPage && today !== 0 && (today - 1) % 3 !== index % 3)
 			Element.parentElement.classList.add('hide');
 	}
