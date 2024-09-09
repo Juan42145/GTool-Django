@@ -440,18 +440,21 @@ RESIN DIALOG
 	--resin-header-bgclr: var(--clr-comet);
 	--resin-btn-border: var(--clr-comet-ltst);
 	
-	--resin-display-bgclr: var(--clr-ecru);
+	--resin-display-bgclr: var(--clr-ecru-dk);
 	--resin-display-bdclr: var(--clr-comet-dkst);
-	--resin-init-txclr: var(--clr-comet-dkst);
-	--resin-init-bgclr: var(--clr-ecru-dk);
+
+	--resin-init-txclr: var(--clr-ecru-lt);
+	--resin-init-bgclr: var(--clr-comet-dk);
+	--resin-calc-bgclr: var(--clr-ecru);
 	--resin-alt-bgclr: var(--clr-ecru-lt);
+	--resin-sml-bgclr: var(--clr-ecru-tone);
 
 	--resin-input-txclr: var(--clr-ecru-lt);
 	--resin-input-bgclr: var(--clr-comet);
 
 	display: flex;
 	flex-direction: column;
-	max-height: 80vh;
+	max-height: 85vh;
 	border-radius: 1em;
 	color: var(--resin-txclr);
 	font-weight: bolder;
@@ -469,7 +472,7 @@ RESIN DIALOG
 	grid-template-rows: 1fr;
 	place-items: stretch center;
 	min-height: 0;
-	gap: 1em;
+	gap: 0.75em;
 	padding: 1em 4em;
 	background-color: var(--resin-bgclr);
 }
@@ -485,7 +488,7 @@ RESIN DIALOG
 	display: grid;
 	grid-template-columns: repeat(2, max-content);
 	overflow-y: scroll;
-	padding: 1em;
+	padding: 0.75em;
 	column-gap: 1em;
 	border-radius: 0.5em;
 	background-color: var(--resin-display-bgclr);
@@ -510,10 +513,11 @@ RESIN DIALOG
 	grid-template-columns: subgrid;
 	padding: 0.35em 1em; /*Rem so horizontal padding is consistent*/
 	border-bottom: 1px solid var(--resin-display-bdclr);
+	background-color: var(--resin-calc-bgclr);
 }
 
 .resin__calc--init{
-	color: var(--clr-comet-dkst);
+	color: var(--resin-init-txclr);
 	background-color: var(--resin-init-bgclr);
 }
 
@@ -523,7 +527,11 @@ RESIN DIALOG
 
 .resin__calc--10{
 	font-size: 1em;
-	background-color: var(--clr-ecru-tone);
+	background-color: var(--resin-sml-bgclr);
+}
+
+.resin__calc--n{
+	opacity: 0.4;
 }
 
 .resin__value{

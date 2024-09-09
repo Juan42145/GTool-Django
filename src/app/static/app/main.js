@@ -181,7 +181,7 @@ function makeResinDialog(){
 	let value = Input.value > MAX_RESIN ? MAX_RESIN : +Input.value
 	calcResin(Results, value, 'init')
 	const baseline = value
-	while (value >= 10){
+	while (value >= 10 || value > baseline - 180){
 		value -= 10
 		let tag = (baseline - value) % 40
 		if (tag === 30) tag = 10
@@ -197,8 +197,15 @@ function calcResin(Element, value, type){
 	const time = date.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})
 
 	const ResinCalc = create(Element, 'div',
-		{'class':'resin__calc resin__calc--'+type})
-	createTxt(ResinCalc, 'div', 'resin__value', value)
+		{'class':'resin__calc resin__calc--'+type+(value < 0? ' resin__calc--n' : '')})
+	if (value < 0){
+		const waitTime = 8*(-value);
+		const hour = Math.floor(waitTime/60)
+		const minute = (waitTime%60).toString().padStart(2,"0")
+		createTxt(ResinCalc, 'div', 'resin__value', '+'+hour+":"+minute)
+	}	else {
+		createTxt(ResinCalc, 'div', 'resin__value', value)
+	}
 	createTxt(ResinCalc, 'div', '', day+' '+time)
 }
 
