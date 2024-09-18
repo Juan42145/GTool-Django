@@ -449,6 +449,8 @@ RESIN DIALOG
 	--resin-alt-bgclr: var(--clr-ecru-lt);
 	--resin-sml-bgclr: var(--clr-ecru-tone);
 
+	--resin-neg-txclr: var(--clr-comet-ltr);
+
 	--resin-input-txclr: var(--clr-ecru-lt);
 	--resin-input-bgclr: var(--clr-comet);
 
@@ -473,7 +475,7 @@ RESIN DIALOG
 	place-items: stretch center;
 	min-height: 0;
 	gap: 0.75em;
-	padding: 1em 4em;
+	padding: 0.5em 4em;
 	background-color: var(--resin-bgclr);
 }
 
@@ -530,8 +532,12 @@ RESIN DIALOG
 	background-color: var(--resin-sml-bgclr);
 }
 
+.resin__calc:nth-child(1 of .resin__calc--n){
+	margin-top: 0.75em;
+}
+
 .resin__calc--n{
-	opacity: 0.4;
+	color: var(--resin-neg-txclr)
 }
 
 .resin__value{
