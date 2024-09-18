@@ -61,6 +61,10 @@
   .row:nth-child(odd) {
 	background-color: var(--inv_odd);
   }
+
+	.row--total {
+		background-color: var(--clr-comet-ltr) !important;
+	}
   
   .row > * {
 	grid-row: inherit;
@@ -77,6 +81,11 @@
 	grid-column: 1;
 	padding: 0.8em;
   }
+
+	.row__name p{
+		width: max-content;
+		font-size: 0.75em;		
+	}
   
   .row__total {
 	font-size: 1em;
