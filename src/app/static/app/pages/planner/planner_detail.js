@@ -707,9 +707,9 @@ function consume(costs, attributeData){
 			if (!value) return
 			userInv[category][item][rank] -= value;
 		})
+		storeUserI(user, userInv)
+		processTotals(category, item);
 	})
-
-	storeUserI(user, userInv)
 
 	let userObj = isChar ? userChar : userWpn
 	let storeFunc = isChar ? storeUserC : storeUserW

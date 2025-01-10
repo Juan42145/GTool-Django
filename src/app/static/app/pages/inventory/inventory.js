@@ -82,7 +82,8 @@ function renderInventory(){
 }
 
 function getGemTotals(mItems){
-	return Object.keys(mItems).reduce((acc, mItem) => {
+	const total = Object.keys(mItems).reduce((acc, mItem) => {
 		return acc + getTotals()["GEMS"][mItem]
 	}, 0)
+	return Math.floor(total*100)/100
 }
