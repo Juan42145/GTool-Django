@@ -5,10 +5,22 @@ function setup(){
 	for (let arg of arguments){promises.push(arg)}
 
 	window.addEventListener('load',() => {
+		//Loading screen
+		const Loading = loading()
+		//Load
 		Promise.all(promises).then(() => {
+			Loading.remove()
 			pageLoad()
 		})
 	})
+}
+
+function loading(){
+	const Loading = create(document.body, 'dialog', {class: 'loading'})
+	Loading.showModal()
+	createDiv(Loading, 'loader')
+	createTxt(Loading, 'div', '', 'Loading...')
+	return Loading
 }
 
 window.addEventListener('load',() => {
