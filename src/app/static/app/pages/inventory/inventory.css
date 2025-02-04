@@ -1,131 +1,131 @@
-.inv {
-	--inv_bg: var(--clr-charcoal);
-	--inv_tx: var(--clr-void);
-	--inv_title_tx: var(--clr-pearl);
-	--inv_grid: var(--clr-void);
-	--inv_even: var(--clr-porcelain);
-	--inv_odd: var(--clr-lightgray);
-	--inv_input_tx: var(--clr-black);
-	--inv_focus_bg: var(--clr-void);
-	--inv_focus_tx: var(--clr-white);
-  
-	--rem: 1rem;
-  
-	--lrem: calc(1*var(--rem));
-  
-	font-size: var(--rem);
-  
-  
-	display: grid;
+.inv{
+	--section-bdclr: var(--clr-black);
+	--section-footer-bgclr: var(--clr-black-lt);
+	--section-btn-txclr: var(--clr-white);
+	--section-btn-bgclr: var(--clr-comet);
+	--section-btn-active-bgclr: var(--clr-comet-dk);
+	
+	--item-bgclr: var(--clr-white-dk);
+	--item-alt-bgclr: var(--clr-white);
+	--item-total-bgclr: var(--clr-ecru);
+
+	--input-txclr: var(--clr-black);
+	--input-focus-bgclr: var(--clr-black-dk);
+	--input-focus-txclr: var(--clr-white-lt);
+
+	display: flex;
+	flex-direction: column;
+	padding: 0.5em;
 	gap: 0.5em;
-	overflow: auto;
-	grid-auto-flow: column;
-	place-items: start;
-  }
-  
-  .section {
-	font-size: 1em;
-  
+}
+
+.section{
 	border-radius: 0.6em;
 	padding-bottom: 1em;
-	background-color: var(--inv_bg);
-  }
-  
-  .section__title{
-	font-size: 1em;
-  
-	padding: 0.2em 0.6em;
-	border-top-left-radius: inherit;
-	border-top-right-radius: inherit;
-	background-color: var(--inv_bg);
-	color: var(--inv_title_tx);
+	background-color: var(--section-footer-bgclr);
+	overflow: hidden;
+}
+
+.section__btn{
+	font-size: 1.5em;
+	padding: 0.4em 0.6em;
+	background-color: var(--section-btn-bgclr);
+	color: var(--section-btn-txclr);
+	cursor: pointer;
 	font-weight: bold;
-  }
+}
+
+.active{
+	background-color: var(--section-btn-active-bgclr);
+}
   
-  .section__table {
-	font-size: 1em;
-  
+.section__content{
+	--num: 1;
+
 	display: grid;
+	grid-template-columns: repeat(var(--num), 1fr min-content);
 	gap: 0.1em;
-	grid-template-columns: min-content;
-	grid-auto-columns: max-content;
-	grid-auto-rows: calc(6*var(--lrem));
-	background-color: var(--inv_grid);
-  }
-  
-  .row {
-	display: contents;
-	background-color: var(--inv_even);
-  }
-  
-  .row:nth-child(odd) {
-	background-color: var(--inv_odd);
-  }
+	background-color: var(--section-bdclr);
+}
 
-	.row--total {
-		background-color: var(--clr-comet-ltr) !important;
-	}
-  
-  .row > * {
-	grid-row: inherit;
+.section__content--s{
+	--num: 3;
+}
+
+.item{
+	--bgclr: var(--item-bgclr);
+
 	display: grid;
-	background-color: inherit;
-	place-items: center;
-	text-align: center;
-	color: var(--inv_tx);
-  }
-  
-  .row__name {
-	font-size: 1em;
-  
-	grid-column: 1;
-	padding: 0.8em;
-  }
+	grid-column: span 2;
+	grid-template-columns: subgrid;
+	grid-auto-flow: column;
+}
 
-	.row__name p{
-		width: max-content;
-		font-size: 0.75em;		
-	}
-  
-  .row__total {
-	font-size: 1em;
-  
-	grid-column: 2;
+.item:nth-row(2n){
+	background-color: red;
+}
+
+.item:nth-child(odd) {
+	--bgclr: var(--item-alt-bgclr);
+}
+
+.item--total {
+	--bgclr: var(--item-total-bgclr) !important;
+}
+
+.item__name {
+	grid-column: 1;
+	display: grid;
+	place-content: center;
 	padding: 0.8em;
+	background-color: var(--bgclr);
+	text-align: center;
+}
+
+.item__name--drops{
+	font-size: 0.75em;
+}
+
+.item__cont{
+	display: flex;
+	gap: 0.1em;
+}
+  
+.item__total{
+	display: grid;
+	place-items: center;
+	padding: 0.8em;
+	background-color: var(--bgclr);
 	font-weight: bolder;
-  }
+}
   
-  .row__card {
-	font-size: var(--lrem);
-  
-	width: 5em;
+.item__card{
+	display: grid;
 	grid-template-rows: 5em 1em;
-	background-color: transparent;
-  }
+	place-items: center;
+	width: 5em;
+}
   
-  .row__card--img {
-	font-size: 1em;
-  
+.item__card--img {
 	display: block;
+	width: 4em;
+	aspect-ratio: 1;
 	max-width: 4em;
 	max-height: 4em;
-  }
-  
-  .inv input {
+}
+
+.item__input {
 	font-size: 0.8em;
-  
-	height: calc(1 *var(--lrem));
-	min-width: calc(5 *var(--lrem));
-	max-width: calc(5 *var(--lrem));
+
+	height: 100%;
+	width: 100%;
 	border-radius: 0;
 	outline: none;
-	background-color: inherit;
-	color: var(--inv_input_tx);
+	color: var(--input-txclr);
 	text-align: center;
-  }
-  
-  .inv input:focus{
-	color: var(--inv_focus_tx);
-	background-color: var(--inv_focus_bg);
-  }
-  
+}
+
+.item__input:focus{
+	background-color: var(--input-focus-bgclr);
+	color: var(--input-focus-txclr);
+}
