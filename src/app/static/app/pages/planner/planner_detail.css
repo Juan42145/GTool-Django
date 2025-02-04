@@ -338,6 +338,7 @@ POP UP
 	display: grid;
 	max-height: 100vh;
 	place-self: center;
+	place-content: center;
 	overflow: scroll;
 	color: var(--popup-txclr);
 	text-align: center;

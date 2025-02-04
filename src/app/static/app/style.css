@@ -655,6 +655,7 @@ LOADING
 	font-size: 3em;
 	display: grid;
 	place-items: center;
+	place-content: center;
 	gap: 2rem;
 	padding: 2em;
 	border-radius: 0.2em;
