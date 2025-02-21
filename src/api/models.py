@@ -44,6 +44,7 @@ class Region(SimpleModel):
 
 class LocalSpecialty(SimpleModel):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
+    inv_order = models.PositiveSmallIntegerField()
     rarity = '1'
 
     @property
@@ -172,7 +173,6 @@ class Trophy(models.Model):
 
     class Meta:
         verbose_name_plural = 'trophies'
-        ordering = ['id']
 
     def __str__(self):
         return self.name

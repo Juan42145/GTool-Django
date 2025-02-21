@@ -24,7 +24,7 @@ class MasterView(views.APIView):
         dict = {}
         def serialize(cls, property = 'serialize', code = None, queryset = None, id = 'name'):
             code = code or str(cls._meta.verbose_name_plural).upper().replace(' ','_')
-            queryset = queryset or cls.objects.all()
+            queryset = queryset or cls.objects.all().order_by('id')
             data = {}
             for obj in queryset:
                 data[getattr(obj, id)] = getattr(obj, property)
@@ -35,7 +35,7 @@ class MasterView(views.APIView):
         serialize(WeaponType)
         serialize(Region)
         serialize(Boss)
-        serialize(LocalSpecialty)
+        serialize(LocalSpecialty,queryset=LocalSpecialty.objects.all().order_by('region','inv_order'))
         serialize(Enemy)
         serialize(Book)
         serialize(WeeklyBoss)
