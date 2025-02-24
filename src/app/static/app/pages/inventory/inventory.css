@@ -1,9 +1,11 @@
 .inv{
 	--section-bdclr: var(--clr-black);
-	--section-footer-bgclr: var(--clr-black-lt);
-	--section-btn-txclr: var(--clr-white);
-	--section-btn-bgclr: var(--clr-comet);
-	--section-btn-active-bgclr: var(--clr-comet-dk);
+	--section-footer-bgclr: var(--clr-gray-dk);
+	--section-btn-txclr: var(--clr-black);
+	--section-btn-bgclr: var(--clr-ecru);
+	--section-btn-alt-bgclr: var(--clr-ecru-dk);
+	--section-btn-active-txclr: var(--clr-white);
+	--section-btn-active-bgclr: var(--clr-comet);
 	
 	--item-bgclr: var(--clr-white-dk);
 	--item-alt-bgclr: var(--clr-white);
@@ -35,8 +37,13 @@
 	font-weight: bold;
 }
 
+.section:nth-child(even) .section__btn{
+	background-color: var(--section-btn-alt-bgclr);
+}
+
 .active{
-	background-color: var(--section-btn-active-bgclr);
+	background-color: var(--section-btn-active-bgclr) !important;
+	color: var(--section-btn-active-txclr) !important;
 }
   
 .section__content{
@@ -59,10 +66,6 @@
 	grid-column: span 2;
 	grid-template-columns: subgrid;
 	grid-auto-flow: column;
-}
-
-.item:nth-row(2n){
-	background-color: red;
 }
 
 .item:nth-child(odd) {
