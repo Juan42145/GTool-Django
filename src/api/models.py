@@ -44,7 +44,7 @@ class Region(SimpleModel):
 
 class LocalSpecialty(SimpleModel):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    inv_order = models.PositiveSmallIntegerField()
+    inv_order = models.PositiveSmallIntegerField(default=0)
     rarity = '1'
 
     @property
