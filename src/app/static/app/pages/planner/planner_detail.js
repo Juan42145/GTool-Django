@@ -456,8 +456,9 @@ function makeConvert(category, item, cMaterials){
 		Object.entries(convert).forEach(([rank, data]) => {
 			Object.entries(data).forEach(([newItem, value]) => {
 				userInv[category][newItem][rank] -= value;
-				processTotals(category, newItem);
 				userInv[category][item][rank] += value;
+				storeUserI(user, userInv)
+				processTotals(category, newItem);
 			})
 		})
 		storeUserI(user, userInv)
