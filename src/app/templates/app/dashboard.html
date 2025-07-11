@@ -3,17 +3,25 @@
 {% block content %}
 
 <div id='home' class="home">
-	<div id="var"></div>
 	{% url 'app:dashboard-detail' '*' as url %}
-	<div id="BOOKS" data-url="{{url}}" class="section js-section section--total hide"></div>
-	<div id="TROPHIES" data-url="{{url}}" class="section js-section section--total hide"></div>
-	<div id="GEMS" data-url="{{url}}" class="section js-section section--total hide"></div>
-	<div id="ELITE" data-url="{{url}}" class="section js-section section--total hide"></div>
-	<div id="COMMON" data-url="{{url}}" class="section js-section section--total hide"></div>
-	<div id="RESOURCES" data-url="{{url}}" class="section js-section hide"></div>
-	<div id="WEEKLY_DROPS" data-url="{{url}}" class="section js-section hide"></div>
-	<div id="BOSSES" data-url="{{url}}" class="section js-section hide"></div>
-	<div id="LOCAL_SPECIALTIES" data-url="{{url}}" class="section js-section hide"></div>
+	<div class="group group-domain">
+		<section id="BOOKS" data-url="{{url}}" class="section js-section section--total hide"></section>
+		<section id="TROPHIES" data-url="{{url}}" class="section js-section section--total hide"></section>
+	</div>
+	<div class="group group-gems">
+		<section id="GEMS" data-url="{{url}}" class="section js-section section--total hide"></section>
+	</div>
+	<div class="group group-enemies">
+		<section id="ELITE" data-url="{{url}}" class="section js-section section--total hide"></section>
+		<section id="COMMON" data-url="{{url}}" class="section js-section section--total hide"></section>
+	</div>
+	<div class="group group-singles">
+		<section id="RESOURCES" data-url="{{url}}" class="section js-section hide"></section>
+		<section id="WEEKLY_DROPS" data-url="{{url}}" class="section js-section hide"></section>
+		<section id="BOSSES" data-url="{{url}}" class="section js-section hide"></section>
+		<div class="break"></div>
+		<section id="LOCAL_SPECIALTIES" data-url="{{url}}" class="section js-section hide"></section>
+	</div>
 </div>
 
 {% endblock content %}
