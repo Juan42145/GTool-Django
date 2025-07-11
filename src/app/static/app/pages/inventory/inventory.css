@@ -41,6 +41,17 @@
 	background-color: var(--section-btn-alt-bgclr);
 }
 
+.accordion:after{
+  content: "\276F";
+	float: right;
+	transform: rotate(90deg);
+	transition: all 0.35s;
+}
+
+.accordion.active:after{
+	transform: rotate(-90deg);
+}
+
 .active{
 	background-color: var(--section-btn-active-bgclr) !important;
 	color: var(--section-btn-active-txclr) !important;

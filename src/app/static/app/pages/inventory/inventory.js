@@ -65,7 +65,7 @@ function renderInventory(){
 				/*Img*/createImg(Card, 'item__card--img', getImage(mCategory, mItem, rank))
 				
 				let value = userInv[mCategory]?.[mItem]?.[rank] ?? 0
-				const Input = createNumInput(Card, {'class':'item__input','data-column':rank}, value)
+				const Input = createNumInput(Card, {'class':'item__input'}, value)
 				Input.addEventListener('blur',() => {
 					Input.value = +Input.value;
 					uSet(userInv, [mCategory,mItem,rank], +Input.value)
