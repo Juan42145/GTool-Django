@@ -36,8 +36,7 @@ function renderDashboard(){
 			pCategory.replace('_',' '));
 
 		const isTotal = Sec.classList.contains('section--total')
-		const Table = create(Sec, 'div',
-			{'class':'section__table js-table', 'data-total':isTotal})
+		const Table = createDiv(Sec, 'section__table', {'data-total':isTotal})
 
 		if(pCategory === 'GEMS'){
 			Title.classList.remove('active')
@@ -45,8 +44,8 @@ function renderDashboard(){
 		}
 		makeAccordion(Title, Table)
 
-		pItemArray.sort(sortOrder(pCategory)).forEach((pItemData, indexItem) => {
-			makeRow(Table, pCategory, pItemData, indexItem, false);
+		pItemArray.sort(sortOrder(pCategory)).forEach((pItemData) => {
+			makeRow(Table, pCategory, pItemData, false);
 		});
 	});
 }
@@ -57,15 +56,15 @@ function makeAccordion(accordion, panel){
 		panel.classList.toggle('hide')
 	})
 }
-let debug = true
-function makeRow(Table, pCategory, pItemData, indexItem, isPage){
+
+function makeRow(Table, pCategory, pItemData, isPage){
 	let [pItem, pMaterials] = pItemData;
 
 	let Row = document.getElementById('r_'+pItem)
 	if(Row && isPage) Row.innerHTML = '';
-	else Row = create(Table, 'div', {'class':'row'})
+	else Row = createDiv(Table, 'row')
 
-	let detailData = [pCategory, pItemData, indexItem]
+	let detailData = [pCategory, pItemData]
 	if(!isPage) Row.addEventListener('click', () => 
 		makePopup(detailData, Table.dataset.total));
 
@@ -82,7 +81,7 @@ function makeRow(Table, pCategory, pItemData, indexItem, isPage){
 	Object.entries(pMaterials).reverse().forEach(([rank, value]) => {
 		if(!value) return
 
-		const Card = create(Row, 'div', {'class':'row__card js-card r_'+rank})
+		const Card = createDiv(Row, 'row__card js-card r_'+rank)
 
 		/*Img*/createImg(Card, 'row__card--img', getImage(category, item, rank))
 
@@ -103,7 +102,7 @@ function makeRow(Table, pCategory, pItemData, indexItem, isPage){
 	else Row.classList.remove('completed')
 
 	if (Table.dataset.total === 'true'){
-		const Total = create(Row, 'div', {'class':'row__total'})
+		const Total = createDiv(Row, 'row__total')
 
 		/*Inv*/createTxt(Total, 'div', 'p row__card--inv',
 			(Math.floor(calc['total'] * 100) / 100).toLocaleString('en-us'))
@@ -131,8 +130,7 @@ function setDatasetStyle(pCategory, pItem, Element, isPage){
 /**--POP UP-- */
 function makePopup(detailData, isTotal){
 	const Popup = document.getElementById('pop-up')
-	Popup.innerHTML = ''
-	Popup.showModal()
+	Popup.innerHTML = ''; Popup.showModal()
 
 	const Container = createDiv(Popup, 'popup')
 
@@ -142,6 +140,7 @@ function makePopup(detailData, isTotal){
 
 	const Content = createDiv(Container, 'popup__content')
 	makeDetail(Content, detailData, isTotal)
+	makeAdder(Content, detailData, isTotal)
 
 	Popup.addEventListener("click", (e) => {
 		if(e.target === Popup) closePopup();
@@ -151,33 +150,30 @@ function makePopup(detailData, isTotal){
 function closePopup(){
 	const Popup = document.getElementById('pop-up')
 	renderDashboard()
-	Popup.close()
-	Popup.innerHTML = ''
+	Popup.close(); Popup.innerHTML = ''
 }
 
 /**--DETAILS-- */
-function makeDetail(Page, [pCategory, pItemData, indexItem], isTotal){
-	console.log('makeDetail')
+function makeDetail(Page, [pCategory, pItemData], isTotal){
 	if(pCategory === 'RESOURCES') isTotal = 'true'
-	const Table = create(Page, 'div',
-		{'class':'section__table details', 'data-total':isTotal})
+	const Table = createDiv(Page, 'section__table details', {'data-total':isTotal})
 	if(isTotal === 'false') Table.classList.add('details--single')
 	if(pCategory === 'RESOURCES') Table.classList.add('details--long')
 	
-	makeRow(Table, pCategory, pItemData, indexItem, true);
-	makeInv(Table, pCategory, pItemData, indexItem);
+	makeRow(Table, pCategory, pItemData, true);
+	makeInv(Table, pCategory, pItemData);
 }
 
-function makeInv(Table, pCategory, pItemData, indexItem){
+function makeInv(Table, pCategory, pItemData){
 	let pItem = pItemData[0]
 	let category = translate(pCategory), item = decode(pCategory, pItem)
 	let mMaterials = DBM[category][item];
 
-	const Row = create(Table, 'div', {'class':'row row--inv'})
+	const Row = createDiv(Table, 'row row--inv')
 
 	Object.keys(mMaterials).reverse().forEach((rank) => {
 		if (isNaN(rank)) return
-		const Card = create(Row, 'div', {'class':'row__card r_'+rank})
+		const Card = createDiv(Row, 'row__card r_'+rank)
 
 		/*Img*/createImg(Card, 'row__card--img', getImage(category, item, rank))
 		
@@ -189,9 +185,48 @@ function makeInv(Table, pCategory, pItemData, indexItem){
 			uSet(userInv, [category,item,rank], +Input.value)
 			storeUserI(user, userInv)
 			processTotals(category, item);
-			makeRow(Table, pCategory, pItemData, indexItem, true);
+			makeRow(Table, pCategory, pItemData, true);
 		}, false);
 	});
+}
+
+function makeAdder(Parent, [pCategory, pItemData], isTotal){
+	const Container = createDiv(Parent, 'adder')
+
+	/*Title*/ createTxt(Container, 'div', 'adder__title', 'Add')
+
+	//Content
+	const Content = createDiv(Container, 'adder__content')
+	let adder = {}
+	let category = translate(pCategory), item = decode(pCategory, pItemData[0])
+	let mMaterials = DBM[category][item];
+
+	Object.keys(mMaterials).reverse().forEach((rank) => {
+		if (isNaN(rank)) return
+		const Card = createDiv(Content, 'adder__card', {'data-color':rank})
+
+		createImg(Card, 'adder__card--img r_'+rank, getImage(category, item, rank))
+		
+		const InputContainer = createDiv(Card, 'adder__input')
+		const Input = createNumInput(InputContainer, {}, 0)
+		Input.addEventListener('blur',() => {
+			if (Input.value === '') Input.value = 0;
+			adder[rank] = Input.value
+		}, false);
+	})
+
+	//Button
+	const Submit = create(Container, 'button', {'class':'btn icon-box'})
+	createIcon(Submit, '#Check')
+	Submit.addEventListener('click', () => {
+		Object.entries(adder).forEach(([rank, value]) => {
+			let userValue = userInv[category]?.[item]?.[rank] ?? 0
+			uSet(userInv, [category,item,rank], userValue + +value)
+			storeUserI(user, userInv)
+			processTotals(category, item);
+		})
+		makePopup([pCategory, pItemData], isTotal)
+	})
 }
 
 /**--INVENTORY CRAFTING PROCESSING-- */
