@@ -794,6 +794,8 @@ BACKGROUNDS
 [data-color="Pyro"]{--color: var(--pyro);}
 [data-color="Cryo"]{--color: var(--cryo);}
 
+[data-color="1"]{--color: var(--rank1);}
+[data-color="2"]{--color: var(--rank2);}
 [data-color="3"]{--color: var(--rank3);}
 [data-color="4"]{--color: var(--rank4);}
 [data-color="5"]{--color: var(--rank5);}

@@ -25,10 +25,7 @@ function loading(){
 
 window.addEventListener('load',() => {
 	makeResinDialog()
-	if (!hasCalc()){
-		console.log('not calc in cache')
-		setCalc(true)
-	}
+	if (!hasCalc()) setCalc(true)
 })
 
 /**--CUSTOM FUNCTION-- */
