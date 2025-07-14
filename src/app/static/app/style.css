@@ -42,7 +42,9 @@
 	--clr-ecru-lt: hsl(41, 44%, 89%);
 	--clr-ecru: hsl(41, 44%, 69%); /*#D3BD8E ~20*/
 	--clr-ecru-dk: hsl(41, 44%, 49%);
-	--clr-ecru-tone: hsl(41, 15%, 69%);
+
+	--clr-ecru-lw: hsl(41, 15%, 69%);
+	--clr-ecru-hg: hsl(41, 74%, 69%);
 
 	/*Acents*/
 	--clr-red: hsl(0, 100%, 75%);
@@ -158,7 +160,7 @@ GLOBAL
 
 	--btn-hover-txclr: var(--clr-white);
 	--btn-hover-fillclr: var(--btn-txclr);
-	--btn-hover-bgclr: var(--clr-ecru-tone);
+	--btn-hover-bgclr: var(--clr-ecru-lw);
 	--btn-hover-bdclr: var(--btn-hover-bgclr);
 
 	font-size: 1.6em;
@@ -199,7 +201,6 @@ GLOBAL
 	--invert: 0;
 	--btn-bgclr: transparent;
 	--btn-hover-bgclr: rgba(0,0,0,0.25);
-	border-radius: 100%;
 }
 
 /* Switch */
@@ -447,7 +448,7 @@ RESIN DIALOG
 	--resin-init-bgclr: var(--clr-comet-dk);
 	--resin-calc-bgclr: var(--clr-ecru);
 	--resin-alt-bgclr: var(--clr-ecru-lt);
-	--resin-sml-bgclr: var(--clr-ecru-tone);
+	--resin-sml-bgclr: var(--clr-ecru-lw);
 
 	--resin-neg-txclr: var(--clr-comet-ltr);
 
