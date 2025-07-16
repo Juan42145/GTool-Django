@@ -275,7 +275,8 @@ function calculate(){
 	};
 	setPivot(calcPivot);
 
-	Object.entries(DBC).reverse().forEach(([character, info]) => {
+	Object.entries(DBC).sort((a,b) => a[1].RARITY - b[1].RARITY).reverse().forEach(
+		([character, info]) => {
 		if (!user.CHARACTERS[character] || !user.CHARACTERS[character].FARM) return;
 		let state = uGet(user.CHARACTERS[character], '')
 		const ascension = [+state.PHASE, +state.TARGET];
