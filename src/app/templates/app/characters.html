@@ -1,18 +1,10 @@
 {% extends "app/base.html" %}
+{% load static %}
 
 {% block content %}
 
 <div class="options">
-	{% comment %} <div class="mode">
-		<button onclick="switcher(this, true)" class="selected">
-			<svg viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3"></path></svg>
-		</button>
-		<button onclick="switcher(this,false)" >
-			<svg viewBox="0 0 24 24"><path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z"></path></svg>
-		</button>
-	</div> {% endcomment %}
-	<button class="owned" onclick="filterOwned(this)">Owned</button>
-	<select onchange="getSort(value)">
+	<select class="options__select" onchange="getSort(value)">
 		<option disabled selected hidden>Sort by ...</option>
 		<option value="0">Release Date</option>
 		<option value="1">Name</option>
@@ -20,26 +12,33 @@
 		<option value="3">Rarity</option>
 		<option value="4">Constellations</option>
 	</select>
-	<button class="arrow" onclick="setReverse(this)"></button>
+	<button id="direction" class="btn icon-box options__direction" onclick="toggleDirection(this)"></button>
+	<div class="mode">
+		<button class="btn mode__btn icon-box selected" onclick="switcher(this, false)">
+			<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#view_module" /></svg>
+		</button>
+		<button class="btn mode__btn icon-box" onclick="switcher(this, true)" >
+			<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#view_list" /></svg>
+		</button>
+	</div>
 </div>
 
-<div id="characters">
-</div>
-
-<div class="table-cont">
-	<table id="table" class="hide">
+<div class="characters">
+	<div id="char-grid" class="grid">
+	</div>
+	
+	<table id="char-table" class="hide">
 		<thead>
 			<th onclick="sortTable(this, 1)"></th>
-			<th></th>
-			<th>Name</th>
-			<th colspan="2">P</th>
-			<th colspan="2">N</th>
-			<th colspan="2">S</th>
-			<th colspan="2">B</th>
-			<th onclick="sortTable(this, 2)">HP</th>
-			<th onclick="sortTable(this, 3)">ATK</th>
-			<th onclick="sortTable(this, 4)">DEF</th>
-			<th onclick="sortTable(this, 5)">STAT</th>
+			<th id="hdr-name" class="row__r-border" onclick="sortTable(this, 2)">Name</th>
+			<th onclick="sortTable(this, 3)">P</th>
+			<th onclick="sortTable(this, 4)">N</th>
+			<th onclick="sortTable(this, 5)">S</th>
+			<th class="row__r-border" onclick="sortTable(this, 6)">B</th>
+			<th onclick="sortTable(this, 7)">HP</th>
+			<th onclick="sortTable(this, 8)">ATK</th>
+			<th onclick="sortTable(this, 9)">DEF</th>
+			<th onclick="sortTable(this, 10)">STAT</th>
 		</thead>
 		<tbody id="table__body"></tbody>
 	</table>

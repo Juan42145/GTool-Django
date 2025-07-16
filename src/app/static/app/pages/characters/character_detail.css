@@ -1,334 +1,310 @@
-/*FORM*/
+.char{
+	--char-btn-bgclr: color-mix(in hsl, var(--clr-black-dk), transparent);
+	--char-txclr: var(--clr-white);
+	--char-bgclr: var(--color);
+	--char-shadowclr: var(--clr-black-dk);
+	--char-opacity-dk: color-mix(in hsl, var(--clr-black-dk) 60%, transparent);
+	--char-opacity: color-mix(in hsl, var(--clr-black-dk) 25%, transparent);
+	--char-opacity-lt: color-mix(in hsl, var(--clr-white-lt), transparent);
 
-#char {
-  --char_btn_bg: rgba(26,26,26,0.75);
-  --char_btn_tx: var(--clr-white);
+	--char-max-txclr: var(--char-opacity-dk);
+	--char-max-bgclr: var(--clr-ecru-hg);
+	--char-btn-bdclr: var(--clr-black);
+	--char-modify-txclr: var(--clr-black);
 
-  display: flex;
 	position: relative;
-  flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: var(--color);
+	height: 100%;
+	overflow: auto;
+  background-color: var(--char-bgclr);
 }
 
-.close{
-  --size: 4rem;
+.char__close{
+	--btn-txclr: var(--char-bgclr);
 
-  position: absolute;
-  font-size: 3rem;
-  top: 1rem;
-  right: 1rem;
-  padding: 0;
-  margin: 0;
-  line-height: var(--size);
-  height: var(--size);
-  width: var(--size);
-  border-radius: 50%;
-  background-color: var(--char_btn_bg);
-  color: var(--char_btn_tx);
-  text-decoration: none;
-  text-align: center;
+	position: absolute;
+	right: 0;
+	margin: 0.75em;
+	z-index: 2;
+	border-radius: 100%;
+	background-color: var(--char-btn-bgclr);
 }
 
-#char-img{
-  justify-self: center;
-  align-self: center;
-  display: block;
-  min-height: 70rem;
-}
-
-.data{
-  --data_bg: var(--color);
-  --data_tx: var(--clr-white);
-  --shadow: var(--clr-void);
-  --shade: rgba(26,26,26,0.75);
-  --input: rgba(26,26,26,0.2);
-  --edit_tx: var(--clr-black);
-  --light: rgba(200,200,200,0.75);
-  --border: var(--clr-charcoal);
-
-  --max_bg: var(--clr-orange);
-  --max_tx: var(--clr-lightyellow);
-
+.char__content{
+  font-size: 2em;
   display: grid;
-  grid-template-columns: max-content 1fr;
-  grid-auto-rows: max-content;
-  grid-auto-flow: dense;
-  margin-top: -40vh;
-  background: linear-gradient(transparent 0%, var(--data_bg) 20%);
-  color: var(--data_tx);
-  font-size: 2rem;
+	height: 100%;
+	color: var(--char-txclr);
 }
 
-.contact{
-  grid-column: 1 / -1;
-  margin: 0 1rem;
-  margin-bottom: 1rem;
+.banner, .information{
+	grid-area: 1/1;
 }
 
-.contact > div{
+.banner{
+	position: relative;
+	max-width: 100svw;
+	place-content: end;
+}
+
+.banner__overlay{
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(transparent 50%, var(--char-bgclr) 100%);
+}
+
+.banner__img{
+	display: block;
+  width: 100%;
+	float: right;
+	object-fit: contain;
+}
+
+.information{
+  padding: 0.5em;
+	padding-top: 4em;
+	display: grid;
+	place-content: end start;
+	z-index: 1;
+}
+
+.information > div{
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5em;
   font-weight: bold;
-  text-shadow: 0 0 0.7rem var(--shadow);
+  text-shadow: 0 0 0.35em var(--char-shadowclr);
 }
 
-#NAME{
-  font-size: 3.5rem;
+.name{
+  font-size: 1.25em;
   font-weight: bold;
 }
 
-#ELEMENT{
-  width: 4rem;
-  height: 4rem;
-  background: radial-gradient(closest-side, var(--shadow), transparent);
+.element{
+  width: 2em;
+  height: 2em;
+  background: radial-gradient(closest-side, var(--char-shadowclr), transparent);
 }
 
-#CONSTELLATION{
+.constellations{
   display: flex;
-  height: 4rem;
-  width: 4.5rem;
-  border-radius: 1.5rem;
-  font-size: 2rem;
+	min-width: 2em;
+	height: 2em;
+  padding: 0.25em;
+  border-radius: 0.25em;
   align-items: center;
   justify-content: center;
-  background-color: var(--shade);
+  background-color: var(--char-opacity-dk);
+	text-shadow: none;
 }
 
-#CONSTELLATION.max{
-  background-color: var(--max_bg);
-  color: var(--max_tx);
+.constellations.max{
+  background-color: var(--char-max-bgclr);
+  color: var(--char-max-txclr);
 }
 
-.contact button{
+.details{
+	font-size: 0.75em;
+	padding-left: 0.25em;
+}
+
+.information button{
   display: grid;
-  height: 4rem;
-  min-width: 4rem;
-  border-radius: 1rem;
-  padding: 0.5rem;
+  height: 2em;
+  min-width: 2em;
+  border-radius: 0.5em;
+  padding: 0.25em;
   place-items: center;
-  background-color: var(--input);
-  color: var(--data_tx);
+	border: 0.05em solid var(--char-btn-bdclr);
+  background-color: var(--char-opacity);
 }
 
-.contact svg{
-  width: 2.4rem;
-  height: 2.4rem;
+.edit svg{
+  width: 1.2em;
+  height: 1.2em;
   fill: currentColor;
 }
 
-.edit{
+.editing{
   position: relative;
 }
 
-#modify{
+.modify{
   position: absolute;
   display: flex;
-  top: -5rem;
-  right: -2rem;
-  gap: 0.5rem;
+  top: -2.5em;
+  right: -1em;
+  gap: 0.25em;
 }
 
-#modify button{
-  background-color: var(--light);
-  color: var(--edit_tx);
-  border: 0.1rem solid var(--border);
+.modify button{
+  background-color: var(--char-opacity-lt);
+  color: var(--char-modify-txclr);
 }
 
-.data input[type=checkbox]{
-  -webkit-appearance: auto;
-  width: 2rem;
-  height: 2rem;
+.data{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-flow: dense;
+	padding: 0.5em;
+	gap: 0.5em 0.25em;
 }
 
-.mats{
-  grid-column: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: min-content min-content;
-  gap: 0.6rem;
-  border-radius: 1rem;
-  margin: 1rem;
-  padding: 1.5rem;
-  place-items: center;
-  place-self: stretch;
-  background-color: var(--shade);
-}
-
-.mat-title{
-  place-self: start;
-  grid-column: span 3;
-}
-
-.mat-img{
-  width: 5rem;
-  height: 5rem;
-  border-radius: 1rem;
-  overflow: hidden;
-  background-color: var(--shade);
-}
-
-.mats img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
+/* Inputs */
 .inputs{
-  grid-column: 2;
-  grid-row: span 3;
+	font-size: 0.9em;
+	
+	grid-column: 1/-1;
   display: grid;
-  border-radius: 1rem;
-  margin: 1rem;
-  padding: 1.5rem;
-  gap: 1.5rem;
-  grid-template-columns: max-content;
-  grid-template-rows: max-content 1fr;
+	grid-auto-flow: dense;
+  padding: 0.6em;
+  gap: 0.5em 0.75em;
   place-content: center;
-  background-color: var(--input);
+  border-radius: 0.5em;
+  background-color: var(--char-opacity);
 }
 
 .farm{
-  display: flex;
-  gap: 0.5rem;
+	grid-column: span 2;
+	display: flex;
+  gap: 0.25em;
+	padding-bottom: 0.25em;
   place-items: center;
+	place-content: center;
+}
+
+.farm input[type=checkbox]{
+	width: 1em;
+	height: 1em;
 }
 
 .phase, .normal, .skill, .burst{
-  place-self: center;
   display: grid;
-  row-gap: 0.5rem;
-  column-gap: 1.5rem;
+	grid-template-columns: 3.5em repeat(2, 2.5em);
+	place-content: center;
+  gap: 0.5em;
+}
+
+.phase{
+	grid-row: span 3;
+	grid-template-columns: 2.5em 2.5em;
+}
+
+.phase .input-text{
+	grid-column: span 2;
+	text-align: center;
 }
 
 .input-text{
-  grid-column: span 2;
+	text-align: end;
 }
 
 .inputs input[type=text]{
-  grid-row: 2;
-  width: 5rem;
+	border-radius: 1em;
+  background-color: var(--char-opacity-dk);
   text-align: center;
-  border-radius: 3rem;
-  background-color: var(--shade);
-  color: var(--data_tx);
 }
 
 .inputs input:nth-of-type(2n){
-  background-color: var(--input);
+  background-color: var(--char-opacity);
 }
 
-.stats{
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: repeat(3, max-content) 1fr;
-  height: min-content;
-  margin: 1rem;
-  gap: 0.2rem;
-  border-radius: 1rem;
+/* Materials */
+.mats{
+	display: grid;
+  gap: 0.25em;
+  border-radius: 0.25em;
+  padding: 0.5em;
+  place-content: center;
+  background-color: var(--char-opacity-dk);
+}
+
+.mat__title{
+	font-size: 0.8em;
+  grid-column: span 3;
+}
+
+.mat__img{
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 0.5em;
   overflow: hidden;
-  place-items: stretch;
-  text-align: center;
+  background-color: var(--char-opacity-dk);
+}
+
+.mat__img img{
+  width: 100%;
+  height: 100%;
+}
+
+/* Stats */
+.stats{
+  grid-column: 1/-1;
+	display: grid;
+  grid-template-rows: repeat(2, 1fr);
+	grid-auto-flow: column;
+  gap: 0.1em;
+  border-radius: 0.25em;
+  overflow: hidden;
 }
 
 .stats div{
+	font-size: 0.8em;
   display: grid;
   place-items: center;
-  padding: 1rem;
-  background-color: var(--shade);
+  padding: 0.4em;
+  background-color: var(--char-opacity-dk);
+	text-align: center;
 }
 
-@media screen and (min-width: 650px){
-  .data{
-    grid-template-columns: repeat(2, max-content) 1fr;
-  }
+@media screen and (min-width: 750px){
+	.data{
+		gap: 0.5em;
+	}
 
-  .common{
-    grid-column: 2;
-  }
+  .inputs, .stats{
+		grid-column: span 1;
+		grid-row: 1;
+	}
 
-  .talent{
-    grid-column: 1;
-  }
+	.stats div{
+		font-size: 1em;
+	}
 
-  .inputs{
-    grid-column: 3;
-    
-  }
+	.banner__img{
+		width: 50%;
+	}
 }
 
-@media screen and (min-width: 800px) and (max-width: 899px) {
-  .inputs{
-    grid-template-columns: repeat(2, max-content);
-    grid-template-rows: repeat(3, max-content);
-    column-gap: 4rem;
-    padding-top: 5rem;
-    place-content: start center;
-  }
+@media screen and (min-width: 1024px){
+	.char__content{
+		place-self: baseline;
+		padding-left: 1em;
+	}
 
-  .farm{
-    width: 100%;
-    grid-column: span 2;
-    place-content: center;
-  }
+	.banner{
+		position: absolute;
+		inset: 0;
+	}
 
-  .normal, .skill, .burst{
-    grid-column: 2;
-  }
-}
+	.banner__img{
+		height: 100%;
+		width: 100%;
+	}
 
-@media screen and (min-width: 900px) {
-  #char{
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    grid-template-rows: 100%;
-  }
+	.information, .data{
+		z-index: 1;
+		border-right: 0.25em solid var(--char-opacity-lt);
+		background-color: color-mix(in hsl, var(--char-bgclr) 65%, transparent);
+	}
 
-  #char-img{
-    min-height: 0;
-    max-height: 100%;
-    max-width: 50rem;
-  }
+	.data{
+		place-content: start;
+		row-gap: 1em;
+	}
 
-  .data{
-    flex: 1;
-    grid-template-columns: max-content 1fr;
-    grid-auto-rows: max-content;
-    margin-top: 6rem;
-    row-gap: 1rem;
-    max-width: max-content;
-  }
-
-  .mats{
-    grid-column: 1;
-    margin: 0;
-  }
-
-  .inputs{
-    margin: 0 1rem;
-  }
-
-  .inputs{
-    grid-column: 2;
-  }
-
-  .stats{
-    margin-left: 0;
-  }
-}
-
-@media screen and (min-width: 1000px) {
-  #char{
-    grid-template-columns: 1fr max-content;
-  }
-
-  #char-img{
-    max-width: 100%;
-  }
-
-  .data{
-    margin-right: 6rem;
-  }
+	.inputs, .stats{
+		grid-column: span 2;
+		grid-row: auto;
+	}
 }

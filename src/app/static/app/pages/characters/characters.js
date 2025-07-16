@@ -5,21 +5,28 @@ function pageLoad(){
 	window.user = loadUser()
 	window.userChar = user.CHARACTERS;
 	
+	window.ELEMENT_ORDER = Object.fromEntries([
+		'Geo', 'Anemo', 'Cryo', 'Electro', 'Dendro', 'Hydro', 'Pyro']
+		.map((v, i) => [v, i]))
+	window.STAT_ORDER = Object.fromEntries(Object.keys(loadMaster().STATS)
+		.map((v, i) => [v, i]))
+
 	renderCharacters()
 }
-let showOwned = false, isReverse = false, sorting = ()=>{}
-let isTable
+let isTable = false, isAsc = false, sorting = ()=>{}
+let showOwned
 
 /**--RENDER-- */
 function renderCharacters(){
 	const characters = Object.entries(DBC).sort(sorting)
-	if (isReverse) characters.reverse();
-	isTable = document.getElementById('switch').checked
+	setDirection();
+	if(!isAsc) characters.reverse();
+	showOwned = document.getElementById('switch').checked
 	
-	document.getElementById('characters').innerHTML = '';
+	document.getElementById('char-grid').innerHTML = '';
 	document.getElementById('table__body').innerHTML = '';
 	characters.forEach(character => {
-		if (showOwned && !userChar[character[0]]?.OWNED) return
+		if(showOwned && !userChar[character[0]]?.OWNED) return
 		isTable ? makeRow(character) : makeCard(character);
 	});
 }
@@ -27,68 +34,79 @@ function renderCharacters(){
 function makeCard(character){
 	const [cName, cInfo] = character; const state = userChar[cName];
 
-	const Container = document.getElementById('characters')
-	const Card = create(Container, 'div', {'class':'card c_'+cInfo.RARITY});
+	const Container = document.getElementById('char-grid')
+	const Card = createDiv(Container, 'card clr-'+cInfo.RARITY);
 	Card.addEventListener('click', () => redirect(cName));
 
-	if (state?.OWNED){
-		const Tag = createTxt(Card, 'p', 'tag', 'C'+ +state.CONSTELLATION);
-		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
+	if(state?.OWNED){
+		let value = consValue(state)
+		const Tag = createTxt(Card, 'div', 'char__tag', 'C'+value);
+		if(state.REWARD) createTxt(Tag, 'small', '', '['+ +state.REWARD+']');
+		if(value >= 6) Tag.classList.add('max')
 	} else{
 		Card.classList.add('missing');
 	}
 
-	/*Icon*/createImg(Card, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT))
-	/*cImg*/createImg(Card, 'image', getCharacter(cName))
-	/*Name*/createTxt(Card, 'p', 'name', cName)
+	/*Icon*/createImg(Card, 'char__icon', getImage('ELEMENTS', cInfo.ELEMENT))
+
+	/*cImg*/createImg(Card, 'card__image', getCharacter(cName))
+	/*Name*/createTxt(Card, 'div', 'card__name', cName)
 }
 
 function makeRow(character){
 	const [cName, cInfo] = character; const state = userChar[cName];
 	
 	const Container = document.getElementById('table__body')
-	const Row = create(Container, 'tr', {'class':'c_'+cInfo.RARITY})
-	Row.addEventListener('click', (e) => {
-		if (e.target.classList == 'farm') return;
-		redirect(cName);
-	}, false);
+	const Row = create(Container, 'tr', {'class':'clr-'+cInfo.RARITY})
 
 	let Cell;
 
-	Cell = create(Row, 'td', {'class':'farm'})
+	Cell = create(Row, 'td')
 	
-	const Farm = create(Cell, 'input', {'class':'farm', 'type':'checkbox'});
+	const Farm = create(Cell, 'input', {'class': 'row__farm', 'type':'checkbox'});
 	Farm.checked = state?.FARM;
 	Farm.addEventListener('change', () => {
 		uSet(userChar, [cName,'FARM'], Farm.checked)
 		setCalc(true); storeUserC(user, userChar);
 	}, false);
 
-	Cell = create(Row, 'td', {'class':'img'})
+	Cell = create(Row, 'td', {'class': 'row__r-border'})
+	Cell.addEventListener('click', () => redirect(cName));
 	
-	/*cImg*/createImg(Cell, 'image', getCharacter(cName))
-	/*Icon*/createImg(Cell, 'c_icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
-
+	const Info = createDiv(Cell, 'row__info')
+	/*Icon*/createImg(Info, 'char__icon', getImage('ELEMENTS', cInfo.ELEMENT, 0))
 	if (state?.OWNED){
-		const Tag = createTxt(Cell, 'p', 'tag', 'C'+ +state.CONSTELLATION);
-		if (state.CONSTELLATION >= 6) Tag.classList.add('max')
+		let value = consValue(state)
+		const Tag = createTxt(Info, 'div', 'char__tag', 'C'+value);
+		if(state.REWARD) createTxt(Tag, 'small', '', '['+ +state.REWARD+']');
+		if(value >= 6) Tag.classList.add('max')
 	} else{
 		Row.classList.add('missing')
 	}
+	
+	const Char = createDiv(Cell, 'row__char')
+	/*cImg*/createImg(Char, 'row__image', getCharacter(cName))
+	/*Name*/createTxt(Char, 'p', '', cName);
 
-	/*Name*/createTxt(Row, 'td', '', cName);
+	Cell = create(Row, 'td')
+	const PCont = createDiv(Cell, 'row__user')
+	/*Phase*/createTxt(PCont, 'p', '', state?.PHASE);
+	/*TPhase*/ if(state?.TARGET) createTxt(PCont, 'p', 'goal', '/'+state?.TARGET);
 
-	/*Phase*/createTxt(Row, 'td', 'sf', state?.PHASE);
-	/*TPhase*/createTxt(Row, 'td', 'goal', state?.TARGET);
+	Cell = create(Row, 'td')
+	const NCont = createDiv(Cell, 'row__user')
+	/*Normal*/createTxt(NCont, 'p', '', state?.NORMAL);
+	/*TNormal*/ if(state?.TNORMAL)createTxt(NCont, 'p', 'goal', '/'+state?.TNORMAL);
 
-	/*Normal*/createTxt(Row, 'td', '', state?.NORMAL);
-	/*TNormal*/createTxt(Row, 'td', 'goal', state?.TNORMAL);
+	Cell = create(Row, 'td')
+	const SCont = createDiv(Cell, 'row__user')
+	/*Skill*/createTxt(SCont, 'p', '', state?.SKILL);
+	/*TSkill*/ if(state?.TSKILL) createTxt(SCont, 'p', 'goal', '/'+state?.TSKILL);
 
-	/*Skill*/createTxt(Row, 'td', '', state?.SKILL);
-	/*TSkill*/createTxt(Row, 'td', 'goal', state?.TSKILL);
-
-	/*Burst*/createTxt(Row, 'td', '', state?.BURST);
-	/*TBurst*/createTxt(Row, 'td', 'sl goal', state?.TBURST);
+	Cell = create(Row, 'td', {'class': 'row__r-border'})
+	const BCont = createDiv(Cell, 'row__user')
+	/*Burst*/createTxt(BCont, 'p', '', state?.BURST);
+	/*TBurst*/ if(state?.TBURST) createTxt(BCont, 'p', 'goal', '/'+state?.TBURST);
 	
 	/*HP*/createTxt(Row, 'td', '', cInfo.STAT_HP);
 	/*ATK*/createTxt(Row, 'td', '', cInfo.STAT_ATK);
@@ -96,35 +114,80 @@ function makeRow(character){
 	/*STAT*/createTxt(Row, 'td', '', cInfo.STAT+' '+cInfo.STAT_VALUE);
 }
 
-/**--REVERSE-- */
-function setReverse(btn){
-	isReverse = !isReverse; btn.classList.toggle('isReverse')
+function consValue(state){
+	let s = uGet(state, '')
+	return s.CONSTELLATION === '' ? +s.REWARD - 1 : +s.CONSTELLATION + +s.REWARD
+}
+
+/**--SWITCH MODE-- */
+function switcher(Element, mode){
+	isTable = mode;
+	let grdClass = document.getElementById('char-grid').classList
+	let tblClass = document.getElementById('char-table').classList
+	if (isTable){
+		tblClass.remove('hide')
+		grdClass.add('hide')
+	} else{
+		grdClass.remove('hide')
+		tblClass.add('hide')
+	}
+
+	document.querySelector('.selected').classList.remove('selected')
+	Element.classList.add('selected')
+	renderCharacters()
+}
+
+/**--DIRECTION-- */
+function toggleDirection(btn){
+	if(isAsc) btn.classList.add('asc')
+	else btn.classList.remove('asc')
+	isAsc = !isAsc
 	renderCharacters();
 }
 
-/**--FILTERS-- */
-function filterOwned(Element){
-	showOwned = !showOwned; Element.classList.toggle('selected')
-	renderCharacters()
+function setDirection(){
+	const BtnClass = document.getElementById('direction').classList
+	const HdrClass = document.getElementsByClassName('hdr--sort')[0]?.classList
+	if(isAsc){
+		BtnClass.add('asc')
+		HdrClass?.add('asc')
+	} else{
+		BtnClass.remove('asc')
+		HdrClass?.remove('asc')
+	}
 }
 
 /**--SORTS-- */
 function getSort(value){
-	const sorts = [()=>{}, sortName, sortAscension, sortRarity, sortConstellation]
-	sorting = sorts[value]; isReverse = false
-	renderCharacters();
+	const sorts = [[()=>{}, false],
+		[sortName, true], [sortAscension, false],
+		[sortRarity, false], [sortConstellation, false]
+	]
+	sorting = sorts[value][0]; isAsc = sorts[value][1];
+
 	//Remove table header if using sort on table view
-	const Prev = document.getElementsByClassName('sort-header')[0]
-	if (Prev) Prev.classList.remove('sort-header')
+	if(value == 1) setTableHeader(document.getElementById('hdr-name'))
+	else setTableHeader()
+
+	renderCharacters();
 }
 
-function sortTable(head, value){
-	const sorts = [()=>{}, sortFarm, sortHP, sortATK, sortDEF, sortStat]
-	sorting = sorts[value];
-	const Prev = document.getElementsByClassName('sort-header')[0]
-	if (Prev) Prev.classList.remove('sort-header')
-	head.classList.add('sort-header')
+function sortTable(header, value){
+	const sorts = [[()=>{}, false], [sortFarm, false], [sortName, true],
+		[sortP, false], [sortN, false], [sortS, false], [sortB, false], 
+		[sortHP, false], [sortATK, false], [sortDEF, false], [sortStat, false]]
+	sorting = sorts[value][0];
+	if(header.classList.contains('hdr--sort')) isAsc = !isAsc
+	else isAsc = sorts[value][1];
+
+	setTableHeader(header)
+
 	renderCharacters();
+}
+
+function setTableHeader(header){
+	document.getElementsByClassName('hdr--sort')[0]?.classList.remove('hdr--sort')
+	header?.classList.add('hdr--sort')
 }
 
 /**--SORT FUNCTIONS-- */
@@ -135,52 +198,64 @@ function sortName(a,b){
 function sortAscension(a,b){
 	let aUsr = uGet(userChar[a[0]], '')
 	let bUsr = uGet(userChar[b[0]], '')
-	return bUsr.PHASE - aUsr.PHASE
-			|| bUsr.OWNED - aUsr.OWNED
+	return aUsr.PHASE - bUsr.PHASE
+			|| aUsr.OWNED - bUsr.OWNED
+			|| a[1].RARITY - b[1].RARITY
+			|| ELEMENT_ORDER[b[1].ELEMENT] - ELEMENT_ORDER[a[1].ELEMENT] //desc
 }
 
 function sortRarity(a,b){
-	return b[1].RARITY - a[1].RARITY;
+	return a[1].RARITY - b[1].RARITY;
 }
 
 function sortConstellation(a,b){
 	let aUsr = uGet(userChar[a[0]], '')
 	let bUsr = uGet(userChar[b[0]], '')
-	return bUsr.CONSTELLATION - aUsr.CONSTELLATION
-			|| bUsr.OWNED - aUsr.OWNED;
+	return consValue(aUsr) - consValue(bUsr)
+			|| b[0].localeCompare(a[0]) //desc
 }
 
+//Table sorts
 function sortFarm(a,b){
 	let aUsr = uGet(userChar[a[0]], '')
 	let bUsr = uGet(userChar[b[0]], '')
-	return bUsr.FARM - aUsr.FARM
-			|| bUsr.OWNED - aUsr.OWNED
-			|| b[1].RARITY - a[1].RARITY
-			|| bUsr.PHASE - aUsr.PHASE
+	return aUsr.FARM - bUsr.FARM
+			|| a[1].RARITY - b[1].RARITY
 }
 
+function sortUserData(stat, goal){
+	return function (a,b) {
+		let aUsr = uGet(userChar[a[0]], '')
+		let bUsr = uGet(userChar[b[0]], '')
+		return aUsr[goal] - bUsr[goal]
+				|| aUsr[stat] - bUsr[stat]
+	}
+}
+
+const sortP = sortUserData('PHASE', 'TARGET')
+const sortN = sortUserData('NORMAL', 'TNORMAL')
+const sortS = sortUserData('SKILL', 'TSKILL')
+const sortB = sortUserData('BURST', 'TBURST')
+
 function sortHP(a,b){
-	return b[1].STAT_HP - a[1].STAT_HP
+	return a[1].STAT_HP - b[1].STAT_HP
 }
 
 function sortATK(a,b){
-	return b[1].STAT_ATK - a[1].STAT_ATK
+	return a[1].STAT_ATK - b[1].STAT_ATK
 }
 
 function sortDEF(a,b){
-	return b[1].STAT_DEF - a[1].STAT_DEF
+	return a[1].STAT_DEF - b[1].STAT_DEF
 }
 
 function sortStat(a,b){
-	return a[1].STAT.localeCompare(b[1].STAT)
-			|| b[1].STAT_VALUE.localeCompare(a[1].STAT_VALUE);
+	return STAT_ORDER[b[1].STAT] - STAT_ORDER[a[1].STAT] //desc
+			|| a[1].RARITY - b[1].RARITY;
 }
 
-/**--SWITCH: CHANGE DISPLAY MODE-- */
+/**--SWITCH: SHOW OWNED-- */
 function toggleSwitch(Element){
-	isTable = Element.checked;
-	const Table = document.getElementById('table').classList
-	if (isTable) Table.remove('hide')
-	else Table.add('hide')
+	showOwned = Element.checked;
 	renderCharacters();
 }

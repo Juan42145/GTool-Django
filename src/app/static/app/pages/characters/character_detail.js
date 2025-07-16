@@ -13,7 +13,7 @@ let cName
 function renderdDetail(){
 	document.querySelectorAll('[data-img]').forEach((Element) => {
 		let [group, value] = Element.dataset.img.split(',')
-		if (group === "CHARACTER"){
+		if(group === "CHARACTER"){
 			Element.src = getCharacter(value, true)
 			setError(Element)
 		} else{
@@ -26,14 +26,20 @@ function renderdDetail(){
 	cName = document.getElementById('name').textContent
 	const state = uGet(userChar[cName], '')
 
+	let ConsGroup = document.getElementById('constellations')
 	let Constellation = document.getElementById('constellation')
-	if (state.OWNED){
-		Constellation.classList.remove('hide');
-		Constellation.textContent = 'C'+state.CONSTELLATION;
-		if (state.CONSTELLATION >= 6) Constellation.classList.add('max')
+	let Details = document.getElementById('details')
+	if(state.OWNED){
+		ConsGroup.classList.remove('hide');
+		let consValue = state.CONSTELLATION === '' ?
+			state.REWARD - 1 : state.CONSTELLATION + state.REWARD
+		Constellation.textContent = 'C'+(consValue)
+		if(state.REWARD)
+			Details.textContent = `[${state.CONSTELLATION}+${state.REWARD}]`;
+		if(consValue >= 6) ConsGroup.classList.add('max')
 	} else{
-		Constellation.classList.add('hide');
-		Constellation.textContent = '';
+		ConsGroup.classList.add('hide');
+		Constellation.textContent = ''; Details.textContent = '';
 	}
 
 	document.getElementById('FARM').checked = state.FARM
@@ -50,7 +56,7 @@ function renderdDetail(){
 
 /**--INPUT UPDATE-- */
 function update(Element){
-	if (Element.id === 'FARM') uSet(userChar, [cName,Element.id], Element.checked)
+	if(Element.id === 'FARM') uSet(userChar, [cName,Element.id], Element.checked)
 	else uSet(userChar, [cName,Element.id], Element.value)
 
 	setCalc(true); storeUserC(user, userChar)
@@ -63,7 +69,7 @@ function editIn(){
 	document.getElementById('pencil').classList.add('hide')
 	document.getElementById('disk').classList.remove('hide')
 	document.getElementById('modify').classList.remove('hide')
-	document.getElementById('constellation').classList.remove('hide')
+	document.getElementById('constellations').classList.remove('hide')
 }
 
 function editOut(){
@@ -73,43 +79,71 @@ function editOut(){
 	document.getElementById('disk').classList.add('hide')
 	document.getElementById('modify').classList.add('hide')
 
-	if (userChar[cName]?.OWNED){
-		document.getElementById('constellation').classList.remove('hide')
-	} else{
-		document.getElementById('constellation').classList.add('hide')
-	}
+	if(userChar[cName]?.OWNED)
+		document.getElementById('constellations').classList.remove('hide')
+	else
+		document.getElementById('constellations').classList.add('hide')
 }
 
 /**--CONSTELLATION UPDATE-- */
-function plus(){
-	const Constellation = document.getElementById('constellation')
-	let constxt = Constellation.textContent, value;
-	if (constxt === ''){
-		uSet(userChar, [cName,'OWNED'], true); value = 0;
+function plus(isReward){
+	const state = uGet(userChar[cName], '')
+	let target = isReward ? state.REWARD : state.CONSTELLATION
+	let other = isReward ? state.CONSTELLATION : state.REWARD
+	
+	let value;
+	if(target === ''){
+		uSet(userChar, [cName,'OWNED'], true); value = isReward ? 1 : 0;
 	} else{
-		value = +constxt.substring(1) + 1;
+		value = target + 1;
 	}
 
-	if (value >= 6) Constellation.classList.add('max')
+	let consValue = (isReward && other === '') ? value - 1 : value + other
 
-	Constellation.textContent = 'C'+value;
-	uSet(userChar, [cName,'CONSTELLATION'], value)
+	const Container = document.getElementById('constellations')
+	if(consValue >= 6) Container.classList.add('max')
+
+	document.getElementById('constellation').textContent = 'C'+(consValue);
+	
+	const Details = document.getElementById('details')
+	if(isReward) Details.textContent = `[${other}+${value}]`;
+	else if(state.REWARD) Details.textContent = `[${value}+${other}]`;
+
+	uSet(userChar, [cName, isReward ? 'REWARD' : 'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }
 
-function minus(){
-	const Constellation = document.getElementById('constellation')
-	let constxt = Constellation.textContent, value, string;
-	if (constxt === '') return;
-	else if (constxt === 'C0'){
-		value = ''; string = ''; uSet(userChar, [cName,'OWNED'], false)
+function minus(isReward){
+	const state = uGet(userChar[cName], '')
+	let target = isReward ? state.REWARD : state.CONSTELLATION
+	let other = isReward ? state.CONSTELLATION : state.REWARD
+
+	let value, consString = true;
+	if(target === '') return;
+	else if(target === (isReward ? 1 : 0)){
+		if(other === ''){
+			uSet(userChar, [cName,'OWNED'], false)
+			consString = false
+		}
+		value = ''
 	} else{
-		value = +constxt.substring(1) - 1; string = 'C'+value;
+		value = target - 1;
 	}
 
-	if (value < 6) Constellation.classList.remove('max')
+	let consValue = (isReward && other === '' || !isReward && value === '') ?
+		(isReward ? value : other) - 1 : value + other
+	
+	const Container = document.getElementById('constellations')
+	if(consValue < 6) Container.classList.remove('max')
 
-	Constellation.textContent = string;
-	uSet(userChar, [cName,'CONSTELLATION'], value)
+	const Constellation = document.getElementById('constellation')
+	Constellation.textContent = consString ? 'C'+(consValue) : '';
+
+	const Details = document.getElementById('details')
+	if(isReward && value) Details.textContent = `[${other}+${value}]`;
+	else if(!isReward && other) Details.textContent = `[${value}+${other}]`;
+	else Details.textContent = '';
+
+	uSet(userChar, [cName, isReward ? 'REWARD' : 'CONSTELLATION'], value)
 	storeUserC(user, userChar)
 }
