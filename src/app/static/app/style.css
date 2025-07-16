@@ -151,8 +151,6 @@ GLOBAL
 */
 
 .btn{
-	--invert: 1;
-
 	--btn-txclr: var(--clr-comet);
 	--btn-fillclr: var(--btn-txclr);
 	--btn-bgclr: var(--clr-ecru-lt);
@@ -186,10 +184,6 @@ GLOBAL
 	transition: all 0.15s ease-in-out;
 }
 
-.btn .icon{
-	filter: invert(var(--invert));
-}
-
 .btn:hover{
 	fill: var(--btn-hover-fillclr);
 	color: var(--btn-hover-txclr);
@@ -198,9 +192,12 @@ GLOBAL
 }
 
 .btn--clear{
-	--invert: 0;
 	--btn-bgclr: transparent;
 	--btn-hover-bgclr: rgba(0,0,0,0.25);
+}
+
+.btn--ii .icon{
+	filter: invert();
 }
 
 /* Switch */
@@ -398,7 +395,6 @@ NAVBAR
 }
 
 .nav__btn{
-	--invert: 0;
 	--btn-fillclr: var(--nav-icon-txclr);
 	--btn-hover-fillclr: var(--nav-icon-txclr);
 	border-radius: 100%;
@@ -481,7 +477,6 @@ RESIN DIALOG
 }
 
 .resin__btn{
-	--invert: 0;
 	--btn-bdclr: var(--resin-btn-border);
 	border-width: 0.3em;
 	border-radius: 100%;
@@ -566,7 +561,6 @@ HEADER
 }
 
 .header__btn{
-	--invert: 0;
 	--btn-fillclr: var(--header-icon-txclr);
 	--btn-hover-fillclr: var(--header-icon-txclr);
 	min-height: 0;

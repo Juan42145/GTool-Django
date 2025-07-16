@@ -95,14 +95,14 @@ function renderInventory(){
 		const Actions = createDiv(Group, 'inventory__actions')
 		if (cMaterialsArray.length > 1){
 			const Craft = createDiv(Actions,
-				'btn inventory__btn inventory__btn--craft icon-box')
+				'btn btn--ii icon-box inventory__btn inventory__btn--craft')
 			createIcon(Craft, '#Craft')
 			Craft.addEventListener('click', () =>
 				makeCraft(category, item, cMaterials))
 		}
 		if (['GEMS','WEEKLY_DROPS'].includes(category)){
 			const Convert = create(Actions, 'button',
-				{'class':'btn inventory__btn icon-box'})
+				{'class':'btn btn--ii icon-box inventory__btn'})
 			createIcon(Convert, '#Convert')
 			Convert.addEventListener('click', () =>
 				makeConvert(category, item, cMaterials))

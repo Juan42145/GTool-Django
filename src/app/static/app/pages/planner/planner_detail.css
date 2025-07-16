@@ -71,7 +71,6 @@ PAGE HEADER
 }
 
 .page__close{
-	--invert: 0;
 	--btn-bdclr: var(--page-btn-bdclr);
 	border-width: 0.3em;
 	border-radius: 100%;

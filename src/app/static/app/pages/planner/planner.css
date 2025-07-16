@@ -92,7 +92,6 @@ PANEL ELEMENTS
 }
 
 .panel__btn{
-	--invert: 0;
 	--btn-bdclr: var(--panel-btn-bdclr);
 	font-size: 1em;
 	min-height: 0;

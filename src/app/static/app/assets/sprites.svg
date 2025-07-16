@@ -51,6 +51,7 @@
 	<image href="/static/app/assets/sprites/Icon_Quit_Game.webp" height="24" width="24"/>
 </symbol>
 
+
 <symbol id="X" viewBox="0 0 24 24">
 	<path d="M18.984 6.422l-5.578 5.578 5.578 5.578-1.406 1.406-5.578-5.578-5.578 5.578-1.406-1.406 5.578-5.578-5.578-5.578 1.406-1.406 5.578 5.578 5.578-5.578z"></path>
 </symbol>
@@ -72,6 +73,7 @@
 	<image href="/static/app/assets/sprites/Icon_Converting.webp" height="24" width="24"/>
 </symbol>
 
+
 <symbol id="view_list" viewBox="0 0 24 24">
 	<path d="M9 5.016h12v3.984h-12v-3.984zM9 18.984v-3.984h12v3.984h-12zM9 14.016v-4.031h12v4.031h-12zM3.984 9v-3.984h4.031v3.984h-4.031zM3.984 18.984v-3.984h4.031v3.984h-4.031zM3.984 14.016v-4.031h4.031v4.031h-4.031z"></path>
 </symbol>
@@ -79,6 +81,7 @@
 <symbol id="view_module" viewBox="0 0 24 24">
 	<path d="M15.984 5.016h5.016v6h-5.016v-6zM9.984 11.016v-6h5.016v6h-5.016zM15.984 18v-6h5.016v6h-5.016zM9.984 18v-6h5.016v6h-5.016zM3.984 18v-6h5.016v6h-5.016zM3.984 11.016v-6h5.016v6h-5.016z"></path>
 </symbol>
+
 
 <symbol id="temp" viewBox="0 0 24 24">
 	<path d="M3 5.016v13.969q0 0.844 0.586 1.43t1.43 0.586h6v-18h-6q-0.844 0-1.43 0.586t-0.586 1.43zM18.984 3h-6v8.016h8.016v-6q0-0.844-0.586-1.43t-1.43-0.586zM12.984 21h6q0.844 0 1.43-0.586t0.586-1.43v-6h-8.016v8.016z"></path>
