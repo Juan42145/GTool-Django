@@ -79,9 +79,12 @@ function makeRow(Table, pCategory, pItemData, isPage){
 	let category = translate(pCategory), item = decode(pCategory, pItem);
 	const [crafted, calc] = getInventory(category, item, pMaterials);
 	Object.entries(pMaterials).reverse().forEach(([rank, value]) => {
+		if(!isPage && !value) return
+		
+		const Card = createDiv(Row, 'row__card')
 		if(!value) return
 
-		const Card = createDiv(Row, 'row__card js-card r_'+rank)
+		Card.classList.add('js-card', 'r_'+rank) 
 
 		/*Img*/createImg(Card, 'row__card--img', getImage(category, item, rank))
 
