@@ -33,8 +33,7 @@
 </head>
 <body>
 	{% include 'app/menu.html' %}
-
-	<dialog id='resin-dialog' class="resin">
+	<dialog id='resin-dialog' class="resin" onclick="if(event.target === this) this.close()">
 		<div class="resin__header">
 			<button class="btn resin__btn icon-box" onclick="document.getElementById('resin-dialog').close()">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#X" /></svg>
