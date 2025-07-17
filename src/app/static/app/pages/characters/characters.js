@@ -11,22 +11,22 @@ function pageLoad(){
 	window.STAT_ORDER = Object.fromEntries(Object.keys(loadMaster().STATS)
 		.map((v, i) => [v, i]))
 
+	showAll = showSwitch(loadSetting('chr-switch', true))
 	renderCharacters()
 }
 let isTable = false, isAsc = false, sorting = ()=>{}
-let showOwned
+let showAll
 
 /**--RENDER-- */
 function renderCharacters(){
 	const characters = Object.entries(DBC).sort(sorting)
 	setDirection();
 	if(!isAsc) characters.reverse();
-	showOwned = document.getElementById('switch').checked
 	
 	document.getElementById('char-grid').innerHTML = '';
 	document.getElementById('table__body').innerHTML = '';
 	characters.forEach(character => {
-		if(showOwned && !userChar[character[0]]?.OWNED) return
+		if(!showAll && !userChar[character[0]]?.OWNED) return
 		isTable ? makeRow(character) : makeCard(character);
 	});
 }
@@ -256,6 +256,7 @@ function sortStat(a,b){
 
 /**--SWITCH: SHOW OWNED-- */
 function toggleSwitch(Element){
-	showOwned = Element.checked;
+	showAll = Element.checked;
+	storeSetting('chr-switch', showAll)
 	renderCharacters();
 }

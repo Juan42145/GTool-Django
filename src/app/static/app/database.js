@@ -23,6 +23,16 @@ function setCalc(calc){set('calc', calc)}
 function getCalc(){return get('calc')}
 function hasCalc(){return has('calc')}
 
+function setSettings(settings){set('settings', settings)}
+function getSettings(){return get('settings')}
+function storeSetting(key, value){
+	let settings = getSettings() ?? {}
+	settings[key] = value; setSettings(settings)
+}
+function loadSetting(key, defaultValue){
+	return getSettings()?.[key] ?? defaultValue
+}
+
 /**--DICTIONARIES-- */
 const INV_CATEGORIES = [
 	'RESOURCES',

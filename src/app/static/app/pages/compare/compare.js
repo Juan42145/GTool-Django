@@ -12,16 +12,18 @@ function pageLoad(){
 		if (!acc.includes(item.data)) acc.push(item.data)
 		return acc
 	},[])
+
+	showAll = showSwitch(loadSetting('cmp-switch', true))
 	renderCompare()
 }
 let isShown = false, isLine = false;
+let showAll
 
 function renderCompare(){
 	document.getElementById('cols').innerHTML = '';
 	document.getElementById('rows').innerHTML = '';
 	document.getElementById('table').innerHTML = '';
 
-	const isOwned = document.getElementById('switch').checked;
 	const rOption = document.getElementById('row').value
 									.toUpperCase().replace(' ', '_')
 	const cOption = document.getElementById('col').value
@@ -43,7 +45,7 @@ function renderCompare(){
 			}
 		}
 		let totals = [new Array(nRows).fill(0), new Array(nCols).fill(0)]
-		getChar(cells, rOption, cOption, rHeaders, cHeaders, isOwned, totals);
+		getChar(cells, rOption, cOption, rHeaders, cHeaders, totals);
 		makeTotals(cells, nRows, nCols, totals);
 	}
 }
@@ -140,9 +142,9 @@ function getHeaders(option, isRow){
 	return array;
 }
 
-function getChar(cells, rOption, cOption, rHeaders, cHeaders, isOwned, totals){
+function getChar(cells, rOption, cOption, rHeaders, cHeaders, totals){
 	Object.entries(DBC).forEach(([cName, cInfo]) => {
-		if (isOwned) if (!userChar[cName]?.OWNED) return;
+		if(!showAll && !userChar[cName]?.OWNED) return;
 		
 		let indexRow = rHeaders.indexOf(cInfo[rOption])
 		let indexCol = cHeaders.indexOf(cInfo[cOption])
@@ -184,6 +186,8 @@ function getInv(category, item){
 }
 
 /**--SWITCH: TOGGLE OWNED-- */
-function toggleSwitch(){
+function toggleSwitch(Element){
+	showAll = Element.checked;
+	storeSetting('cmp-switch', showAll)
 	renderCompare();
 }

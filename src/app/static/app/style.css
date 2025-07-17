@@ -297,6 +297,10 @@ dialog::backdrop{
 	visibility: hidden !important;
 }
 
+.hidden{
+	visibility: hidden !important;
+}
+
 /* 
 ========================================
 NAVBAR

@@ -6,10 +6,13 @@ function pageLoad(){
 	window.userWpn = user.WEAPONS;
 	
 	window.WPN_TYPES = Object.keys(loadMaster().WEAPON_TYPES)
+
+	showAll = showSwitch(loadSetting('wpn-switch', false))
 	initWeapons()
 }
 let filter = 0, second = 0, count = 0, showOwned = false, isReverse = false;
 let sorting = ()=>{};
+let showAll
 
 /**--INITIALIZE-- */
 function initWeapons(){
@@ -24,11 +27,10 @@ function initWeapons(){
 function renderWeapons(){
 	let weapons = Object.entries(DBW).sort(sorting);
 	if (isReverse) weapons.reverse();
-	let isShowAll = document.getElementById('switch').checked;
 
 	document.getElementById('weapons').innerHTML = '';
 	weapons.forEach(weapon => {
-		if (!isShowAll && weapon[1].IS_WISH_ONLY) return
+		if (!showAll && weapon[1].IS_WISH_ONLY) return
 		else if (showOwned && !userWpn[weapon[0]]?.OWNED) return
 		else if (filter !== 0 && weapon[1].WEAPON_TYPE !== WPN_TYPES[filter - 1])
 			return
@@ -156,5 +158,7 @@ function sortRR(a,b){
 
 /**--SWITCH: CHANGE DISPLAY MODE */
 function toggleSwitch(Element){
+	showAll = Element.checked;
+	storeSetting('wpn-switch', showAll)
 	renderWeapons();
 }

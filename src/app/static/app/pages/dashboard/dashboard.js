@@ -14,6 +14,9 @@ function pageLoad(){
 		"Natlan": "Pyro",
 		"Snezhnaya": "Cryo",
 	}
+
+	let filter = showSwitch(loadSetting('dsh-switch', true))
+	document.body.style.setProperty('--filter', filter ? 'inherit' : 'none')
 	renderDashboard()
 }
 const DAYS = ['Mo/Th', 'Tu/Fr', 'We/Sa']
@@ -317,4 +320,5 @@ function sortOrder(pCategory){
 function toggleSwitch(Element){
 	document.body.style.setProperty('--filter', Element.checked ?
 		'inherit' : 'none')
+	storeSetting('dsh-switch', Element.checked)
 }

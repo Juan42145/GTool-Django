@@ -201,12 +201,13 @@ function makeResinDialog(){
 
 function calcResin(Element, value, type){
 	const date = new Date();
-	if (value < MAX_RESIN) date.setMinutes(date.getMinutes() + 8*(MAX_RESIN - 1 - value))
+	if (value < MAX_RESIN)
+		date.setMinutes(date.getMinutes() + 8*(MAX_RESIN - 1 - value))
 	const day = (new Date()).getDay() == date.getDay() ? 'Today' : 'Tomorrow';
 	const time = date.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})
 
-	const ResinCalc = create(Element, 'div',
-		{'class':'resin__calc resin__calc--'+type+(value < 0? ' resin__calc--n' : '')})
+	const ResinCalc = create(Element, 'div', {'class':
+		'resin__calc resin__calc--'+type+(value < 0? ' resin__calc--n' : '')})
 	if (value < 0){
 		const waitTime = 8*(-value);
 		const hour = Math.floor(waitTime/60)
@@ -216,6 +217,12 @@ function calcResin(Element, value, type){
 		createTxt(ResinCalc, 'div', 'resin__value', value)
 	}
 	createTxt(ResinCalc, 'div', '', day+' '+time)
+}
+
+function showSwitch(variable){
+	const Switch = document.getElementById('switch')
+	Switch.checked = variable; Switch.parentElement.classList.remove('hidden')
+	return variable
 }
 
 /**--TOOLTIP-- */

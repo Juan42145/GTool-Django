@@ -3,8 +3,10 @@ setup(loadCharacters())
 function pageLoad(){
 	window.CALCDATA = loadStatic().calculation_data
 	
+	showCum = showSwitch(loadSetting('data-switch', false))
 	renderData()
 }
+let showCum
 
 /**--RENDER-- */
 function renderData(){
@@ -16,8 +18,6 @@ function renderData(){
 }
 
 function makeTable(Cont, type, categories){
-	let isCum = document.getElementById('switch').checked;
-	
 	const Table = create(Cont, 'table')
 	const Head = create(Table, 'thead')
 	const Bod = create(Table, 'tbody')
@@ -44,7 +44,7 @@ function makeTable(Cont, type, categories){
 				/*RHeader*/createTxt(LevelRow, 'th', '', level)
 			}
 
-			const prev = (levels[level - 1] && !isCum) ?
+			const prev = (levels[level - 1] && !showCum) ?
 				Object.values(levels[level - 1]) : undefined
 			const values = Object.values(materials)
 			const max = values.length - 1
@@ -62,6 +62,8 @@ function makeTable(Cont, type, categories){
 }
 
 /**--SWITCH: CHANGE CUMMULATIVE-- */
-function toggleSwitch(){
+function toggleSwitch(Element){
+	showCum = Element.checked;
+	storeSetting('data-switch', showCum)
 	renderData()
 }
