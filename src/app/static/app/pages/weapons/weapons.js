@@ -16,7 +16,7 @@ function pageLoad(){
 	showWish = showSwitch(loadSetting('wpn-switch', false))
 	initWeapons()
 }
-let filter = 0, showAll = true, isAsc = false; sorting = ()=>{};
+let filter = 0, showAll = true, isAsc = false, sorting = ()=>{};
 let showWish
 
 /**--INITIALIZE-- */
