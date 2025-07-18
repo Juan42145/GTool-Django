@@ -2,33 +2,34 @@
 
 {% block content %}
 
-<div id="weapon-menu">
-	<div class="options">
-		<button class="owned" onclick="filterOwned(this)">Owned</button>
-		<div class="filter-btn">
-			<button onclick="filterWpn(this, 1)"><img></button>
-			<button onclick="filterWpn(this, 2)"><img></button>
-			<button onclick="filterWpn(this, 3)"><img></button>
-			<button onclick="filterWpn(this, 4)"><img></button>
-			<button onclick="filterWpn(this, 5)"><img></button>
-		</div>
-		<button class="arrow" onclick="sortTable(null, 0)">&udarr;</button>
+<div class="options">
+	<div class="options__filters">
+		<button class="btn icon-box options__wtype" onclick="filterWpn(this, 1)"><img class="js-wtype"></button>
+		<button class="btn icon-box options__wtype" onclick="filterWpn(this, 2)"><img class="js-wtype"></button>
+		<button class="btn icon-box options__wtype" onclick="filterWpn(this, 3)"><img class="js-wtype"></button>
+		<button class="btn icon-box options__wtype" onclick="filterWpn(this, 4)"><img class="js-wtype"></button>
+		<button class="btn icon-box options__wtype" onclick="filterWpn(this, 5)"><img class="js-wtype"></button>
 	</div>
-
-	<table id="table">
-		<thead>
-			<th onclick="sortTable(this, 1)"></th>
-			<th onclick="sortTable(this, 2)"></th>
-			<th onclick="sortTable(this, 3)">Name</th>
-			<th onclick="sortTable(this, 4)">Phase</th>
-			<th onclick="sortTable(this, 7)">Type</th>
-			<th onclick="sortTable(this, 5)">ATK</th>
-			<th onclick="sortTable(this, 6)">Stat</th>
-			<th onclick="sortTable(this, 6)">Value</th>
-		</thead>
-		<tbody id="weapons"></tbody>
-	</table>
-
+	<button id="direction" class="btn options__direction" onclick="toggleDirection(this)"></button>
+	<div class="options__owned">
+		<button class="btn owned__btn" onclick="filterNonOwned(this, true)">Owned</button>
+		<button class="btn owned__btn selected" onclick="filterNonOwned(this, false)">All</button>
+	</div>
 </div>
+
+<table id="table">
+	<thead>
+		<th onclick="sortTable(this, 1)"></th>
+		<th onclick="sortTable(this, 2)"></th>
+		<th onclick="sortTable(this, 3)">Name</th>
+		<th onclick="sortTable(this, 4)">P</th>
+		<th onclick="sortTable(this, 5)">ATK</th>
+		<th onclick="sortTable(this, 6)">STAT</th>
+		<th onclick="sortTable(this, 7)">TRP</th>
+		<th onclick="sortTable(this, 8)">ELT</th>
+		<th onclick="sortTable(this, 9)">CMN</th>
+	</thead>
+	<tbody id="weapons"></tbody>
+</table>
 
 {% endblock content %}
