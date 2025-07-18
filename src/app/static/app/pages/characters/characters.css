@@ -43,12 +43,12 @@
 }
 
 .options__direction:after{
-	content: "\276F";
-	transform: rotate(90deg);
+	content: "\25B2";
+	transform: rotate(180deg);
 }
   
 .options__direction.asc:after{
-	transform: rotate(-90deg);
+	transform: rotate(0);
 }
 
 .mode{
@@ -73,7 +73,6 @@
 .selected{
 	--btn-txclr: var(--options-mode-selected-txclr);
 	--btn-bgclr: var(--options-mode-selected-bgclr);
-	--btn-hover-bgclr: var(--options-mode-selected-bgclr);
 	pointer-events: none;
 }
 
@@ -129,25 +128,26 @@
 	--card-txclr: var(--clr-ecru-lt);
 	--card-bgclr: var(--clr-comet-dk);
 
+	--size: 9em;
+
 	display: grid;
 	place-content: center;
 	gap: 0.8em;
 	padding: 0.5em 0.25em;
-	grid-template-columns: repeat(auto-fill, 9em);
-	grid-auto-rows: 12em;
+	grid-template-columns: repeat(auto-fill, var(--size));
 }
 
 .card{
 	position: relative;
 	display: grid;
-	grid-template-columns: 9em;
-	grid-template-rows: 9em 3em;
+	grid-template-columns: var(--size);
+	grid-template-rows: var(--size) 3em;
 	border-radius: 1em;
 	overflow: hidden;
 }
 
 .card__image{
-	max-width: 9em;
+	max-width: var(--size);
 	aspect-ratio: 1;
 }
 
@@ -165,9 +165,6 @@
 
 /*TABLE*/
 table{
-	--table_bg: var(--clr-void);
-	--table_head: var(--clr-pearl);
-
 	--table-txclr: var(--clr-black-dk);
 	--table-bgclr: var(--clr-black);
 	--table-bdclr: var(--clr-black);
@@ -207,15 +204,16 @@ th{
 }
 
 .hdr--sort:after{
-	content: "\276F";
+	content: "\25B2";
 	position: absolute;
 	bottom: 0;
-	left: 0.4em;
-	transform: rotate(90deg);
+	left: 50%;
+	translate: -50%;
+	transform: rotate(180deg);
 }
   
 .hdr--sort.asc:after{
-	transform: rotate(-90deg);
+	transform: rotate(0);
 }
 
 td{
@@ -267,8 +265,7 @@ td{
 	}
   
 	th{
-	  padding-left: 0.5em;
-	  padding-right: 0.5em;
+		padding: 0.625em 0.5em;
 	}
 
 	.row__user{
