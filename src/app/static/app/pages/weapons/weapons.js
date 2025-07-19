@@ -67,8 +67,12 @@ function makeRow(weapon){
 	/*Img*/createImg(Cell, 'wpn__img', getWeapon(wName))
 	/*Type*/createTxt(Cell, 'div', 'wpn__type', wInfo.WEAPON_TYPE);
 	if(state?.OWNED){
-		const Tag = createTxt(Cell, 'div', 'wpn__tag', 'R'+ +state.REFINEMENT);
-		if(state.REFINEMENT >= (wInfo.MAX || 5)) Tag.classList.add('max')
+		let value = (state.REFINEMENT || 0) + (state.WISH || 0)
+		const Tag = createTxt(Cell, 'div', 'wpn__tag',
+			'R'+value+(state.WISH ? '*' : ''));
+		if(state.WISH && state.REFINEMENT)
+			createTxt(Tag, 'div', '', '['+state.REFINEMENT+']')
+		if(value >= (wInfo.MAX || 5)) Tag.classList.add('max')
 	} else{
 		Row.classList.add('missing')
 	}

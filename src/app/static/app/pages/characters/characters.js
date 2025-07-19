@@ -41,7 +41,7 @@ function makeCard(character){
 	if(state?.OWNED){
 		let value = consValue(state)
 		const Tag = createTxt(Card, 'div', 'char__tag', 'C'+value);
-		if(state.REWARD) createTxt(Tag, 'small', '', '['+ +state.REWARD+']');
+		if(state.REWARD) createTxt(Tag, 'div', '', '['+ +state.REWARD+']');
 		if(value >= 6) Tag.classList.add('max')
 	} else{
 		Card.classList.add('missing');
@@ -78,7 +78,7 @@ function makeRow(character){
 	if (state?.OWNED){
 		let value = consValue(state)
 		const Tag = createTxt(Info, 'div', 'char__tag', 'C'+value);
-		if(state.REWARD) createTxt(Tag, 'small', '', '['+ +state.REWARD+']');
+		if(state.REWARD) createTxt(Tag, 'div', '', '['+state.REWARD+']');
 		if(value >= 6) Tag.classList.add('max')
 	} else{
 		Row.classList.add('missing')
@@ -116,7 +116,7 @@ function makeRow(character){
 
 function consValue(state){
 	let s = uGet(state, '')
-	return s.CONSTELLATION === '' ? +s.REWARD - 1 : +s.CONSTELLATION + +s.REWARD
+	return (s.CONSTELLATION === 0 ? 0 : s.CONSTELLATION || -1) + s.REWARD
 }
 
 /**--SWITCH MODE-- */
