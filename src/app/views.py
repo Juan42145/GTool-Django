@@ -27,15 +27,6 @@ def dashboard(request, *args, **kwargs):
     return render(request, 'app/dashboard.html', context)
 
 @login_required
-def dashboard_detail(request, category, *args, **kwargs):
-    context = {
-        'styles': ['app/pages/dashboard/dashboard.css','app/pages/dashboard/dashboard_detail.css'],
-        'scripts': ['app/pages/dashboard/dashboard.js','app/pages/dashboard/dashboard_detail.js'],
-        'category': unquote(category)
-    }
-    return render(request, 'app/dashboard_detail.html', context)
-
-@login_required
 def inventory(request, *args, **kwargs):
     context = {
         'styles': ['app/pages/inventory/inventory.css'],

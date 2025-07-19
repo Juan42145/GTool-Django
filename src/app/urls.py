@@ -6,7 +6,6 @@ urlpatterns = [
     path('', home, name='home'),
     path('domains/', test, name='domains'), #index No login
     path('dashboard/', dashboard, name='dashboard'),
-    path('dashboard/<str:category>/', dashboard_detail, name='dashboard-detail'),
     path('inventory/', inventory, name='inventory'),
     path('planner/', planner, name='planner'),
     path('planner/<str:kind>/<str:name>/', planner_detail, name='planner-detail'),
