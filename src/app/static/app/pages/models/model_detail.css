@@ -1,0 +1,369 @@
+.dets{
+	--dets-btn-bgclr: color-mix(in hsl, var(--clr-black-dk), transparent);
+	--dets-txclr: var(--clr-white);
+	--dets-bgclr: var(--color);
+	--dets-shadowclr: var(--clr-black-dk);
+	--dets-opacity-dk: color-mix(in hsl, var(--clr-black-dk) 60%, transparent);
+	--dets-opacity: color-mix(in hsl, var(--clr-black-dk) 25%, transparent);
+	--dets-opacity-lt: color-mix(in hsl, var(--clr-white-lt), transparent);
+
+	--dets-max-txclr: var(--dets-opacity-dk);
+	--dets-max-bgclr: var(--clr-ecru-hg);
+	--dets-btn-bdclr: var(--clr-black);
+	--dets-modify-txclr: var(--clr-black);
+
+	position: relative;
+	height: 100%;
+	overflow: auto;
+  background-color: var(--dets-bgclr);
+}
+
+.dets__close{
+	--btn-txclr: var(--dets-bgclr);
+
+	position: absolute;
+	right: 0;
+	margin: 0.75em;
+	z-index: 2;
+	border-radius: 100%;
+	background-color: var(--dets-btn-bgclr);
+}
+
+.dets__content{
+  font-size: 2em;
+  display: grid;
+	color: var(--dets-txclr);
+}
+
+.dets__banner, .dets__info{
+	grid-area: 1/1;
+}
+
+.dets__banner{
+	position: relative;
+	display: flex;
+	max-height: 50svh;
+	max-width: 100svw;
+	overflow: hidden;
+}
+
+.banner__overlay{
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(transparent 75%, var(--dets-bgclr) 100%);
+}
+
+.banner__img{
+	display: block;
+  width: 100%;
+	object-fit: contain;
+	object-position: right;
+}
+
+.dets__info{
+  padding: 0.5em;
+	padding-top: 4em;
+	display: grid;
+	place-content: end start;
+	z-index: 1;
+}
+
+.dets__info > div{
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: bold;
+  text-shadow: 0 0 0.35em var(--dets-shadowclr);
+}
+
+.info__name{
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.info__element{
+  width: 2em;
+  height: 2em;
+  background: radial-gradient(closest-side, var(--dets-shadowclr), transparent);
+}
+
+.info__enhancements{
+  display: flex;
+	min-width: 2em;
+	height: 2em;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dets-opacity-dk);
+	text-shadow: none;
+}
+
+.info__enhancements.max{
+  background-color: var(--dets-max-bgclr);
+  color: var(--dets-max-txclr);
+}
+
+.enhancement__details{
+	font-size: 0.75em;
+	padding-left: 0.25em;
+}
+
+.dets__info button{
+  display: grid;
+  height: 2em;
+  min-width: 2em;
+  border-radius: 0.5em;
+  padding: 0.25em;
+  place-items: center;
+	border: 0.05em solid var(--dets-btn-bdclr);
+  background-color: var(--dets-opacity);
+}
+
+.info__edit svg{
+  width: 1.2em;
+  height: 1.2em;
+  fill: currentColor;
+}
+
+.info__editing{
+  position: relative;
+}
+
+.info__modify{
+  position: absolute;
+  display: flex;
+  top: -2.5em;
+  right: -1em;
+  gap: 0.25em;
+}
+
+.info__modify button{
+  background-color: var(--dets-opacity-lt);
+  color: var(--dets-modify-txclr);
+}
+
+.dets__data{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-columns: 1fr;
+	grid-auto-flow: dense;
+	padding: 0.5em;
+	gap: 0.5em 0.25em;
+}
+
+/* Inputs */
+.data__inputs{
+	font-size: 0.9em;
+	
+	grid-column: 1/-1;
+  display: grid;
+  padding: 0.6em;
+  gap: 0.5em 0.75em;
+  place-content: center;
+  border-radius: 0.5em;
+  background-color: var(--dets-opacity);
+}
+
+.wpn .data__inputs{
+	grid-auto-flow: column;
+	place-content: space-evenly;
+}
+
+.input__farm{
+	display: flex;
+  gap: 0.25em;
+  place-items: center;
+	place-content: center;
+}
+
+.char .input__farm{
+	grid-column: span 2;
+	padding-bottom: 0.25em;
+}
+
+.input__farm input[type=checkbox]{
+	width: 1em;
+	height: 1em;
+}
+
+.input__group{
+  display: grid;
+	grid-template-columns: 3.5em repeat(2, 2.5em);
+	place-content: center;
+  gap: 0.5em;
+}
+
+.char .phase{
+	grid-row: span 3;
+	grid-template-columns: 2.5em 2.5em;
+}
+
+.char .phase .input__group__text{
+	grid-column: span 2;
+	text-align: center;
+}
+
+.input__group__text{
+	text-align: end;
+}
+
+.input__group input[type=text]{
+	border-radius: 1em;
+  background-color: var(--dets-opacity-dk);
+  text-align: center;
+}
+
+.input__group input:nth-of-type(2n){
+  background-color: var(--dets-opacity);
+}
+
+/* Materials */
+.data__mats{
+	display: grid;
+  gap: 0.25em;
+  border-radius: 0.25em;
+  padding: 0.5em;
+  place-content: center;
+  background-color: var(--dets-opacity-dk);
+}
+
+.mat__title{
+	font-size: 0.8em;
+  grid-column: span 3;
+}
+
+.mat__img{
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 0.5em;
+  overflow: hidden;
+  background-color: var(--dets-opacity-dk);
+}
+
+.mat__img img{
+  width: 100%;
+  height: 100%;
+}
+
+/* Stats */
+.data__stats{
+	display: grid;
+  grid-template-rows: repeat(2, 1fr);
+	grid-auto-flow: column;
+  gap: 0.1em;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+
+.char .data__stats{
+	grid-column: 1/-1;
+}
+
+.data__stats div{
+	font-size: 0.8em;
+  display: grid;
+  place-items: center;
+  padding: 0.4em;
+  background-color: var(--dets-opacity-dk);
+	text-align: center;
+}
+
+@media screen and (min-width: 750px){
+	.dets__content{
+		height: 100%;
+	}
+
+	.dets__banner{
+		position: absolute;
+		inset: 0;
+		height: 50svh;
+		width: max-content;
+		place-content: center;
+		margin: auto;
+	}
+
+	.banner__overlay{
+		background: 
+		linear-gradient(var(--dets-bgclr) 0%, transparent 25%,
+		transparent 75%, var(--dets-bgclr) 100%),
+		linear-gradient(90deg, transparent 75%, var(--dets-bgclr) 100%);
+	}
+
+	.banner__img{
+		height: 100%;
+		width: auto;
+	}
+
+	.dets__info, .dets__data{
+		z-index: 1;
+		background-color: color-mix(in hsl, var(--dets-bgclr) 50%, transparent);
+	}
+
+	.dets__data{
+		place-content: start;
+		gap: 0.5em;
+	}
+
+  .data__inputs{
+		grid-column: span 2;
+	}
+
+	.wpn .data__inputs{
+		grid-column: 1;
+	}
+
+	.wpn .phase{
+		grid-template-columns: 2.5em 2.5em;
+	}
+
+	.wpn .phase .input__group__text{
+		grid-column: span 2;
+		text-align: center;
+	}
+
+	.data__stats{
+		grid-column: 3;
+	}
+
+	.char .data__stats{
+		grid-column: 3;
+		grid-row: 1/span 2;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: auto;
+		grid-auto-flow: row;
+	}
+
+	.data__stats div{
+		font-size: 1em;
+	}
+}
+
+@media screen and (min-width: 1024px){
+	.dets__content{
+		float: left;
+	}
+
+	.dets__info, .dets__data{
+		padding-left: 1.5em;
+		border-right: 0.25em solid var(--dets-opacity-lt);
+	}
+
+	.dets__data{
+		grid-template-columns: 1fr;
+		grid-auto-flow: row;
+		row-gap: 1em;
+	}
+
+	.data__stats{
+		grid-column: 1;
+	}
+	
+	.char .data__stats{
+		grid-column: span 2;
+		grid-row: auto;
+		grid-template-rows: repeat(2, 1fr);
+		grid-template-columns: auto;
+		grid-auto-flow: column;
+	}
+}

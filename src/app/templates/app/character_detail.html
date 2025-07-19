@@ -3,34 +3,35 @@
 
 {% block content %}
 
-<div id="char" class="char" data-color={{ object.element }}>
-  <a class="btn btn--clear icon-box char__close" href="{% url 'app:characters' %}">
+<div class="dets char" data-color={{ object.element }}>
+  <a class="btn btn--clear icon-box dets__close" href="{% url 'app:characters' %}">
 		<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#X"/></svg>
 	</a>
-  <div class="char__content">
+	
+  <div class="dets__content">
 		
-		<div class="banner">
+		<div class="dets__banner">
 			<div class="banner__overlay"></div>
 			<img class="banner__img" data-img='CHARACTER,{{ object.name }}'>
 		</div>
 
-    <div class="information">
+    <div class="dets__info">
       <div>
-        <div id="name" class="name">{{ object.name }}</div>
-        <img class="element" data-img='ELEMENTS,{{ object.element }}'>
-        <div class="editing">
-					<div id="constellations" class="constellations">
-						<div id="constellation" class="constellation"></div>
-						<div id="details" class="details"></div>
+        <div id="name" class="info__name">{{ object.name }}</div>
+        <img class="info__element" data-img='ELEMENTS,{{ object.element }}'>
+        <div class="info__editing">
+					<div id="constellations" class="info__enhancements">
+						<div id="constellation"></div>
+						<div id="details" class="enhancement__details"></div>
 					</div>
-          <div id="modify" class="modify hide">
+          <div id="modify" class="info__modify hide">
             <button onclick="minus(true)">[-]</button>
             <button onclick="plus(true)">[+]</button>
             <button onclick="minus()">-</button>
             <button onclick="plus()">+</button>
           </div>
         </div>
-        <button id="edit" class="edit" onclick="editIn()">
+        <button id="edit" class="info__edit" onclick="editIn()">
           <svg id="pencil" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path></svg>
           <svg id="disk" class="hide" viewBox="0 0 24 24"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg>
         </button>
@@ -41,51 +42,50 @@
       </div>
     </div>
 
-		
-		<div class="data">
+		<div class="dets__data">
 
-			<div class="inputs">
-				<div class="farm">
+			<div class="data__inputs">
+				<div class="input__farm">
 					<input type="checkbox" id="FARM" onchange="update(this)">
 					Farm
 				</div>
-				<div class="phase">
-					<div class="input-text">Phase</div>
+				<div class="input__group phase">
+					<div class="input__group__text">Phase</div>
 					<input type="text" pattern="\d*" id="PHASE" onchange="update(this)" onclick="focusInput(event)">
 					<input type="text" pattern="\d*" id="TARGET" onchange="update(this)" onclick="focusInput(event)">
 				</div>
-				<div class="normal">
-					<div class="input-text">Normal</div>
+				<div class="input__group normal">
+					<div class="input__group__text">Normal</div>
 					<input type="text" pattern="\d*" id="NORMAL" onchange="update(this)" onclick="focusInput(event)">
 					<input type="text" pattern="\d*" id="TNORMAL" onchange="update(this)" onclick="focusInput(event)">
 				</div>
-				<div class="skill">
-					<div class="input-text">Skill</div>
+				<div class="input__group skill">
+					<div class="input__group__text">Skill</div>
 					<input type="text" pattern="\d*" id="SKILL" onchange="update(this)" onclick="focusInput(event)">
 					<input type="text" pattern="\d*" id="TSKILL" onchange="update(this)" onclick="focusInput(event)">
 				</div>
-				<div class="burst">
-					<div class="input-text">Burst</div>
+				<div class="input__group burst">
+					<div class="input__group__text">Burst</div>
 					<input type="text" pattern="\d*" id="BURST" onchange="update(this)" onclick="focusInput(event)">
 					<input type="text" pattern="\d*" id="TBURST" onchange="update(this)" onclick="focusInput(event)">
 				</div>
 			</div>
 			
-			<div class="ascension mats">
+			<div class="data__mats">
 				<div class="mat__title">Ascension Materials</div>
-				<div class="mat__img"><img id="BOSS" data-img='BOSSES,{{ object.boss|default:"" }}'></div>
-				<div class="mat__img"><img id="LOCAL" data-img='LOCAL_SPECIALTIES,{{ object.local_specialty }}'></div>
-				<div class="mat__img"><img id="COMMON" data-img='ENEMIES,{{ object.common }}'></div>
+				<div class="mat__img"><img data-img='BOSSES,{{ object.boss|default:"" }}'></div>
+				<div class="mat__img"><img data-img='LOCAL_SPECIALTIES,{{ object.local_specialty }}'></div>
+				<div class="mat__img"><img data-img='ENEMIES,{{ object.common }}'></div>
 			</div>
 	
-			<div class="talent mats">
+			<div class="data__mats">
 				<div class="mat__title">Talent Materials</div>
-				<div class="mat__img"><img id="BOOK" data-img='BOOKS,{{ object.book|default:"" }}'></div>
-				<div class="mat__img"><img id="WEEKLY BOSS" data-img='WEEKLY_BOSSES,{{ object.weekly_boss|default:"" }}'></div>
-				<div class="mat__img"><img id="WEEKLY" data-img='WEEKLY_DROPS,{{ object.weekly_drop|default:"" }}'></div>
+				<div class="mat__img"><img data-img='BOOKS,{{ object.book|default:"" }}'></div>
+				<div class="mat__img"><img data-img='WEEKLY_BOSSES,{{ object.weekly_boss|default:"" }}'></div>
+				<div class="mat__img"><img data-img='WEEKLY_DROPS,{{ object.weekly_drop|default:"" }}'></div>
 			</div>
 			
-			<div class="stats">
+			<div class="data__stats">
 				<div>HP</div>
 				<div>{{ object.stat_hp }}</div>
 				<div>ATK</div>

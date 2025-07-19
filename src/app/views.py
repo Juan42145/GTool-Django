@@ -74,7 +74,7 @@ def character_detail(request, name, *args, **kwargs):
     object = get_object_or_404(Character, name=unquote(name))
     context = {
         'object': object,
-        'styles': ['app/pages/characters/character_detail.css'],
+        'styles': ['app/pages/models/model_detail.css'],
         'scripts': ['app/pages/characters/character_detail.js'],
     }
     return render(request, 'app/character_detail.html', context)
@@ -92,7 +92,7 @@ def weapon_detail(request, name, *args, **kwargs):
     object = get_object_or_404(Weapon, name=unquote(name))
     context = {
         'object': object,
-        'styles': ['app/pages/weapons/weapon_detail.css'],
+        'styles': ['app/pages/models/model_detail.css'],
         'scripts': ['app/pages/weapons/weapon_detail.js'],
     }
     return render(request, 'app/weapon_detail.html', context)
