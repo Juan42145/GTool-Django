@@ -38,8 +38,9 @@
 	--btn-bgclr: var(--options-dir-bgclr);
 	--btn-hover-bgclr: var(--options-dir-hover-bgclr);
 	font-size: 1.25em;
-	line-height: 0;
 	min-height: 0;
+	height: 100%;
+	line-height: 0;
 }
 
 .options__direction:after{
