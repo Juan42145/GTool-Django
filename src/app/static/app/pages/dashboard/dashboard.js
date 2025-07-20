@@ -102,8 +102,8 @@ function makeRow(Table, pCategory, pItemData, isPage){
 
 	if (calc['runs']) /*Runs*/createTxt(Name, 'span', '', calc['runs'])
 
-	const numCards = Row.querySelectorAll('.js-card').length
-	let complete = numCards <= Row.querySelectorAll('.completed').length;
+	const numCards = Row.getElementsByClassName('js-card').length
+	let complete = numCards <= Row.getElementsByClassName('completed').length;
 	if (complete) Row.classList.add('completed')
 	else Row.classList.remove('completed')
 

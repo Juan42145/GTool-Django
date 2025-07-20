@@ -169,14 +169,14 @@ function getError(){
 /**--NAVBAR-- */
 function openNav(){
 	const Nav = document.getElementById('nav');
-	const Backdrop = Nav.querySelector('#backdrop')
+	const Backdrop = Nav.getElementById('backdrop')
 	Nav.style.width = '90%';
 	Backdrop.classList.add('backdrop')
 }
 
 function closeNav(){
 	const Nav = document.getElementById('nav');
-	const Backdrop = Nav.querySelector('#backdrop')
+	const Backdrop = Nav.getElementById('backdrop')
 	Nav.style.width = null;
 	Backdrop.classList.remove('backdrop')
 }

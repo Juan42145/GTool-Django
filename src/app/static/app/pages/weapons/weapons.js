@@ -115,7 +115,7 @@ function makeInfoCard(Cont, wInfo, group, key){
 /**--FILTERS-- */
 function filterNonOwned(Element, value){
 	showAll = !value; storeSetting('wpn-all', showAll)
-	document.querySelector('.selected').classList.remove('selected')
+	document.getElementsByClassName('selected')[0].classList.remove('selected')
 	Element.classList.add('selected')
 	renderWeapons();
 }
