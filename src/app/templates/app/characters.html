@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="options">
-	<select class="options__select" onchange="getSort(value)">
+	<select id="select-sort" class="options__select" onchange="setSort(value)">
 		<option disabled selected hidden>Sort by ...</option>
 		<option value="0">Release Date</option>
 		<option value="1">Name</option>
@@ -14,10 +14,10 @@
 	</select>
 	<button id="direction" class="btn icon-box options__direction" onclick="toggleDirection(this)"></button>
 	<div class="mode">
-		<button class="btn icon-box mode__btn selected" onclick="switcher(this, false)">
+		<button class="js-mode btn icon-box mode__btn selected" onclick="switcher(this, false)">
 			<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#view_module" /></svg>
 		</button>
-		<button class="btn icon-box mode__btn" onclick="switcher(this, true)" >
+		<button class="js-mode btn icon-box mode__btn" onclick="switcher(this, true)" >
 			<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#view_list" /></svg>
 		</button>
 	</div>
@@ -29,16 +29,16 @@
 	
 	<table id="char-table" class="hide">
 		<thead>
-			<th onclick="sortTable(this, 1)"></th>
-			<th id="hdr-name" class="row__r-border" onclick="sortTable(this, 2)">Name</th>
-			<th onclick="sortTable(this, 3)">P</th>
-			<th onclick="sortTable(this, 4)">N</th>
-			<th onclick="sortTable(this, 5)">S</th>
-			<th class="row__r-border" onclick="sortTable(this, 6)">B</th>
-			<th onclick="sortTable(this, 7)">HP</th>
-			<th onclick="sortTable(this, 8)">ATK</th>
-			<th onclick="sortTable(this, 9)">DEF</th>
-			<th onclick="sortTable(this, 10)">STAT</th>
+			<th onclick="setSort(1, this)"></th>
+			<th id="hdr-name" class="row__r-border" onclick="setSort(2, this)">Name</th>
+			<th onclick="setSort(3, this)">P</th>
+			<th onclick="setSort(4, this)">N</th>
+			<th onclick="setSort(5, this)">S</th>
+			<th class="row__r-border" onclick="setSort(6, this)">B</th>
+			<th onclick="setSort(7, this)">HP</th>
+			<th onclick="setSort(8, this)">ATK</th>
+			<th onclick="setSort(9, this)">DEF</th>
+			<th onclick="setSort(10, this)">STAT</th>
 		</thead>
 		<tbody id="table__body"></tbody>
 	</table>

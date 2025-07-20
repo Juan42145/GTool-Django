@@ -14,10 +14,23 @@ function pageLoad(){
 		.map((v, i) => [v, i]))
 	
 	showWish = showSwitch(loadSetting('wpn-switch', false))
+	isAsc = loadSetting('wpn-asc', false)
+	sorting = loadSetting('wpn-sort', 0)
+	filter = loadSetting('wpn-fltr', 0)
+	showAll = loadSetting('wpn-all', true)
+	displaySettings()
 	initWeapons()
 }
-let filter = 0, showAll = true, isAsc = false, sorting = ()=>{};
-let showWish
+let showWish, isAsc, sorting, filter, showAll
+function displaySettings(){
+	//sorting
+	sortTable(document.getElementsByTagName('th')[sorting-1], sorting)
+	//filter
+	const Element = document.getElementsByClassName('js-wtype')[filter-1]
+	Element?.parentElement.classList.add('active');
+	//showAll
+	document.getElementsByClassName('js-own')[+showAll].classList.add('selected')
+}
 
 /**--INITIALIZE-- */
 function initWeapons(){
@@ -101,7 +114,7 @@ function makeInfoCard(Cont, wInfo, group, key){
 
 /**--FILTERS-- */
 function filterNonOwned(Element, value){
-	showAll = !value;
+	showAll = !value; storeSetting('wpn-all', showAll)
 	document.querySelector('.selected').classList.remove('selected')
 	Element.classList.add('selected')
 	renderWeapons();
@@ -113,6 +126,7 @@ function filterWpn(Element, value){
 	else{
 		filter = value; Element.classList.add('active');
 	}
+	storeSetting('wpn-fltr', filter)
 	renderWeapons();
 }
 
@@ -120,7 +134,7 @@ function filterWpn(Element, value){
 function toggleDirection(btn){
 	if(isAsc) btn.classList.add('asc')
 	else btn.classList.remove('asc')
-	isAsc = !isAsc
+	isAsc = !isAsc; storeSetting('wpn-asc', isAsc)
 	renderWeapons();
 }
 
@@ -137,26 +151,27 @@ function setDirection(){
 }
 
 /**--SORTS-- */
+function setSort(header, value){
+	isAsc = sortTable(header, value); storeSetting('wpn-asc', isAsc)
+	renderWeapons()
+}
+
 function sortTable(header, value){
 	const sorts =[[()=>{}, false], [sortFarm, false], [sortRef, false],
 		[sortName, true], [sortP, false], [sortATK, false], [sortStat, false],
 		[sortTrp, false], [sortElt, false], [sortCmn, false], [sortR, false]]
-	sorting = sorts[value][0];
-	if(!header.classList.contains('hdr--sort')) isAsc = sorts[value][1];
-	else{
-		if(value === 1){
-			sorting = sorts[0][0]; isAsc = sorts[0][1]; header = null
-		} else if(value === 4){
-			sorting = sorts[10][0]; isAsc = sorts[10][1]; header = null
-		} else{
-			isAsc = !isAsc
-		}
+
+	let isHeaderSort = header?.classList.contains('hdr--sort')
+	let isReverse = isHeaderSort && value !== 1 && value !== 4
+	if(isHeaderSort && (value === 1 || value === 4)){
+		value = (value === 1) ? 0 : 10; header = null
 	}
+	sorting = sorts[value][0]; storeSetting('wpn-sort', value)
 
 	document.getElementsByClassName('hdr--sort')[0]?.classList.remove('hdr--sort')
 	header?.classList.add('hdr--sort')
 
-	renderWeapons();
+	return isReverse ? !isAsc : sorts[value][1]
 }
 
 /**--SORT FUNCTIONS-- */

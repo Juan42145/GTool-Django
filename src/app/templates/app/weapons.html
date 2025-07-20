@@ -12,22 +12,22 @@
 	</div>
 	<button id="direction" class="btn options__direction" onclick="toggleDirection(this)"></button>
 	<div class="options__owned">
-		<button class="btn owned__btn" onclick="filterNonOwned(this, true)">Owned</button>
-		<button class="btn owned__btn selected" onclick="filterNonOwned(this, false)">All</button>
+		<button class="js-own btn owned__btn" onclick="filterNonOwned(this, true)">Owned</button>
+		<button class="js-own btn owned__btn" onclick="filterNonOwned(this, false)">All</button>
 	</div>
 </div>
 
 <table id="table">
 	<thead>
-		<th onclick="sortTable(this, 1)"></th>
-		<th onclick="sortTable(this, 2)"></th>
-		<th onclick="sortTable(this, 3)">Name</th>
-		<th onclick="sortTable(this, 4)">P</th>
-		<th onclick="sortTable(this, 5)">ATK</th>
-		<th onclick="sortTable(this, 6)">STAT</th>
-		<th onclick="sortTable(this, 7)">TRP</th>
-		<th onclick="sortTable(this, 8)">ELT</th>
-		<th onclick="sortTable(this, 9)">CMN</th>
+		<th onclick="setSort(this, 1)"></th>
+		<th onclick="setSort(this, 2)"></th>
+		<th onclick="setSort(this, 3)">Name</th>
+		<th onclick="setSort(this, 4)">P</th>
+		<th onclick="setSort(this, 5)">ATK</th>
+		<th onclick="setSort(this, 6)">STAT</th>
+		<th onclick="setSort(this, 7)">TRP</th>
+		<th onclick="setSort(this, 8)">ELT</th>
+		<th onclick="setSort(this, 9)">CMN</th>
 	</thead>
 	<tbody id="weapons"></tbody>
 </table>

@@ -12,15 +12,29 @@ function pageLoad(){
 		.map((v, i) => [v, i]))
 
 	showAll = showSwitch(loadSetting('chr-switch', true))
+	isAsc = loadSetting('chr-asc', false)
+	sorting = loadSetting('chr-sort', 0)
+	isTable = loadSetting('chr-tbl', false)
+	displaySettings()
 	renderCharacters()
 }
-let isTable = false, isAsc = false, sorting = ()=>{}
-let showAll
+let showAll, isAsc, sorting, isTable
+function displaySettings(){
+	//sorting
+	if(sorting < 0){
+		sortTable(-sorting, document.getElementsByTagName('th')[-sorting-1])
+	} else{
+		document.getElementById('select-sort').selectedIndex = +sorting + 1
+		sortSelect(sorting)
+	}
+	//isTable
+	renderSwitcher(document.getElementsByClassName('js-mode')[+isTable], isTable)
+}
 
 /**--RENDER-- */
 function renderCharacters(){
-	const characters = Object.entries(DBC).sort(sorting)
 	setDirection();
+	const characters = Object.entries(DBC).sort(sorting)
 	if(!isAsc) characters.reverse();
 	
 	document.getElementById('char-grid').innerHTML = '';
@@ -121,7 +135,11 @@ function consValue(state){
 
 /**--SWITCH MODE-- */
 function switcher(Element, mode){
-	isTable = mode;
+	renderSwitcher(Element, mode); renderCharacters()
+}
+
+function renderSwitcher(Element, mode){
+	isTable = mode; storeSetting('chr-tbl', isTable)
 	let grdClass = document.getElementById('char-grid').classList
 	let tblClass = document.getElementById('char-table').classList
 	if (isTable){
@@ -134,14 +152,13 @@ function switcher(Element, mode){
 
 	document.querySelector('.selected').classList.remove('selected')
 	Element.classList.add('selected')
-	renderCharacters()
 }
 
 /**--DIRECTION-- */
 function toggleDirection(btn){
 	if(isAsc) btn.classList.add('asc')
 	else btn.classList.remove('asc')
-	isAsc = !isAsc
+	isAsc = !isAsc; storeSetting('chr-asc', isAsc)
 	renderCharacters();
 }
 
@@ -158,31 +175,38 @@ function setDirection(){
 }
 
 /**--SORTS-- */
-function getSort(value){
+function setSort(value, header){
+	isAsc = header ? sortTable(value, header) : sortSelect(value)
+	storeSetting('chr-asc', isAsc)
+	renderCharacters()
+}
+
+function sortSelect(value){
 	const sorts = [[()=>{}, false],
 		[sortName, true], [sortAscension, false],
 		[sortRarity, false], [sortConstellation, false]
 	]
-	sorting = sorts[value][0]; isAsc = sorts[value][1];
+	sorting = sorts[value][0]; storeSetting('chr-sort', value)
 
-	//Remove table header if using sort on table view
+	//Set table header according to select value
 	if(value == 1) setTableHeader(document.getElementById('hdr-name'))
 	else setTableHeader()
 
-	renderCharacters();
+	return sorts[value][1]
 }
 
-function sortTable(header, value){
+function sortTable(value, header){
 	const sorts = [[()=>{}, false], [sortFarm, false], [sortName, true],
 		[sortP, false], [sortN, false], [sortS, false], [sortB, false], 
 		[sortHP, false], [sortATK, false], [sortDEF, false], [sortStat, false]]
-	sorting = sorts[value][0];
-	if(header.classList.contains('hdr--sort')) isAsc = !isAsc
-	else isAsc = sorts[value][1];
+	sorting = sorts[value][0]; storeSetting('chr-sort', -value)
+	let asc = header.classList.contains('hdr--sort') ? !isAsc : sorts[value][1]
 
+	//Set select value and table header according to table sort
+	document.getElementById('select-sort').selectedIndex = 0
 	setTableHeader(header)
 
-	renderCharacters();
+	return asc
 }
 
 function setTableHeader(header){
@@ -256,7 +280,6 @@ function sortStat(a,b){
 
 /**--SWITCH: SHOW OWNED-- */
 function toggleSwitch(Element){
-	showAll = Element.checked;
-	storeSetting('chr-switch', showAll)
+	showAll = Element.checked; storeSetting('chr-switch', showAll)
 	renderCharacters();
 }
