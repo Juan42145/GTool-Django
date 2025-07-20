@@ -198,7 +198,7 @@ function renderUpgrade(){
 		return
 	} else Upgrade.classList.remove('hide')
 
-	const Area = Upgrade.getElementById('upgrade-area')
+	const Area = document.getElementById('upgrade-area')
 	Area.innerHTML = ''
 	createTxt(Area, 'div', 'upgrade__title', upgradable ?
 		'Upgrade' : 'Cannot Upgrade')
@@ -224,7 +224,7 @@ function renderUpgrade(){
 	}
 
 	// Next
-	const Next = Upgrade.getElementById('upgrade-next'); Next.innerHTML = ''
+	const Next = document.getElementById('upgrade-next'); Next.innerHTML = ''
 	let isNext = false
 	const state = uGet(isChar ? userChar[objName] : userWpn[objName], '')
 	const info = isChar ? DBC[objName] : DBW[objName]
