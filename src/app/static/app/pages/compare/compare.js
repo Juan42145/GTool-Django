@@ -9,7 +9,7 @@ function pageLoad(){
 	
 	window.TOTAL_CATEGORIES = Object.keys(getTotals())
 	window.REGION_GROUPS = Object.values(DBM['BOOKS']).reduce((acc, item) => {
-		if (!acc.includes(item.data)) acc.push(item.data)
+		if(!acc.includes(item.data)) acc.push(item.data)
 		return acc
 	},[])
 
@@ -31,16 +31,16 @@ function renderCompare(){
 	const rHeaders = getHeaders(rOption, true);
 	const cHeaders = getHeaders(cOption, false);
 
-	if (isShown){
+	if(isShown){
 		const Table = document.getElementById('table');
 		let nRows = rHeaders.length, nCols = cHeaders.length;
 		let cells = new Array(nRows);
 		for(let r = 0; r <= nRows; r++){
 			cells[r] = new Array(nCols);
 			for(let c = 0; c <= nCols; c++){
-				const Div = create(Table, 'div', {'class':'cell'})
-				Div.style = `grid-column: ${c+3}; grid-row: ${r+3};`
-				if (isLine) Div.classList.add('cell--line');
+				const Div = createDiv(Table, 'cmp__cell',
+					{'style': `grid-area: ${r+3}/ ${c+3};`})
+				if(isLine) Div.classList.add('cmp__cell--line');
 				cells[r][c] = Div;
 			}
 		}
@@ -56,7 +56,7 @@ function getHeaders(option, isRow){
 	let category = translate(option)
 	let array = category in DBM ? Object.keys(DBM[category]) : [undefined]
 
-	if (!isRow) isLine = false;
+	if(!isRow) isLine = false;
 
 	switch (option){
 		case 'RARITY': array = [4,5] // COL ONLY
@@ -67,17 +67,15 @@ function getHeaders(option, isRow){
 			break
 	}
 
-	
-	let Head = isRow ?
+	const Header = isRow ?
 	document.getElementById('rows') : document.getElementById('cols')
 	
 	let span = 3, cum, prev
-	if (option == 'LOCAL_SPECIALTY') span = {};
+	if(option == 'LOCAL_SPECIALTY') span = {};
 	array.forEach(item => {
-		const Card = create(Head, 'div',
-			{'class':'c-header c-header--'+(isRow ? 'row' : 'col')})
+		const Card = createDiv(Header,
+			'cmp__header cmp__header--'+(isRow ? 'row' : 'col'))
 
-		//REVISE
 		let inv = ''
 		switch (category){
 			case 'ELEMENTS': inv = getInv('GEMS',item)
@@ -93,14 +91,14 @@ function getHeaders(option, isRow){
 				break;
 		}
 
-		if (isText) Card.textContent = item;
+		if(isText) Card.textContent = item;
 		else{
-			/*Img*/createImg(Card, 'c-header__image', getImage(category, item))
+			/*Img*/createImg(Card, 'cmp__header__image', getImage(category, item))
 			makeTooltip(Card, item+' '+inv)
 		}
 
-		if (category == 'LOCAL_SPECIALTIES'){
-			if (prev !== DBM[category][item].data){
+		if(category == 'LOCAL_SPECIALTIES'){
+			if(prev !== DBM[category][item].data){
 			  cum = 1; prev = DBM[category][item].data
 			}
 			else cum++;
@@ -109,36 +107,36 @@ function getHeaders(option, isRow){
 	});
 
 	const Cont = document.getElementById('compare')
-	if (['LOCAL_SPECIALTIES', 'BOOKS', 'WEEKLY_DROPS'].includes(category)){
+	if(['LOCAL_SPECIALTIES', 'BOOKS', 'WEEKLY_DROPS'].includes(category)){
 		let group = category === 'WEEKLY_DROPS' ? 'WEEKLY_BOSSES' : 'REGIONS'
-		Object.keys(DBM[group]).forEach((item, i) => {
-			if (group === 'REGIONS' && !REGION_GROUPS.includes(item)) return
+		Object.keys(DBM[group]).forEach(item => {
+			if(group === 'REGIONS' && !REGION_GROUPS.includes(item)) return
 
-			const Card = create(Head, 'div',
-				{'class':'c-header c-header--'+(isRow ? 'r' : 'c')+'group'})
+			const Card = createDiv(Header,
+				'cmp__header cmp__header--'+(isRow ? 'r' : 'c')+'group')
 
 			let cStyle = isRow ? 'grid-row': 'grid-column'
-			if (category == 'LOCAL_SPECIALTIES')
+			if(category == 'LOCAL_SPECIALTIES')
 				Card.style = cStyle+': span '+span[item];
 			else Card.style = cStyle+': span '+span;
 
-			if (group == 'WEEKLY_BOSSES')
+			if(group == 'WEEKLY_BOSSES')
 				makeTooltip(Card, item+' '+getTotals()[group][item])
 
-			createImg(Card, 'c-header__image', getImage(group, item, 0))
+			createImg(Card, 'cmp__header__image', getImage(group, item, 0))
 		});
-		Head.classList.add('area--group')
+		Header.classList.add('area--group')
 		Cont.classList.add('compare--'+(isRow ? 'rowG' : 'colG'))
 	}
 	else{
-		Head.classList.remove('area--group')
+		Header.classList.remove('area--group')
 		Cont.classList.remove('compare--'+(isRow ? 'rowG' : 'colG'))
 	}
 
-	/*Card Total*/create(Head, 'div',
-		{'class':'c-header c-header--total c-header--'+(isRow ? 'row' : 'col')})
+	/*Card Total*/createDiv(Header,
+		'cmp__header cmp__header--total cmp__header--'+(isRow ? 'row' : 'col'))
 
-	if (isRow) isShown = true;
+	if(isRow) isShown = true;
 	return array;
 }
 
@@ -148,9 +146,9 @@ function getChar(cells, rOption, cOption, rHeaders, cHeaders, totals){
 		
 		let indexRow = rHeaders.indexOf(cInfo[rOption])
 		let indexCol = cHeaders.indexOf(cInfo[cOption])
-		if (indexRow === -1 || indexCol === -1) return;
+		if(indexRow === -1 || indexCol === -1) return;
 
-		const Card = create(cells[indexRow][indexCol], 'div', {'class':'card'})
+		const Card = createDiv(cells[indexRow][indexCol], 'card')
 		/*Img*/createImg(Card, 'card__image c_'+cInfo.RARITY, getCharacter(cName))
 		totals[0][indexRow]++; totals[1][indexCol]++;
 	});
@@ -159,23 +157,20 @@ function getChar(cells, rOption, cOption, rHeaders, cHeaders, totals){
 function makeTotals(cells, nRows, nCols, totals){
 	for(let r = 0; r < nRows; r++){
 		cells[r][nCols].classList = 'total'
-		const Card = create(cells[r][nCols], 'div')
-		createTxt(Card, 'div', '', totals[0][r])
+		createTxt(cells[r][nCols], 'div', '', totals[0][r])
 	}
 	for(let c = 0; c < nCols; c++){
 		cells[nRows][c].classList = 'total'
-		const Card = create(cells[nRows][c], 'div')
-		createTxt(Card, 'div', '', totals[1][c])
+		createTxt(cells[nRows][c], 'div', '', totals[1][c])
 	}
 	cells[nRows][nCols].classList = 'total total--sum'
-	const Card = create(cells[nRows][nCols], 'div')
-	createTxt(Card, 'div', '', totals[0].reduce((a,b)=>(a + b),0))
+	createTxt(cells[nRows][nCols], 'div', '', totals[0].reduce((a,b)=>(a + b),0))
 }
 
 /*--READ INVENTORY-- */
 function getInv(category, item){
 	let value
-	if (TOTAL_CATEGORIES.includes(category)) value = getTotals()[category][item]
+	if(TOTAL_CATEGORIES.includes(category)) value = getTotals()[category][item]
 	else{
 		let rank = Object.keys(DBM[category][item])
 								.reduce((key, v) => v < key ? v : key)
