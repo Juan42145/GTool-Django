@@ -1,23 +1,4 @@
 :root{
-	--clr-white: #ffffff;
-	--clr-pearl: #e9e5d9;
-	--clr-lightgray: #d0cfd5;
-	--clr-porcelain: #bfbfbf;
-	--clr-gray: #949597;
-	--clr-darkgray: #707483;
-	--clr-charcoal: #404040;
-	--clr-black: #313131;
-	--clr-void: #1a1a1a;
-
-	--clr-lightnavy: #4b5264;
-	--clr-navy: #3f4555;
-	--clr-darknavy: #303a4a;
-	--clr-darkblue: #0a153a;
-	--clr-gold: #cfbd93;
-	--clr-yellow: #eec853;
-	--clr-orange: #a2705a;
-	--clr-lightyellow: #fbdb89;
-
 	/*Black and Whites*/
 	--clr-white-lt: hsl(0, 0%, 100%);
 	--clr-white: hsl(0, 0%, 87.5%);
@@ -316,7 +297,7 @@ NAVBAR
 
 	--nav-highlightclr: var(--clr-comet-dk);
 
-	--nav-icon-txclr: var(--clr-darkblue);
+	--nav-icon-txclr: var(--clr-comet-dkst);
 
 	--nav-hover-txclr: var(--nav-txclr);
 	--nav-hover-bgclr: var(--clr-comet-lt);
@@ -552,7 +533,7 @@ HEADER
 
 .header{
 	--header-bgclr: var(--clr-comet-dk);
-	--header-icon-txclr: var(--clr-yellow);
+	--header-icon-txclr: var(--clr-ecru-hg);
 	--header-icon-bgclr: var(--clr-comet-dkst);
 
 	display: grid;
@@ -655,7 +636,7 @@ LOADING
 	display: grid;
 	place-items: center;
 	place-content: center;
-	gap: 2rem;
+	gap: 0.6em;
 	padding: 2em;
 	border-radius: 0.2em;
 	color: var(--loading-txclr);
@@ -666,7 +647,7 @@ LOADING
 	--loader-clr: var(--clr-ecru);
 
 	width: 2em;
-	border: 0.8rem dotted var(--loader-clr);
+	border: 0.26em dotted var(--loader-clr);
 	border-radius: 50%;
 	aspect-ratio: 1;
 	animation: loadspin 3s linear infinite;
