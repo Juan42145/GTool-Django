@@ -1,70 +1,55 @@
-.main{
-	position: absolute;
-	bottom: 1rem;
-	right: 2rem;
-  }
-  
-  input[type=checkbox]{
-	-webkit-appearance: auto;
-	width: 2rem;
-	height: 2rem;
-  }
-  
-  #content{
+.content{
+	--data-title-txclr: var(--clr-white);
+	--data-title-bgclr: var(--clr-black-lt);
+
+	--data-rheader-bgclr: var(--clr-gray-lt);
+	--data-cheader-bgclr: var(--clr-ecru-dk);
+	--data-cheader-bgclr-lt: var(--clr-comet-lt);
+
+	--data-cell-bgclr: var(--clr-ecru);
+	--data-cell-bgclr-lt: var(--clr-comet-ltst);
+	--data-total-bgclr: var(--clr-black-dk);
+
 	display: grid;
-	grid-auto-flow: row;
-	gap: 5px;
-	margin: 5px;
+	gap: 0.5em;
+	padding: 0.5em;
 	overflow: auto;
-  }
-  
-  .title{
-	background-color: var(--clr-charcoal);
-	color: vaR(--clr-pearl);
-  }
-  
-  th,td{
+}
+
+.title{
+	background-color: var(--data-title-bgclr);
+	color: vaR(--data-title-txclr);
+}
+
+th,td{
 	text-align: center;
 	vertical-align: middle;
-	min-width: 15px;
-  }
-  
-  th{
-	background-color: var(--clr-orange);
+	min-width: 1.5em;
+}
+
+th{
+	background-color: var(--data-rheader-bgclr);
 	font-weight: bolder;
-  }
-  
-  th.even{
-	background-color: var(--clr-yellow);
-  }
-  
-  th.odd{
-	background-color: var(--clr-lightyellow);
-  }
-  
-  td.even{
-	background-color: var(--clr-porcelain);
-  }
-  
-  td.odd{
-	background-color: var(--clr-pearl);
-  }
-  
-  .total{
+}
+
+th.even{background-color: var(--data-cheader-bgclr);}
+th.odd{background-color: var(--data-cheader-bgclr-lt);}
+
+.subheader{background-color: var(--color);}
+
+td.even{background-color: var(--data-cell-bgclr);}
+td.odd{background-color: var(--data-cell-bgclr-lt);}
+
+td.total{
+	background-color: var(--data-total-bgclr);
 	font-weight: bolder;
-	color: white
-  }
-  
-  .even.total{
-	background-color: var(--clr-darknavy);
-  }
-  
-  .odd.total{
-	background-color: var(--clr-lightnavy);
-  }
-  
-  @media screen and (min-width: 820px) {
-	#content{
-	  grid-template-columns: auto auto;
-	}
-  }
+}
+
+.total.even{color: var(--data-cell-bgclr);}
+.total.odd{color: var(--data-cell-bgclr-lt);}
+
+@media screen and (min-width: 820px){
+.content{
+	grid-template-columns: auto auto;
+}
+}

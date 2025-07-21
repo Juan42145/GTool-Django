@@ -32,12 +32,14 @@ function makeTable(Cont, type, categories){
 		let cClass = indexCat % 2 ? 'odd' : 'even';
 		let isTotal = headerRanks.length > 1;
 
-		/*CHeader*/createTxt(HCatg, 'th', cClass, category, {'colspan':headerRanks.length + isTotal})
+		/*CHeader*/createTxt(HCatg, 'th', cClass, category.replace('_',' '),
+			{'colspan':headerRanks.length + isTotal})
 
-		headerRanks.forEach(rank => createTxt(HRank, 'th', cClass, rank))
-		if (isTotal) createTxt(HRank, 'th', cClass, 'Total')
+		headerRanks.forEach(rank => createTxt(HRank, 'th', 'subheader', rank,
+			{'data-color':rank}))
+		if(isTotal) createTxt(HRank, 'th', cClass, 'Total')
 
-		Object.entries(levels).forEach(([level, materials], indexLevel) => {
+		Object.entries(levels).forEach(([level, materials]) => {
 			let LevelRow = document.getElementById(type+level)
 			if(!LevelRow){
 				LevelRow = create(Bod, 'tr', {'id':type+level})
@@ -50,20 +52,19 @@ function makeTable(Cont, type, categories){
 			const max = values.length - 1
 			let total = 0
 			values.forEach((value, indexVal) => {
-				if (prev) value -= +prev[indexVal]
-				if (value === 0) value = '';
+				if(prev) value -= +prev[indexVal]
+				if(value === 0) value = '';
 				/*cell*/createTxt(LevelRow, 'td', cClass, value)
 				total += +value/(3**(max - indexVal))
 			})
-			if (isTotal) createTxt(LevelRow, 'td', cClass+' total',
-										(Math.floor(total*100)/100).toLocaleString('en-us'))
+			if(isTotal) createTxt(LevelRow, 'td', 'total '+cClass,
+									(Math.floor(total*100)/100).toLocaleString('en-us'))
 		})
 	})
 }
 
 /**--SWITCH: CHANGE CUMMULATIVE-- */
 function toggleSwitch(Element){
-	showCum = Element.checked;
-	storeSetting('data-switch', showCum)
+	showCum = Element.checked; storeSetting('data-switch', showCum)
 	renderData()
 }
