@@ -59,7 +59,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 class CharacterViewSet(DictViewSet):
     serializer_class = CharacterSerializer
-    queryset = Character.objects.all()
+    queryset = Character.objects.all().order_by('id')
 
 class WeaponViewSet(DictViewSet):
     serializer_class = WeaponSerializer
