@@ -185,8 +185,9 @@ function sortFarm(a,b){
 function sortRef(a,b){
 	let aUsr = uGet(userWpn[a[0]], '')
 	let bUsr = uGet(userWpn[b[0]], '')
-	return aUsr.REFINEMENT - bUsr.REFINEMENT
-			|| a[1].RARITY - b[1].RARITY;
+	return (aUsr.REFINEMENT + aUsr.WISH) - (bUsr.REFINEMENT + bUsr.WISH)
+			|| a[1].RARITY - b[1].RARITY
+			|| aUsr.WISH - bUsr.WISH;
 }
 
 function sortName(a,b){

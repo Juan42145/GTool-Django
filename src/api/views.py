@@ -63,7 +63,7 @@ class CharacterViewSet(DictViewSet):
 
 class WeaponViewSet(DictViewSet):
     serializer_class = WeaponSerializer
-    queryset = Weapon.objects.all()
+    queryset = Weapon.objects.all().order_by('id')
 
 class ImageViewSet(DictViewSet):
     serializer_class = ImageSerializer
