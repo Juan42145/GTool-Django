@@ -1,0 +1,80 @@
+.form{
+	--form-txclr: var(--clr-white-lt);
+	--form-bgclr: var(--clr-comet-dkr);
+	--form-bdclr: var(--clr-gray);
+
+	--form-legend-txclr: var(--clr-ecru);
+	--form-submit-bgclr: var(--clr-comet);
+
+	display: grid;
+	gap: 1.5em;
+	padding: 1em;
+}
+
+.form__legend{
+	font-size: 2em;
+	font-weight: bolder;
+	border-bottom: 0.05em solid var(--form-legend-txclr);
+	color: var(--form-legend-txclr);
+}
+
+.form__submit{
+	display: flex;
+	justify-content: space-between;
+	padding: 1em;
+	border-radius: 0.5em;
+	background-color: var(--form-submit-bgclr);
+}
+
+.form__btn{
+	--btn-txclr: var(--form-txclr);
+	--btn-bdclr: var(--form-txclr);
+}
+
+.form__content{
+	display: flex;
+	padding-bottom: 0.75em;
+	background-color: var(--form-bgclr);
+	color: var(--form-txclr);
+}
+
+.content__fields{
+	font-size: 1.3em;
+	padding: 0 0.5em;
+	flex: 1;
+}
+
+.form-group{
+	display: flex;
+	align-items: center;
+	padding: 0.75em 0;
+	gap: 0.75em;
+	border-bottom: 0.01em solid var(--form-bdclr);
+}
+
+.form-control{
+	border-radius: 0.5em;
+	border: 0.1em solid var(--form-bdclr);
+	background-color: var(--form-bgclr);
+}
+
+.asteriskField{
+	opacity: 0.5;
+}
+
+.content__images{
+	display: grid;
+	grid-auto-rows: max-content;
+	place-items: stretch;
+	place-self: center;
+	margin: 0.5em;
+	padding: 0.25em;
+	gap: 0.25em;
+	background-color: var(--form-bdclr);
+}
+
+.content__img{
+	height: 5em;
+	object-fit: contain;
+	background-color: var(--form-bgclr);
+}

@@ -1,0 +1,25 @@
+{% extends "app/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form class="form" method="POST">{% csrf_token %}
+	<legend class="form__legend">{{ model_name|title }}</legend>
+	<div class="form__content">
+		<div class="content__fields">
+			{{ form|crispy }}
+		</div>
+		<div id="form-images" class="content__images" data-model="{{ model_name }}" data-pk="{{ form.instance.pk }}">
+			{% for i in img_fields %}
+			<img id={{ 'img-'|add:i }} class="js-img content__img">
+			{% endfor %}
+		</div>
+	</div>
+	<div class="form__submit">
+		{% with 'app:'|add:model_name|add:'-list' as link %}
+		<a class="btn btn--clear form__btn" href="{% url link %}">Cancel</a>
+		{% endwith %}
+		<button class="btn" type="submit">Save</button>
+	</div>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "adm/_list.html" %}
+
+{% block opt %}"w"{% endblock%}
+{% block create %}{% url 'app:weapon-create' %}{% endblock%}
+{% block update %}{% url 'app:weapon-update' object.id %}{% endblock%}
+{% block list_fields %}
+
+<div>{{ object.id }}</div>
+<img class="js-img list__image" data-src="{{ object.name }}">
+<div>{{ object.name }}</div>
+<div>{{ object.version }}</div>
+<input type="checkbox" style="pointer-events: none;" {% if object.is_wish_only == True %}checked={% endif %}>
+<div>{{ object.rarity }}</div>
+<div>{{ object.weapon_type }}</div>
+
+{% endblock%}
+
+
+

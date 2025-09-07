@@ -1,0 +1,75 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+
+<div class="admin">
+	<div class="admin__header">Administration</div>
+	<div class="admin__container">
+		<div class="admin__group">
+			<div class="group__legend">App</div>
+			<a class="btn btn--clear admin__link" href="{% url 'app:character-list' %}">Characters</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:weapon-list' %}">Weapons</a>
+		</div>
+		<div class="admin__group">
+			<div class="group__legend">Inventory</div>
+			<a class="btn btn--clear admin__link" href="">Inventory</a>
+		</div>
+		<div class="admin__group">
+			<div class="group__legend">Regional</div>
+			<a class="btn btn--clear admin__link" href="">Region</a>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
+
+{% block extrastyle %}
+<style>
+.admin{
+	--header-txclr: var(--clr-comet-dkr);
+	--header-bgclr: var(--clr-ecru);
+	
+	--legend-txclr: var(--clr-comet-dkr);
+	--legend-bgclr: var(--clr-ecru-dk);
+	
+	--group-txclr: var(--clr-comet);
+	--group-bgclr: var(--clr-ecru-lt);
+}
+
+.admin__header{
+	font-size: 3em;
+	padding: 0.75em;
+	text-align: center;
+	background-color: var(--header-bgclr);
+	color: var(--header-txclr);
+	font-weight: bolder;
+}
+
+.admin__container{
+	display: grid;
+	gap: 1em;
+	padding: 2em;
+}
+
+.admin__group{
+	background-color: var(--group-bgclr);
+}
+
+.group__legend{
+	font-size: 2em;
+	padding: 0.4em;
+	background-color: var(--legend-bgclr);
+	color: var(--legend-txclr);
+	font-weight: bolder;
+}
+
+.admin__link{
+	--btn-txclr: var(--group-txclr);
+
+	border-radius: 0;
+	border-bottom: 0.1em solid var(--group-txclr);
+	place-content: center start;
+}
+</style>
+{% endblock extrastyle %}
+

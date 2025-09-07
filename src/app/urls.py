@@ -4,7 +4,6 @@ from .views import *
 app_name = 'app'
 urlpatterns = [
     path('', home, name='home'),
-    path('domains/', test, name='domains'), #index No login
     path('dashboard/', dashboard, name='dashboard'),
     path('inventory/', inventory, name='inventory'),
     path('planner/', planner, name='planner'),
@@ -14,9 +13,14 @@ urlpatterns = [
     path('weapons/', weapons, name='weapons'),
     path('weapons/<str:name>/', weapon_detail, name='weapons-detail'), #MODEL
     path('compare/', compare, name='compare'), #Potential no Login
-    path('data/', data, name='data'), #Potential no login
+    path('data/', data, name='data'),
     
-    # CREATE/UPDATE (MODEL)
-    #no login views (more work)
-    # CREATE/UPDATE (Master/ in inventory or new page well see)
+    # CRUDs
+    path('adm/', admin, name='admin'),
+    path('adm/character/', CharacterListView.as_view(), name='character-list'),
+    path('adm/character/new/', CharacterCreateView.as_view(), name='character-create'),
+    path('adm/character/<int:pk>/', CharacterUpdateView.as_view(), name='character-update'),
+    path('adm/weapon/', WeaponListView.as_view(), name='weapon-list'),
+    path('adm/weapon/new/', WeaponCreateView.as_view(), name='weapon-create'),
+    path('adm/weapon/<int:pk>/', WeaponUpdateView.as_view(), name='weapon-update'),
 ]

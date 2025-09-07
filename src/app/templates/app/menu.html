@@ -40,6 +40,9 @@
 						</button>
 					</form>
 				{% endif %}
+				{% if user.is_staff %}
+					<a class="btn" href="{% url 'app:admin' %}">Admin</a>
+				{% endif %}
 			</div>
 		</section>
 	</aside>

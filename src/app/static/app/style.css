@@ -347,13 +347,10 @@ NAVBAR
 	display: flex;
 	flex-direction: row-reverse;
 	align-items: center;
-	background-color: var(--nav-highlightclr);
-}
-
-.nav__top{
 	justify-content: space-between;
 	padding: 1em;
 	gap: 1em;
+	background-color: var(--nav-highlightclr);
 }
 
 .nav__links{
@@ -362,7 +359,6 @@ NAVBAR
 }
 
 .nav__bottom{
-	padding: 1em;
 	font-weight: bolder;
 }
 
@@ -647,7 +643,7 @@ LOADING
 	--loader-clr: var(--clr-ecru);
 
 	width: 2em;
-	border: 0.26em dotted var(--loader-clr);
+	border: 0.2em dotted var(--loader-clr);
 	border-radius: 50%;
 	aspect-ratio: 1;
 	animation: loadspin 3s linear infinite;

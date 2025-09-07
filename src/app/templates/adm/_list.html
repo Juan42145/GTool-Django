@@ -1,0 +1,15 @@
+{% extends "app/base.html" %}
+{% block content %}
+
+<div id="list" class="list" data-opt={% block opt %}{% endblock %}>
+	<a class="btn" href="{% block create %}{% endblock %}">Add New</a>
+	<div class="list__container">
+		{% for object in object_list %}
+		<a class="list__item" href="{% block update %}{% endblock %}">
+			{% block list_fields %}{% endblock %}
+		</a>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock content %}
