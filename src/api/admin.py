@@ -16,9 +16,9 @@ register(Character, 'app', admin_class=CharacterAdmin)
 register(Weapon, 'app', admin_class=WeaponAdmin)
 
 register_app('dynamic', 2)
-register(LocalSpecialty, 'dynamic', 1, LSAdmin)
-register(Boss, 'dynamic', 2, SimpleAdmin)
-register(Enemy, 'dynamic', 3, EnemyAdmin)
+register(Boss, 'dynamic', 1, SimpleAdmin)
+register(Enemy, 'dynamic', 2, EnemyAdmin)
+register(LocalSpecialty, 'dynamic', 3, LSAdmin)
 register(WeeklyBoss, 'dynamic', 4, SimpleAdmin)
 register(WeeklyDrop, 'dynamic', 5, WDAdmin)
 
