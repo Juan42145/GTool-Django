@@ -20,7 +20,7 @@ function renderInventory(){
 		if(['BOSSES','LOCAL_SPECIALTIES'].includes(mCategory))
 			Cont.classList.add('section__content--s')
 		makeAccordion(Btn, Cont)
-		let drops
+		let drops, itemArray
 		Object.entries(mItems).forEach(([mItem, mMaterials], indexItem) => {
 			let Row
 			if(mCategory !== "WEEKLY_DROPS"){
@@ -30,13 +30,19 @@ function renderInventory(){
 				if (indexItem % 3 == 0){
 					Row = createDiv(Cont, 'item', {'id':'WD-R_'+mMaterials.data})
 					drops = createDiv(Row, 'item__name--drops')
+					itemArray = []
 				}
 				else Row = document.getElementById('WD-R_'+mMaterials.data)
 				/*Name*/
 				createTxt(drops, 'p', '', '- '+mItem)
+				itemArray.push(mItem)
 				if (indexItem % 3 == 2){
 					const Text = createTxt(Row, 'div', 'item__name', mMaterials.data)
 					Text.appendChild(drops)
+					const WDbtn = create(Text, 'button', {'class':'btn btn--clear item__btn icon-box'})
+					WDbtn.textContent = '+'
+					let itemsData = itemArray
+					WDbtn.addEventListener('click', () => makePopup(itemsData, mMaterials.data))
 				}
 			}
 
@@ -66,6 +72,7 @@ function renderInventory(){
 				
 				let value = userInv[mCategory]?.[mItem]?.[rank] ?? 0
 				const Input = createNumInput(Card, {'class':'item__input'}, value)
+				if(mCategory == "WEEKLY_DROPS") Input.id = 'INP_'+mItem
 				Input.addEventListener('blur',() => {
 					Input.value = +Input.value;
 					uSet(userInv, [mCategory,mItem,rank], +Input.value)
@@ -93,6 +100,67 @@ function makeAccordion(accordion, panel){
 	accordion.addEventListener('click',() => {
 		accordion.classList.toggle('active')
 		panel.classList.toggle('hide')
+	})
+}
+
+/**--POP UP-- */
+function makePopup(mItems, boss){
+	const Popup = document.getElementById('pop-up')
+	Popup.innerHTML = ''; Popup.showModal()
+
+	const Container = createDiv(Popup, 'popup')
+
+	const Close = create(Container, 'button', {'class':'btn btn--clear icon-box'})
+	createIcon(Close, '#X')
+	Close.addEventListener('click', () => closePopup(mItems, boss))
+
+	const Content = createDiv(Container, 'popup__content')
+	makeAdder(Content, mItems, boss)
+
+	Popup.addEventListener("click", (e) => {
+		if(e.target === Popup) closePopup(mItems, boss);
+	});
+}
+
+function closePopup(mItems, boss){
+	//Update value and total
+	mItems.forEach((mItem) => {
+		document.getElementById('INP_'+mItem).value = userInv["WEEKLY_DROPS"]?.[mItem]?.[5] ?? 0
+	})
+	document.getElementById('WD-I_'+boss).textContent = getTotals()["WEEKLY_BOSSES"][boss]
+	
+	const Popup = document.getElementById('pop-up')
+	Popup.close(); Popup.innerHTML = ''
+}
+
+function makeAdder(Container, mItems, boss){
+	const Content = createDiv(Container, 'adder__content')
+	let adder = {}
+
+	mItems.forEach((mItem) => {
+		const Card = createDiv(Content, 'adder__card', {'data-color':5})
+		createImg(Card, 'adder__card--img r_5', getImage("WEEKLY_DROPS", mItem, 5))
+		
+		const InputContainer = createDiv(Card, 'adder__input')
+		const Input = createNumInput(InputContainer, {}, 0)
+		Input.addEventListener('blur',() => {
+			if (Input.value === '') Input.value = 0;
+			adder[mItem] = Input.value
+		}, false);
+	})
+
+	//Button
+	const Submit = create(Container, 'button', {'class':'btn icon-box'})
+	createIcon(Submit, '#Check')
+	Submit.addEventListener('click', () => {
+		Object.entries(adder).forEach(([item, value]) => {
+			let category = "WEEKLY_DROPS", rank = 5
+			let userValue = userInv[category]?.[item]?.[rank] ?? 0
+			uSet(userInv, [category,item,rank], userValue + +value)
+			storeUserI(user, userInv)
+			processTotals(category, item);
+		})
+		closePopup(mItems, boss)
 	})
 }
 
