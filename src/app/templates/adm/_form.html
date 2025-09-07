@@ -3,12 +3,12 @@
 {% block content %}
 
 <form class="form" method="POST">{% csrf_token %}
-	<legend class="form__legend">{{ model_name|title }}</legend>
+	<legend class="form__legend">{{ verbose_name|title }}</legend>
 	<div class="form__content">
 		<div class="content__fields">
 			{{ form|crispy }}
 		</div>
-		<div id="form-images" class="content__images" data-model="{{ model_name }}" data-pk="{{ form.instance.pk }}">
+		<div id="form-images" class="content__images" data-model="{{ verbose_name }}" data-pk="{{ form.instance.pk }}">
 			{% for i in img_fields %}
 			<img id={{ 'img-'|add:i }} class="js-img content__img">
 			{% endfor %}

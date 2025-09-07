@@ -12,11 +12,17 @@
 		</div>
 		<div class="admin__group">
 			<div class="group__legend">Inventory</div>
-			<a class="btn btn--clear admin__link" href="">Inventory</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:boss-list' %}">Boss</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:enemy-list' %}">Enemy</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:localspecialty-list' %}">Local Specialty</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:weeklyboss-list' %}">Weekly Boss</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:weeklydrop-list' %}">Weekly Drop</a>
 		</div>
 		<div class="admin__group">
 			<div class="group__legend">Regional</div>
-			<a class="btn btn--clear admin__link" href="">Region</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:region-list' %}">Region</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:book-list' %}">Book</a>
+			<a class="btn btn--clear admin__link" href="{% url 'app:trophy-list' %}">Trophy</a>
 		</div>
 	</div>
 </div>

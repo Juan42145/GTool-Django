@@ -1,0 +1,18 @@
+{% extends "adm/_list.html" %}
+
+{% block opt %}"b"{% endblock%}
+{% block create %}{% url 'app:book-create' %}{% endblock%}
+{% block update %}{% url 'app:book-update' object.id %}{% endblock%}
+{% block list_fields %}
+
+<div>{{ object.id }}</div>
+<div>{{ object.region }}</div>
+<div>{{ object.name }}</div>
+<img class="js-img list__image" data-r="2" data-src="{{ object.name }}">
+<img class="js-img list__image" data-r="3" data-src="{{ object.name }}">
+<img class="js-img list__image" data-r="4" data-src="{{ object.name }}">
+
+{% endblock%}
+
+
+

@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
-from api.models import Character, Weapon, Boss
+from api.models import *
 
 # Create your views here.
 def test(request, *args, **kwargs):
@@ -128,6 +128,7 @@ class GenericFormView(LoginRequiredMixin, View):
         context['styles'] = ['app/pages/models/model_form.css']
         context['scripts'] = ['app/pages/models/model_form.js']
         context['model_name'] = self.model.__name__.lower()
+        context['verbose_name'] = self.model._meta.verbose_name
         context['img_fields'] = self.img_fields
         return context
 
@@ -159,11 +160,8 @@ class CharacterFormView(GenericFormView):
     class Meta:
         abstract = True
 
-class CharacterCreateView(CharacterFormView, CreateView):
-    pass
-
-class CharacterUpdateView(CharacterFormView, UpdateView):
-    pass
+class CharacterCreateView(CharacterFormView, CreateView): pass
+class CharacterUpdateView(CharacterFormView, UpdateView): pass
 
 class WeaponListView(GenericListView):
     model = Weapon
@@ -178,8 +176,129 @@ class WeaponFormView(GenericFormView):
     class Meta:
         abstract = True
 
-class WeaponCreateView(WeaponFormView, CreateView):
-    pass
+class WeaponCreateView(WeaponFormView, CreateView): pass
+class WeaponUpdateView(WeaponFormView, UpdateView): pass
 
-class WeaponUpdateView(WeaponFormView, UpdateView):
-    pass
+class BossListView(GenericListView):
+    model = Boss
+    template_name = 'adm/boss_list.html'
+
+class BossFormView(GenericFormView):
+    model = Boss
+    success_url = reverse_lazy('app:boss-list')
+    img_fields = ['code']
+
+    class Meta:
+        abstract = True
+
+class BossCreateView(BossFormView, CreateView): pass
+class BossUpdateView(BossFormView, UpdateView): pass
+
+class EnemyListView(GenericListView):
+    model = Enemy
+    template_name = 'adm/enemy_list.html'
+
+class EnemyFormView(GenericFormView):
+    model = Enemy
+    success_url = reverse_lazy('app:enemy-list')
+    img_fields = ['low','mid','high']
+
+    class Meta:
+        abstract = True
+
+class EnemyCreateView(EnemyFormView, CreateView): pass
+class EnemyUpdateView(EnemyFormView, UpdateView): pass
+
+class LocalSpecialtyListView(GenericListView):
+    model = LocalSpecialty
+    template_name = 'adm/localspecialty_list.html'
+
+class LocalSpecialtyFormView(GenericFormView):
+    model = LocalSpecialty
+    success_url = reverse_lazy('app:localspecialty-list')
+    inv_fields = ['region']
+    img_fields = ['name']
+
+    class Meta:
+        abstract = True
+
+class LocalSpecialtyCreateView(LocalSpecialtyFormView, CreateView): pass
+class LocalSpecialtyUpdateView(LocalSpecialtyFormView, UpdateView): pass
+
+class WeeklyBossListView(GenericListView):
+    model = WeeklyBoss
+    template_name = 'adm/weeklyboss_list.html'
+
+class WeeklyBossFormView(GenericFormView):
+    model = WeeklyBoss
+    success_url = reverse_lazy('app:weeklyboss-list')
+    img_fields = ['code']
+
+    class Meta:
+        abstract = True
+
+class WeeklyBossCreateView(WeeklyBossFormView, CreateView): pass
+class WeeklyBossUpdateView(WeeklyBossFormView, UpdateView): pass
+
+class WeeklyDropListView(GenericListView):
+    model = WeeklyDrop
+    template_name = 'adm/weeklydrop_list.html'
+
+class WeeklyDropFormView(GenericFormView):
+    model = WeeklyDrop
+    success_url = reverse_lazy('app:weeklydrop-list')
+    inv_fields = ['weekly_boss']
+    img_fields = ['code']
+
+    class Meta:
+        abstract = True
+
+class WeeklyDropCreateView(WeeklyDropFormView, CreateView): pass
+class WeeklyDropUpdateView(WeeklyDropFormView, UpdateView): pass
+
+class RegionListView(GenericListView):
+    model = Region
+    template_name = 'adm/region_list.html'
+
+class RegionFormView(GenericFormView):
+    model = Region
+    success_url = reverse_lazy('app:region-list')
+    img_fields = ['code']
+
+    class Meta:
+        abstract = True
+
+class RegionCreateView(RegionFormView, CreateView): pass
+class RegionUpdateView(RegionFormView, UpdateView): pass
+
+class BookListView(GenericListView):
+    model = Book
+    template_name = 'adm/book_list.html'
+
+class BookFormView(GenericFormView):
+    model = Book
+    success_url = reverse_lazy('app:book-list')
+    inv_fields = ['region']
+    img_fields = ['2','3','4']
+
+    class Meta:
+        abstract = True
+
+class BookCreateView(BookFormView, CreateView): pass
+class BookUpdateView(BookFormView, UpdateView): pass
+
+class TrophyListView(GenericListView):
+    model = Trophy
+    template_name = 'adm/trophy_list.html'
+
+class TrophyFormView(GenericFormView):
+    model = Trophy
+    success_url = reverse_lazy('app:trophy-list')
+    inv_fields = ['region']
+    img_fields = ['n2','n3','n4','n5']
+
+    class Meta:
+        abstract = True
+
+class TrophyCreateView(TrophyFormView, CreateView): pass
+class TrophyUpdateView(TrophyFormView, UpdateView): pass

@@ -11,7 +11,7 @@
 
 .list__container{
 	display: grid;
-	grid-template-columns: max-content max-content 1fr repeat(5, max-content);
+	grid-template-columns: max-content max-content repeat(5, auto);
 }
 
 .list__item{

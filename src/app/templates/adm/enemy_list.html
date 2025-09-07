@@ -1,0 +1,18 @@
+{% extends "adm/_list.html" %}
+
+{% block opt %}"ENEMIES"{% endblock%}
+{% block create %}{% url 'app:enemy-create' %}{% endblock%}
+{% block update %}{% url 'app:enemy-update' object.id %}{% endblock%}
+{% block list_fields %}
+
+<div>{{ object.id }}</div>
+<input type="checkbox" style="pointer-events: none;" {% if object.is_elite == True %}checked={% endif %}>
+<div>{{ object.name }}</div>
+<img class="js-img list__image" data-src="{{ object.low }}">
+<img class="js-img list__image" data-src="{{ object.mid }}">
+<img class="js-img list__image" data-src="{{ object.high }}">
+
+{% endblock%}
+
+
+

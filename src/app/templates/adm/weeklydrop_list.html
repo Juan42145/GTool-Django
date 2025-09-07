@@ -1,0 +1,17 @@
+{% extends "adm/_list.html" %}
+
+{% block opt %}"WEEKLY_DROPS"{% endblock%}
+{% block create %}{% url 'app:weeklydrop-create' %}{% endblock%}
+{% block update %}{% url 'app:weeklydrop-update' object.id %}{% endblock%}
+{% block list_fields %}
+
+<div>{{ object.id }}</div>
+<img class="js-img list__image" data-src="{{ object.code }}">
+<div>{{ object.name }}</div>
+<div>{{ object.weekly_boss }}</div>
+<div>{{ object.code }}</div>
+
+{% endblock%}
+
+
+

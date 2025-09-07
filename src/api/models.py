@@ -39,8 +39,7 @@ class Model(SimpleModel):
     def code(self):
         return self.name
 
-class Region(SimpleModel):
-    pass
+class Region(SimpleModel): pass
 
 class LocalSpecialty(SimpleModel):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
@@ -56,10 +55,12 @@ class LocalSpecialty(SimpleModel):
         return dict(super().serialize, data=self.region.name)
 
     class Meta:
+        verbose_name = 'local specialty'
         verbose_name_plural = 'local specialties'
 
 class WeeklyBoss(SimpleModel):
     class Meta:
+        verbose_name = 'weekly boss'
         verbose_name_plural = 'weekly bosses'
 
 class WeeklyDrop(SimpleModel):
@@ -69,9 +70,12 @@ class WeeklyDrop(SimpleModel):
     @property
     def serialize(self):
         return dict(super().serialize, data=self.weekly_boss.name)
+    
+    class Meta:
+        verbose_name = 'weekly drop'
+        verbose_name_plural = 'weekly drops'
 
-class WeaponType(SimpleModel):
-    pass
+class WeaponType(SimpleModel): pass
 
 
 # Regular Models

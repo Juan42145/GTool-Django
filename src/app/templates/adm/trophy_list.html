@@ -1,0 +1,21 @@
+{% extends "adm/_list.html" %}
+
+{% block opt %}"t"{% endblock%}
+{% block create %}{% url 'app:trophy-create' %}{% endblock%}
+{% block update %}{% url 'app:trophy-update' object.id %}{% endblock%}
+{% block list_fields %}
+
+{% comment %} <div>{{ object.id }}</div> {% endcomment %}
+{% comment %} <div>{{ object.region }}</div> {% endcomment %}
+<input type="checkbox" style="pointer-events: none;" {% if object.insert_code == True %}checked={% endif %}>
+<img class="js-img list__image" data-src="{{ object.n2 }}" data-code="{{ object.code }}" data-ic="{{ object.insert_code }}">
+<img class="js-img list__image" data-src="{{ object.n3 }}" data-code="{{ object.code }}" data-ic="{{ object.insert_code }}">
+<img class="js-img list__image" data-src="{{ object.n4 }}" data-code="{{ object.code }}" data-ic="{{ object.insert_code }}">
+<img class="js-img list__image" data-src="{{ object.n5 }}" data-code="{{ object.code }}" data-ic="{{ object.insert_code }}">
+<div>{{ object.code }}</div>
+<div>{{ object.name }}</div>
+
+{% endblock%}
+
+
+
