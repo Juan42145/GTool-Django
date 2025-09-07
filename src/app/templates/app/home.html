@@ -1,9 +1,69 @@
 {% extends "app/base.html" %}
+{% load static %}
 
 {% block content %}
 
-<div style="height: 100%; color: white; display:grid; place-content:center">
-	Under Construction
+<div class="home">
+	<div class="home__container">
+		<div class="home__header">Welcome {{ user.username }}!</div>
+	</div>
+	<div class="home__container">
+		{% for page, link in nav.items %}{% url link as url %}
+		{% if page != 'HOME'%}
+			<a class="btn home__link" href="{{ url }}">
+				<div class="icon-box">
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#{{ page }}" /></svg>
+				</div>
+				<p class="link__text">{{ page|upper }}</p>
+			</a>
+		{% endif %}
+		{% endfor %}
+		{% if not user.is_authenticated %}<a class="btn home__link" href="{% url 'login' %}">Login</a>{% endif %}
+		{% if user.is_staff %}<a class="btn home__link" href="{% url 'app:admin' %}">Admin</a>{% endif %}
+	</div>
 </div>
 
 {% endblock content %}
+
+{% block extrastyle %}
+<style>
+.home{
+	--container-txclr: var(--clr-comet-dkr);
+	--container-bgclr: var(--clr-ecru);
+
+	padding: 1em;
+}
+
+.home__container{
+	display: flex;
+	flex-wrap: wrap;
+	place-content: center;
+	margin-top: 1em;
+	padding: 0.75em;
+	gap: 0.75em;
+	border-radius: 0.5em;
+	background-color: var(--container-bgclr);
+	color: var(--container-txclr);
+}
+
+.home__header{
+	font-size: 3em;
+	word-break: break-word;
+	font-weight: bolder;
+	text-align: center;
+}
+
+.home__link{
+	grid-auto-flow: row;
+	place-content: center;
+	min-width: 7em;
+	gap: 0.5em;
+	aspect-ratio: 1;
+	font-weight: bold;
+}
+
+.link__text{
+	font-size: 0.75em;
+}
+</style>
+{% endblock extrastyle %}
