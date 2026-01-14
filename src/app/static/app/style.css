@@ -96,6 +96,10 @@ BASE
 ========================================
 */
 
+:root{
+	overflow: hidden;
+}
+
 html,
 body{
 	overflow: hidden;
@@ -643,14 +647,14 @@ LOADING
 	--loader-clr: var(--clr-ecru);
 
 	width: 2em;
-	border: 0.2em dotted var(--loader-clr);
+	border: 0.2em solid var(--loader-clr);
+	border-right-color: transparent;
 	border-radius: 50%;
 	aspect-ratio: 1;
-	animation: loadspin 3s linear infinite;
+	animation: loadspin 0.75s linear infinite;
 }
 
 @keyframes loadspin {
-	0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
