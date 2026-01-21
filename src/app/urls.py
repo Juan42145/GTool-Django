@@ -12,7 +12,8 @@ urlpatterns = [
     path('characters/<str:name>/', character_detail, name='character-detail'), #MODEL
     path('weapons/', weapons, name='weapons'),
     path('weapons/<str:name>/', weapon_detail, name='weapons-detail'), #MODEL
-    path('compare/', compare, name='compare'), #Potential no Login
+    path('wishing/', wishing, name='wishing'),
+    path('compare/', compare, name='compare'),
     path('data/', data, name='data'),
     
     # CRUDs

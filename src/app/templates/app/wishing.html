@@ -1,0 +1,55 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="wishing">
+	<div class="wishing__options">
+		<button class="btn options__btn" onclick="f(this, 2)">
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Settings" /></svg>
+			</div>
+		</button>
+		<button class="btn options__btn" onclick="f(this, 2)">Set Featured</button>
+	</div>
+	<div class="wishing__btns">
+		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="5">
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#CHARACTERS" /></svg>
+			</div>
+			<span class="wishing__stars" data-stars="5"></span>
+		</button>
+		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="5">
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#WEAPONS" /></svg>
+			</div>
+			<span class="wishing__stars" data-stars="5"></span>
+		</button>
+		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="4">
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#CHARACTERS" /></svg>
+			</div>
+			<span class="wishing__stars" data-stars="4"></span>
+		</button>
+		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="4">
+			<div class="icon-box">
+				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#WEAPONS" /></svg>
+			</div>
+			<span class="wishing__stars" data-stars="4"></span>
+		</button>
+	</div>
+</div>
+
+<div class="preview" id="preview">
+</div>
+
+<div class="confirm hide" id="confirm">
+	<button class="btn" onclick="f()">
+		<div class="icon-box">
+			<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#WISHING" /></svg>
+		</div>
+		<div>Add</div>
+	</button>
+</div>
+
+{% endblock content %}

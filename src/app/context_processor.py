@@ -10,6 +10,7 @@ def custom_context(request):
             'PLANNER': 'app:planner',
             'CHARACTERS': 'app:characters',
             'WEAPONS': 'app:weapons',
+            'WISHING': 'app:wishing',
             'COMPARE': 'app:compare',
             'DATA': 'app:data',
         },

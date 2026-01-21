@@ -1,0 +1,39 @@
+.wishing{
+	--wish-bgclr: var(--clr-comet-dk);
+
+	display: grid;
+	padding: 2em 1em;
+	gap: 1.5em;
+	background-color: var(--wish-bgclr);
+}
+
+.wishing__options, .wishing__btns{
+	display: flex;
+	gap: 1em;
+}
+
+.wishing__btn{
+	--btn-bgclr: var(--color);
+
+	flex: 1;
+	grid-auto-flow: row;
+	padding: 0.5em;
+}
+
+.wishing__stars{
+	font-size: 0.75em;
+}
+
+.preview{
+	height: 1fr;
+}
+
+.preview{
+	background-color: red;
+}
+
+.confirm{
+	display: grid;
+	padding: 1em;
+	place-items: center;
+}

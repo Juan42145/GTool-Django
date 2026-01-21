@@ -89,6 +89,14 @@ def weapon_detail(request, name, *args, **kwargs):
     return render(request, 'app/weapon_detail.html', context)
 
 @login_required
+def wishing(request, *args, **kwargs):
+    context = {
+        'styles': ['app/pages/wishing/wishing.css'],
+        'scripts': ['app/pages/wishing/wishing.js'],
+    }
+    return render(request, 'app/wishing.html', context)
+
+@login_required
 def compare(request, *args, **kwargs):
     context = {
         'styles': ['app/pages/compare/compare.css'],
