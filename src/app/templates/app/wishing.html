@@ -5,33 +5,33 @@
 
 <div class="wishing">
 	<div class="wishing__options">
-		<button class="btn options__btn" onclick="f(this, 2)">
+		<button class="btn options__btn" onclick="showSettings()">
 			<div class="icon-box">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Settings" /></svg>
 			</div>
 		</button>
-		<button class="btn options__btn" onclick="f(this, 2)">Set Featured</button>
+		<button class="btn options__btn" onclick="showFeatured()">Set Featured</button>
 	</div>
 	<div class="wishing__btns">
-		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="5">
+		<button class="btn wishing__btn" onclick="showWish(true,5)" data-color="5">
 			<div class="icon-box">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#CHARACTERS" /></svg>
 			</div>
 			<span class="wishing__stars" data-stars="5"></span>
 		</button>
-		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="5">
+		<button class="btn wishing__btn" onclick="showWish(false,5)" data-color="5">
 			<div class="icon-box">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#WEAPONS" /></svg>
 			</div>
 			<span class="wishing__stars" data-stars="5"></span>
 		</button>
-		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="4">
+		<button class="btn wishing__btn" onclick="showWish(true,4)" data-color="4">
 			<div class="icon-box">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#CHARACTERS" /></svg>
 			</div>
 			<span class="wishing__stars" data-stars="4"></span>
 		</button>
-		<button class="btn wishing__btn" onclick="f(this, 2)" data-color="4">
+		<button class="btn wishing__btn" onclick="showWish(false,4)" data-color="4">
 			<div class="icon-box">
 				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#WEAPONS" /></svg>
 			</div>
