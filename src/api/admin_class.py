@@ -3,11 +3,6 @@ from django.shortcuts import redirect
 from .models import *
 
 # Custom model admin
-class SingletonAdmin(admin.ModelAdmin):
-    def changelist_view(self, request, extra_context=None):
-        meta = self.model._meta
-        return redirect(f'admin:{meta.app_label}_{meta.model_name}_change', object_id = '1')
-
 class BaseAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     actions = None
@@ -79,3 +74,7 @@ class WeaponAdmin(BaseAdmin):
 
 class ImageAdmin(BaseAdmin):
     list_display = ["name", "url", "format"]
+
+class ConstantAdmin(BaseAdmin):
+    list_display = ["name", "data"]
+    list_editable = ["data"]

@@ -23,11 +23,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
-class ConstantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Constant
-        fields = '__all__'
-
 class CharacterSerializer(FormatSerializer):
     weekly_boss = serializers.SerializerMethodField()
 

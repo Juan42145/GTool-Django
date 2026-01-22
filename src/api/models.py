@@ -232,8 +232,9 @@ class Image(models.Model):
     def __str__(self):
         return self.name
 
+class Constant(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    data = models.JSONField(blank=True, null=True)
 
-# Singleton Models
-class Constant(SingletonModel):
-    calculation_data = models.JSONField(blank=True, null=True)
-    drop_rates = models.JSONField(blank=True, null=True)
+    def __str__(self):
+        return self.name

@@ -38,5 +38,5 @@ register_app('image', 5)
 register(Image, 'image', admin_class=ImageAdmin)
 
 register_app('singleton', 6)
-register(Constant, 'singleton', admin_class=SingletonAdmin)
+register(Constant, 'singleton', admin_class=ConstantAdmin)
 

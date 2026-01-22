@@ -48,8 +48,10 @@ class MasterView(views.APIView):
 
 class ConstantView(views.APIView):
     def get(self, request, format=None):
-        data = ConstantSerializer(Constant.load()).data
-        data.pop('id')
+        data = {}
+        queryset = Constant.objects.all()
+        for obj in queryset:
+            data[obj.name] = obj.data
         return response.Response(data)
 
 class ProfileView(generics.RetrieveUpdateAPIView):
