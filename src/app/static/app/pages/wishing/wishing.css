@@ -1,6 +1,9 @@
 .wishing{
 	--wish-bgclr: var(--clr-comet-dk);
 
+	--active-bgclr: var(--clr-ecru);
+	--settings-bgclr: var(--clr-comet-dkst);
+
 	display: grid;
 	padding: 2em 1em;
 	gap: 1.5em;
@@ -10,6 +13,28 @@
 .wishing__options, .wishing__btns{
 	display: flex;
 	gap: 1em;
+	place-items: start;
+}
+
+.options__btn{
+	height: 2.5em;
+	padding: 0 0.75em;
+}
+
+.options__btn--active{
+	--btn-bgclr: var(--active-bgclr);
+}
+
+.wishing__settings{
+	border-radius: 0.5em;
+	background-color: var(--settings-bgclr);
+}
+
+.settings__content{
+	display: grid;
+	padding: 0.75em;
+	padding-left: 0;
+	gap: 0.5em;
 }
 
 .wishing__btn{
@@ -90,6 +115,10 @@
 	border-radius: 1em;
 	overflow: hidden;
 	background-color: var(--color);
+}
+
+.card--unchecked{
+	opacity: 0.3;
 }
 
 .card__image{

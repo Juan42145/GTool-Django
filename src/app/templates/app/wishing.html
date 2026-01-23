@@ -5,12 +5,19 @@
 
 <div class="wishing">
 	<div class="wishing__options">
-		<button class="btn options__btn" onclick="showSettings()">
-			<div class="icon-box">
-				<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Settings" /></svg>
+		<div class="wishing__settings">
+			<button class="btn options__btn" onclick="toggleSettings(this)">
+				<div class="icon-box">
+					<svg class="icon"><use href="{%static 'app/assets/sprites.svg'%}#Settings" /></svg>
+				</div>
+			</button>
+			<div id="wishing-settings" class="settings__content hide">
+				<button class="btn" onclick="showChecks('5C')">Standard Characters</button>
+				<button class="btn" onclick="showChecks('5W')">Standard Weapons</button>
+				<button class="btn" onclick="showChecks('4W')">Wishable Weapons</button>
 			</div>
-		</button>
-		<button class="btn options__btn" onclick="showFeatured()">Set Featured</button>
+		</div>
+		<button class="btn options__btn" onclick="showChecks('4C')">Set Featured</button>
 	</div>
 	<div class="wishing__btns">
 		<button class="btn wishing__btn" onclick="showWish(true,5)" data-color="5">

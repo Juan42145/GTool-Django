@@ -8,8 +8,15 @@ function pageLoad(){
 	window.userWpn = user.WEAPONS;
 
 	defaults = loadSetting('wsh-set', loadStatic().wish_defaults)
+	defaults['4C'] = []
 }
 let defaults
+
+function toggleSettings(btn){
+	const Settings = document.getElementById('wishing-settings')
+	Settings.classList.toggle('hide')
+	btn.classList.toggle('options__btn--active')
+}
 
 function showSettings(){
 	const Popup = makePopup()
@@ -21,6 +28,30 @@ function showFeatured(){
 	createTxt(Popup, 'div', '', 'Featured')
 }
 
+function showChecks(key){
+	const Popup = makePopup()
+	const Cards = createDiv(Popup, 'cards')
+	
+	let dict = defaults[key]
+	let [rarity, type] = key
+	let isChar = type == 'C'
+	const array = Object.entries(isChar? DBC : DBW)
+	array.forEach(object => {
+		if(object[1].RARITY != rarity) return
+		
+		const [name, info] = object;
+		let color = isChar? info.ELEMENT : info.RARITY
+		
+		const Card = createDiv(Cards, 'card', {'data-color':color});
+		if(dict.includes(name)) Card.classList.remove('card--unchecked')
+		else Card.classList.add('card--unchecked')
+		// Card.addEventListener('click', () => redirect(name));
+
+		createImg(Card, 'card__image', isChar? getCharacter(name) : getWeapon(name))
+		createTxt(Card, 'div', 'card__name '+(isChar?'':'name--wpn'), name)
+	});
+}
+
 function showWish(isChar, rarity){
 	const Popup = makePopup()
 	const Featured = createDiv(Popup, 'cards cards--featured')
@@ -30,9 +61,7 @@ function showWish(isChar, rarity){
 	let isAsc = false
 	if(!isAsc) array.reverse();
 
-	let key
-	if(isChar && rarity == 4) key = []
-	else key = defaults[rarity+(isChar? 'C' : 'W')]
+	let key = defaults[rarity+(isChar? 'C' : 'W')]
 	console.log(key)
 	array.forEach(object => {
 		if(object[1].RARITY != rarity) return
