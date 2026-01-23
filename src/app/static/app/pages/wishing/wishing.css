@@ -1,13 +1,19 @@
+.wishing-panel{
+	position: relative;
+}
+
 .wishing{
-	--wish-bgclr: var(--clr-comet-dk);
+	--menu-bgclr: var(--clr-comet-dk);
 
 	--active-bgclr: var(--clr-ecru);
 	--settings-bgclr: var(--clr-comet-dkst);
 
+	position: sticky;
+	top: 0;
 	display: grid;
 	padding: 2em 1em;
 	gap: 1.5em;
-	background-color: var(--wish-bgclr);
+	background-color: var(--menu-bgclr);
 }
 
 .wishing__options, .wishing__btns{
@@ -50,11 +56,62 @@
 }
 
 .preview{
-	height: 1fr;
+	--wish-bgclr: var(--clr-ecru);
+	--wish-img-bgclr: var(--clr-ecru-lt);
+	--wish-val-bgclr: var(--clr-ecru-dk);
+
+	display: grid;
+	padding: 1em 0;
+	gap: 0.75em;
+	overflow: scroll;
 }
 
-.preview{
-	background-color: red;
+.preview__content{
+	display: grid;
+	gap: 0.5em;
+}
+
+.wish{
+	display: flex;
+	place-items: center;
+	gap: 1em;
+	background-color: var(--wish-bgclr);
+}
+
+.wish__card{
+	font-size: 1.25em;
+
+	--size: 5em;
+
+	display: grid;
+	width: 9em;
+	gap: 0.2em;
+	place-items: center;
+	background-color: var(--wish-img-bgclr);
+}
+
+.wish__values{
+	font-size: 1.25em;
+
+	display: flex;
+	place-items: center;
+	gap: 0.75em;
+}
+
+.wish__value{
+	margin-right: 0.75em;
+	padding: 1.5em;
+	background-color: var(--wish-val-bgclr);
+}
+
+.wish__actions{
+	display: flex;
+	padding-left: 2em;
+	gap: 1em;
+}
+
+.action__btn{
+	aspect-ratio: 1;
 }
 
 .confirm{
