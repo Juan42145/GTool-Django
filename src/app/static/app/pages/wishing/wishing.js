@@ -18,16 +18,6 @@ function toggleSettings(btn){
 	btn.classList.toggle('options__btn--active')
 }
 
-function showSettings(){
-	const Popup = makePopup()
-	createTxt(Popup, 'div', '', 'Settings')
-}
-
-function showFeatured(){
-	const Popup = makePopup()
-	createTxt(Popup, 'div', '', 'Featured')
-}
-
 function showChecks(key){
 	const Popup = makePopup()
 	const Cards = createDiv(Popup, 'cards')
@@ -45,7 +35,16 @@ function showChecks(key){
 		const Card = createDiv(Cards, 'card', {'data-color':color});
 		if(dict.includes(name)) Card.classList.remove('card--unchecked')
 		else Card.classList.add('card--unchecked')
-		// Card.addEventListener('click', () => redirect(name));
+		Card.addEventListener('click', () => {
+			if(dict.includes(name)){
+				Card.classList.add('card--unchecked')
+				dict.splice(dict.indexOf(name), 1)
+			} else{
+				Card.classList.remove('card--unchecked')
+				dict.push(name)
+			}
+			storeSetting('wsh-set', defaults)
+		});
 
 		createImg(Card, 'card__image', isChar? getCharacter(name) : getWeapon(name))
 		createTxt(Card, 'div', 'card__name '+(isChar?'':'name--wpn'), name)
