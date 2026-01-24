@@ -61,7 +61,7 @@
 	--wish-val-bgclr: var(--clr-ecru-dk);
 
 	display: grid;
-	padding: 1em 0;
+	padding-top: 1em;
 	gap: 0.75em;
 	overflow: scroll;
 }

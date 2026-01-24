@@ -81,7 +81,7 @@ function makeCard(Cont, object, isChar){
 		closePopup()
 	});
 
-	if(state?.OWNED) isChar? tagChar(Card, state) : tagWpn(Card, state)
+	if(state?.OWNED) isChar? tagChar(Card, state, info.MAX) : tagWpn(Card, state)
 
 	createImg(Card, 'card__image', isChar? getCharacter(name) : getWeapon(name))
 	createTxt(Card, 'div', 'card__name '+(isChar?'':'name--wpn'), name)
@@ -144,6 +144,30 @@ function renderWishing(){
 	}
 }
 
+/**--WISH PROCESSING-- */
+function addWishes(){
+	Object.entries(wishes).forEach(([code, number]) => {
+		let isChar = code[0] !== '-'
+		const name = isChar? code : code.slice(1)
+
+		const userDict = isChar? userChar : userWpn
+		const state = uGet(userDict[name], '')
+		
+		let value = isChar? state.CONSTELLATION : state.WISH;
+		if(value === ''){
+			uSet(userDict, [name,'OWNED'], true); value = isChar? -1 : 0;
+		}
+		value += number;
+
+		uSet(userDict, [name, isChar? 'CONSTELLATION' : 'WISH'], value)
+		if(isChar) storeUserC(user, userDict)
+		else storeUserW(user, userDict)
+	})
+
+	wishes = {}
+	renderWishing()
+}
+
 /**--POP UP-- */
 function makePopup(){
 	const Popup = document.getElementById('pop-up')
@@ -177,15 +201,15 @@ function tagChar(Cont, state){
 	if(value >= 6) Tag.classList.add('max')
 }
 
-function tagWpn(Cont, state){
+function tagWpn(Cont, state, max){
 	let value = (state.REFINEMENT || 0) + (state.WISH || 0)
 
 	const Tag = createTxt(Cont, 'div', 'card__tag','R'+value+(state.WISH ? '*' : ''));
-	if(state.REWARD) createTxt(Tag, 'div', '', '['+ +state.REWARD+']');
-	if(value >= 6) Tag.classList.add('max')
+	if(state.WISH && state.REFINEMENT) createTxt(Tag, 'div', '', '['+state.REFINEMENT+']')
+	if(value >= (max || 5)) Tag.classList.add('max')
 }
 
-function	getValues(number, name, isChar){
+function getValues(number, name, isChar){
 	const state = isChar? uGet(userChar[name], '') : uGet(userWpn[name], '');
 	const init = isChar? -1 : 0 //Initial values when not owned
 
