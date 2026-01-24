@@ -309,17 +309,12 @@ POP UP
 
 .popup{
 	--popup-txclr: var(--clr-white);
-	--popup-header-bgclr: var(--clr-comet-dkst);
+	--popup-header-bgclr: var(--clr-comet-dk);
 	--popup-header-txclr: var(--clr-ecru);
-	--popup-content-bgclr: hsla(0, 0%, 0%, 0.25);
+	--popup-content-bgclr: hsla(0, 0%, 0%, 0.4);
+	--popup-footer-bgclr: var(--clr-comet-dk);
 
-	position: fixed;
-	inset: 0;
 	display: grid;
-	max-height: 100vh;
-	place-self: center;
-	place-content: center;
-	overflow: scroll;
 	color: var(--popup-txclr);
 	text-align: center;
 }
@@ -341,6 +336,7 @@ POP UP
 	place-content: center;
 	padding: 1em;
 	gap: 1em;
+	background-color: var(--popup-footer-bgclr);
 }
 
 /* 
@@ -427,6 +423,10 @@ CONVERT
 	padding: 0.25em;
 	place-content: center;
 	background-color: var(--convert-title-bgclr);
+}
+
+.convert .card{
+	width: 4em;
 }
 
 /* Convert Elements */
