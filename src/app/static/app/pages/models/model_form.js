@@ -93,3 +93,7 @@ function addEvent(element, listener){
 	element.addEventListener('input', listener)
 	if(isUpdate) element.dispatchEvent(new Event('input'));
 }
+
+function saveForm(){
+	reset()
+}

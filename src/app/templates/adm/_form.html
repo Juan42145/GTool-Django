@@ -18,7 +18,7 @@
 		{% with 'app:'|add:model_name|add:'-list' as link %}
 		<a class="btn btn--clear form__btn" href="{% url link %}">Cancel</a>
 		{% endwith %}
-		<button class="btn" type="submit">Save</button>
+		<button class="btn" type="submit" onclick="saveForm()">Save</button>
 	</div>
 </form>
 
