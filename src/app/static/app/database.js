@@ -73,7 +73,7 @@ function converge(category){
 
 function decode(category, item){
   return ['WEEKLY_DROP', 'WEEKLY_DROPS'].includes(category) ?
-		item.split(' ')[1] : item;
+		item.split(': ')[1] : item;
 }
 
 function translate(category){return converge(toPlural(category))}

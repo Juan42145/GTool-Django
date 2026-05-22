@@ -327,7 +327,7 @@ function calcCharT(info, talents, isPivot){
 	const props = {
 		BOOK: info.BOOK,
 		COMMON: info.COMMON,
-		WEEKLY_DROP: info.WEEKLY_DROP ? info.WEEKLY_BOSS+' '+info.WEEKLY_DROP : null,
+		WEEKLY_DROP: info.WEEKLY_DROP ? info.WEEKLY_BOSS+': '+info.WEEKLY_DROP : null,
 		MORA: 'Mora',
 	}
 	return generateCosts(props, calcT, talents, isPivot)
