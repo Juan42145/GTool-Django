@@ -23,10 +23,7 @@ function renderInventory(){
 		let drops, itemArray
 		Object.entries(mItems).forEach(([mItem, mMaterials], indexItem) => {
 			let Row
-			if(mCategory !== "WEEKLY_DROPS"){
-				Row = createDiv(Cont, 'item')
-				/*Name*/ createTxt(Row, 'div', 'item__name', mItem)
-			} else {
+			if (mCategory == "WEEKLY_DROPS"){
 				if (indexItem % 3 == 0){
 					Row = createDiv(Cont, 'item', {'id':'WD-R_'+mMaterials.data})
 					drops = createDiv(Row, 'item__name--drops')
@@ -42,16 +39,25 @@ function renderInventory(){
 					const WDbtn = create(Text, 'button', {'class':'btn btn--clear item__btn icon-box'})
 					WDbtn.textContent = '+'
 					let itemsData = itemArray
-					WDbtn.addEventListener('click', () => makePopup(itemsData, mMaterials.data))
+					WDbtn.addEventListener('click', () => makePopup([mCategory, itemsData], mMaterials.data))
 				}
+			} else if (['BOOKS','TROPHIES'].includes(mCategory)){
+				Row = createDiv(Cont, 'item')
+				const Name = createTxt(Row, 'div', 'item__name', mItem)
+				const Dbtn = create(Name, 'button', {'class':'btn btn--clear item__btn icon-box'})
+				Dbtn.textContent = '+'
+				Dbtn.addEventListener('click', () => makePopup([mCategory, mItem]))
+			} else{
+				Row = createDiv(Cont, 'item')
+				/*Name*/ createTxt(Row, 'div', 'item__name', mItem)
 			}
 
 			let ItemCont
 			if (mCategory !== "WEEKLY_DROPS"){
 				ItemCont = createDiv(Row, 'item__cont')
-			} else {
+			} else{
 				if (indexItem % 3 == 0){
-					ItemCont = createDiv(Row, 'item__cont',{'id':'IC_'+mMaterials.data})
+					ItemCont = createDiv(Row, 'item__cont', {'id':'IC_'+mMaterials.data})
 					let total = getTotals()["WEEKLY_BOSSES"][mMaterials.data]
 					if (total !== undefined)
 						createTxt(ItemCont, 'div', 'item__total', total,
@@ -72,8 +78,9 @@ function renderInventory(){
 				
 				let value = userInv[mCategory]?.[mItem]?.[rank] ?? 0
 				const Input = createNumInput(Card, {'class':'item__input'}, value)
-				if(mCategory == "WEEKLY_DROPS") Input.id = 'INP_'+mItem
-				Input.addEventListener('blur',() => {
+				if (mCategory == "WEEKLY_DROPS") Input.id = 'INP_'+mItem
+				else if (['BOOKS','TROPHIES'].includes(mCategory)) Input.id = `INP_${mItem}-${rank}`
+				Input.addEventListener('blur', () => {
 					Input.value = +Input.value;
 					uSet(userInv, [mCategory,mItem,rank], +Input.value)
 					storeUserI(user, userInv)
@@ -82,7 +89,8 @@ function renderInventory(){
 						document.getElementById('gemC').textContent = getGemTotals(mItems)
 					}
 					if(mCategory == "WEEKLY_DROPS"){
-						document.getElementById('WD-I_'+mMaterials.data).textContent = getTotals()["WEEKLY_BOSSES"][mMaterials.data]
+						document.getElementById('WD-I_'+mMaterials.data).textContent =
+							getTotals()["WEEKLY_BOSSES"][mMaterials.data]
 					}
 				}, false);
 			});
@@ -90,21 +98,21 @@ function renderInventory(){
 		if(mCategory == "GEMS"){
 			const TRow = createDiv(Cont, 'item item--total')
 			/*Name*/createTxt(TRow, 'div', 'item__name', 'Total')
-			createTxt(TRow, 'div','item__total', getGemTotals(mItems), {'id':'gemC'})
+			createTxt(TRow, 'div', 'item__total', getGemTotals(mItems), {'id':'gemC'})
 		}
 
 	});
 }
 
 function makeAccordion(accordion, panel){
-	accordion.addEventListener('click',() => {
+	accordion.addEventListener('click', () => {
 		accordion.classList.toggle('active')
 		panel.classList.toggle('hide')
 	})
 }
 
 /**--POP UP-- */
-function makePopup(mItems, boss){
+function makePopup(adderData, boss){
 	const Popup = document.getElementById('pop-up')
 	Popup.innerHTML = ''; Popup.showModal()
 
@@ -112,40 +120,58 @@ function makePopup(mItems, boss){
 
 	const Close = create(Container, 'button', {'class':'btn btn--clear icon-box'})
 	createIcon(Close, '#X')
-	Close.addEventListener('click', () => closePopup(mItems, boss))
+	Close.addEventListener('click', () => closePopup(adderData, boss))
 
 	const Content = createDiv(Container, 'popup__content')
-	makeAdder(Content, mItems, boss)
+	makeAdder(Content, adderData, boss)
 
 	Popup.addEventListener("click", (e) => {
-		if(e.target === Popup) closePopup(mItems, boss);
+		if (e.target === Popup) closePopup(adderData, boss);
 	});
 }
 
-function closePopup(mItems, boss){
+function closePopup(adderData, boss){
+	let [category, item] = adderData
 	//Update value and total
-	mItems.forEach((mItem) => {
-		document.getElementById('INP_'+mItem).value = userInv["WEEKLY_DROPS"]?.[mItem]?.[5] ?? 0
-	})
-	document.getElementById('WD-I_'+boss).textContent = getTotals()["WEEKLY_BOSSES"][boss]
-	
+	if (category == "WEEKLY_DROPS"){
+		item.forEach((mItem) => {
+			document.getElementById('INP_'+mItem).value = userInv[category]?.[mItem]?.[5] ?? 0
+		})
+		let total = getTotals()["WEEKLY_BOSSES"][boss]
+		document.getElementById('WD-I_'+boss).textContent = total
+	} else{
+		Object.keys(DBM[category][item]).forEach((rank) => {
+			if (isNaN(rank)) return
+			document.getElementById(`INP_${item}-${rank}`).value = userInv[category]?.[item]?.[rank] ?? 0
+		})
+		let total = Math.floor(getTotals()[category][item]).toLocaleString('en-us')
+		document.getElementById('I_'+item).textContent = total
+	}
+
 	const Popup = document.getElementById('pop-up')
 	Popup.close(); Popup.innerHTML = ''
 }
 
-function makeAdder(Container, mItems, boss){
+function makeAdder(Container, adderData, boss){
 	const Content = createDiv(Container, 'adder__content')
 	let adder = {}
+	let [category, itemData] = adderData
+	let wdFlag = category == "WEEKLY_DROPS"
+	let list = wdFlag ? itemData : Object.keys(DBM[category][itemData]).reverse()
 
-	mItems.forEach((mItem) => {
-		const Card = createDiv(Content, 'adder__card', {'data-color':5})
-		createImg(Card, 'adder__card--img r_5', getImage("WEEKLY_DROPS", mItem, 5))
+	list.forEach((object) => {
+		let [item, rank] = wdFlag ? [object, 5] : [itemData, object]
 		
+		if (isNaN(rank)) return
+		const Card = createDiv(Content, 'adder__card', {'data-color':rank})
+
+		createImg(Card, 'adder__card--img r_'+rank, getImage(category, item, rank))
+
 		const InputContainer = createDiv(Card, 'adder__input')
 		const Input = createNumInput(InputContainer, {}, 0)
-		Input.addEventListener('blur',() => {
+		Input.addEventListener('blur', () => {
 			if (Input.value === '') Input.value = 0;
-			adder[mItem] = Input.value
+			adder[object] = Input.value
 		}, false);
 	})
 
@@ -153,14 +179,15 @@ function makeAdder(Container, mItems, boss){
 	const Submit = create(Container, 'button', {'class':'btn icon-box'})
 	createIcon(Submit, '#Check')
 	Submit.addEventListener('click', () => {
-		Object.entries(adder).forEach(([item, value]) => {
-			let category = "WEEKLY_DROPS", rank = 5
+		Object.entries(adder).forEach(([object, value]) => {
+			let [item, rank] = wdFlag ? [object, 5] : [itemData, object]
+
 			let userValue = userInv[category]?.[item]?.[rank] ?? 0
 			uSet(userInv, [category,item,rank], userValue + +value)
 			storeUserI(user, userInv)
 			processTotals(category, item);
 		})
-		closePopup(mItems, boss)
+		closePopup(adderData, boss)
 	})
 }
 
