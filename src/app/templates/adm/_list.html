@@ -2,7 +2,11 @@
 {% block content %}
 
 <div id="list" class="list" data-opt={% block opt %}{% endblock %}>
-	<a class="btn" href="{% block create %}{% endblock %}">Add New</a>
+	<div class="list__options">
+		<a class="btn btn--clear return__btn" href="{% url 'app:admin' %}">&#x25C1;</a>
+		<a class="btn" href="{% block create %}{% endblock %}">Add New</a>
+	</div>
+	{% block notes %}{% endblock %}
 	<div class="list__container">
 		{% for object in object_list %}
 		<a class="list__item" href="{% block update %}{% endblock %}">

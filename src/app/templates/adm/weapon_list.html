@@ -3,6 +3,15 @@
 {% block opt %}"w"{% endblock%}
 {% block create %}{% url 'app:weapon-create' %}{% endblock%}
 {% block update %}{% url 'app:weapon-update' object.id %}{% endblock%}
+
+{% block notes %}
+
+<div class="list__notes">
+	<div>4 > 5</div>
+	<div>Event > BP > Region > Fish > Special > Wish > Gacha</div>
+</div>
+
+{% endblock %}
 {% block list_fields %}
 
 <div>{{ object.id }}</div>

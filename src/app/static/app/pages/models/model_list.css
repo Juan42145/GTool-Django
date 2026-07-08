@@ -3,10 +3,35 @@
 	--list-bgclr: var(--clr-comet);
 	--list-bgclr2: var(--clr-comet-lt);
 
+	--return-txclr: var(--clr-ecru-lt);
+
+	--notes-txclr: var(--clr-ecru);
+	--notes-bgclr: var(--clr-comet-dkr);
+	--notes-bdclr: var(--clr-ecru);
+
 	display: grid;
 	gap: 1.5em;
 	padding: 1em;
 	padding-top: 1.5em;
+}
+
+.list__options{
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	gap: 1.5em;
+}
+
+.return__btn{
+	--btn-txclr: var(--return-txclr);
+	--btn-bdclr: var(--return-txclr);
+}
+
+.list__notes{
+	padding: 0.4em 1em;
+	border: 0.1em solid var(--notes-bdclr);
+	background-color: var(--notes-bgclr);
+	color: var(--notes-txclr);
+	text-align: center;
 }
 
 .list__container{
