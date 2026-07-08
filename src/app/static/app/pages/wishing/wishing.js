@@ -8,10 +8,10 @@ function pageLoad(){
 	window.userWpn = user.WEAPONS;
 
 	defaults = loadSetting('wsh-set', loadStatic().wish_defaults)
-	defaults['4C'] = []
+	wishes = loadSetting('wsh-wsh', {})
 	renderWishing()
 }
-let defaults, wishes = {}
+let defaults, wishes
 
 function toggleSettings(btn){
 	const Settings = document.getElementById('wishing-settings')
@@ -77,6 +77,7 @@ function makeCard(Cont, object, isChar){
 	const Card = createDiv(Cont, 'card', {'data-color':color});
 	Card.addEventListener('click', () => {
 		wishes[codename] = (wishes[codename] || 0) + 1
+		storeSetting('wsh-wsh', wishes)
 		renderWishing()
 		closePopup()
 	});
@@ -115,6 +116,7 @@ function renderWishing(){
 		Remove.textContent = '-'
 		Remove.addEventListener('click', () => {
 			wishes[code] -= 1
+			storeSetting('wsh-wsh', wishes)
 			if(wishes[code] > 0){
 				let [curr, next] = getValues(wishes[code], name, isChar)
 				document.getElementById(name+'_wish_num').textContent = wishes[code]
@@ -122,6 +124,7 @@ function renderWishing(){
 				document.getElementById(name+'_wish_next').textContent = next
 			} else{
 				delete wishes[code]
+				storeSetting('wsh-wsh', wishes)
 				renderWishing()
 			}
 		})
@@ -129,6 +132,7 @@ function renderWishing(){
 		Add.textContent = '+'
 		Add.addEventListener('click', () => {
 			wishes[code] += 1
+			storeSetting('wsh-wsh', wishes)
 			let [curr, next] = getValues(wishes[code], name, isChar)
 			document.getElementById(name+'_wish_num').textContent = wishes[code]
 			document.getElementById(name+'_wish_curr').textContent = curr
@@ -165,6 +169,10 @@ function addWishes(){
 	})
 
 	wishes = {}
+	defaults['4C'] = []
+	storeSetting('wsh-wsh', wishes)
+	storeSetting('wsh-set', defaults)
+	
 	renderWishing()
 }
 
