@@ -41,8 +41,7 @@ function makeContent(){
 function renderEdit(){
 	const Edit = document.getElementById('page-edit')
 	Edit.innerHTML = ''
-	let state = isChar ?
-		uGet(userChar[objName], '') : uGet(userWpn[objName], '')
+	let state = isChar ? uGet(userChar[objName], '') : uGet(userWpn[objName], '')
 	makeInputs(Edit, 'Levels', [{PHASE: state.PHASE, TARGET: state.TARGET}]);
 	if (isChar){
 		makeInputs(Edit, 'Talents', [
@@ -137,7 +136,7 @@ function renderInventory(){
 function makeRequirements(Requirements, category, item, cMaterials, extra){
 	Requirements.innerHTML = ''
 	let inv = uGet({...userInv[category]?.[item]}, 0)
-	if (extra){
+	if (extra?.usedMaterials){
 		Object.entries(extra.usedMaterials).forEach(([rank, value]) => {
 			inv[rank] -= value
 			if (inv[rank] < 0){
@@ -155,8 +154,13 @@ function makeRequirements(Requirements, category, item, cMaterials, extra){
 		Required.classList.add('required')
 		if (item === 'Mora') Required.classList.add('required--long');
 
-		/*Inv*/createTxt(Required, 'div', 'required__inventory',
+		if (extra?.noCraft){
+			createTxt(Required, 'div', 'required__inventory', 
+				inv[rank].toLocaleString('en-us'))
+		} else{
+			/*Inv*/createTxt(Required, 'div', 'required__inventory',
 			crafted[rank].toLocaleString('en-us'))
+		}
 		/*Slash*/createTxt(Required, 'div', 'required__slash', '/')
 		/*Need*/createTxt(Required, 'div', 'required__value',
 			value.toLocaleString('en-us'))
@@ -206,8 +210,8 @@ function renderUpgrade(){
 		'' : 'Insufficient Materials')
 	if (upgradable){
 		Area.classList.remove('upgrade--insufficient')
-		attributeData.forEach(([label, [from, to]]) => {
-			if (!isNaN(label)) label = ['Normal', 'Skill', 'Burst'][label]
+		attributeData.forEach(([from, to], i) => {
+			let label = ['Phase', 'Normal', 'Skill', 'Burst'][i]
 			if (to === from) return
 			const Attribute = createDiv(Msg, 'upgrade__attribute')
 			createTxt(Attribute, 'div', '', label+': '+from)
@@ -216,7 +220,7 @@ function renderUpgrade(){
 			createTxt(Attribute, 'div', '', to)
 		})
 		const Btn = create(Area, 'button', {'class':'btn icon-box'})
-		createIcon(Btn, '#X')
+		Btn.textContent = '\u25B2'
 		Btn.addEventListener('click', () =>
 			makeUpgradePanel(attributeData, upgradeCosts))
 	} else{
@@ -229,7 +233,7 @@ function renderUpgrade(){
 	const state = uGet(isChar ? userChar[objName] : userWpn[objName], '')
 	const info = isChar ? DBC[objName] : DBW[objName]
 	
-	let [labelAscension, [_, lastAscension]] = attributeData[0]
+	let lastAscension = attributeData[0]?.[1]
 	let labelTalent, lastTalent = 10, nextCosts = upgradeCosts
 	if (isChar){
 		let talentTargets = [+state.TNORMAL, +state.TSKILL, +state.TBURST]
@@ -238,9 +242,9 @@ function renderUpgrade(){
 			defaultTalent(state.SKILL),
 			defaultTalent(state.BURST)
 		]
-		attributeData.forEach(([label,[_,to]]) => {
-			if (label === 'Phase') return
-			talentLasts[label] = to
+		attributeData.forEach(([_,to], i) => {
+			if (i === 0) return
+			talentLasts[i-1] = to
 		})
 		talentLasts.forEach((goal, i) => {
 			if (goal < talentTargets[i] && goal < lastTalent){
@@ -260,7 +264,7 @@ function renderUpgrade(){
 		const costCalc = isChar ? calcCharA : calcWpn
 		const costs = costCalc(info, uData, false)
 
-		makeNext(Next, labelAscension, from, to, costs, upgradeCosts)
+		makeNext(Next, 'Phase', from, to, costs, upgradeCosts)
 
 		nextCosts = mergeCosts([upgradeCosts, costs])
 	}
@@ -398,9 +402,10 @@ function makeConvert(category, item, cMaterials){
 	if (category === 'WEEKLY_DROPS') Convert.classList.add('convert--single')
 	
 	const Inventory = createDiv(Convert, 'convert__inventory')
-	const Values = createDiv(Convert, 'convert__values')
+	const Amount = createDiv(Convert, 'convert__amount')
+	const Pick = createDiv(Convert, 'convert__pick')
 	createTxt(Convert, 'div', 'convert__title', 'Conversion Materials')
-	const Materials = createDiv(Convert, 'convert__materials convert--subgrid')
+	const Materials = createDiv(Convert, 'convert__materials')
 	
 	createTxt(Header, 'div', '', 'Convert '+capitalize(category))
 
@@ -408,6 +413,13 @@ function makeConvert(category, item, cMaterials){
 	let maxIndex = 0
 	let convert = {}
 	let iMaterials = uGet(userInv[category]?.[item], 0)
+
+	if (category === 'GEMS'){
+		let total = getTotals()[category]?.[item]
+		/*Total*/createTxt(Inventory, 'div', 'card--total',
+			Math.floor(total).toLocaleString('en-us'))
+	}
+
 	Object.keys(DBM[category][item]).reverse().forEach((rank, mIndex) => {
 		if (isNaN(rank)) return
 		
@@ -427,11 +439,17 @@ function makeConvert(category, item, cMaterials){
 	const maxDust = Math.ceil(Math.floor(calc.left*(3**maxIndex)*100)/100)
 	createTxt(Confirm, 'div', '', '/'+maxDust+')')
 
-	makeConvertValues(Values, category, item, calc.left, convert)
+	makeConvertValues([Amount, Pick], category, item, calc.left, convert)
 
 	Object.entries(DBM[category]).forEach(([newItem, newMaterials]) => {
 		if (newItem === item || newItem === '-') return
 		if (newMaterials.data !== DBM[category][item].data) return
+
+		if (category === 'GEMS'){
+			let total = getTotals()[category]?.[newItem]
+			/*Total*/createTxt(Materials, 'div', 'card--total',
+				Math.floor(total).toLocaleString('en-us'))
+		}
 
 		Object.keys(newMaterials).reverse().forEach((rank) => {
 			if (isNaN(rank)) return
@@ -447,7 +465,7 @@ function makeConvert(category, item, cMaterials){
 				if (+Input.value > inv) Input.value = +inv
 				Input.value = +Input.value;
 				convert[rank][newItem] = +Input.value
-				makeConvertValues(Values, category, item, calc.left, convert)
+				makeConvertValues([Amount, Pick], category, item, calc.left, convert)
 			}, false);
 		})
 	})
@@ -469,9 +487,9 @@ function makeConvert(category, item, cMaterials){
 }
 
 function makeConvertValues(Values, category, item, left, convert){
-	Values.innerHTML = ''
-	const Amount = createDiv(Values, 'convert__amount convert--subgrid')
-	const Pick = createDiv(Values, 'convert__pick convert--subgrid')
+	const [Amount, Pick] = Values
+	Amount.innerHTML = ''
+	Pick.innerHTML = ''
 	const total = {}
 	let dust = 0
 	const array = Object.entries(convert)
@@ -491,26 +509,54 @@ function makeConvertValues(Values, category, item, left, convert){
 
 }
 
-function makeUpgradePanel(attributeData, upgradeCosts){
+function makeUpgradePanel(attributeData, upgradeCosts, modified){
 	const [Header, Content, Footer] = makePopup()
 
 	const Panel = createDiv(Content, 'upgrade-panel')
+	
 	const Levels = createDiv(Panel, 'upgrade-panel__levels')
 	const Inventory = createDiv(Panel, 'upgrade-panel__inventory')
 	const Crafting = createDiv(Panel, 'upgrade-panel__crafting')
+	
 	const Title = createTxt(Crafting, 'div', 'crafting__header', 'Craft')
 	const CraftCont = createDiv(Crafting, 'crafting__cont')
 
 	createTxt(Header, 'div', '', 'Upgrade '+objName)
 
-	attributeData.forEach(([label, [from, to]]) => {
-		if (!isNaN(label)) label = ['Normal', 'Skill', 'Burst'][label]
-		if (to === from) return
-		const Attribute = createDiv(Levels, 'upgrade__attribute')
-		createTxt(Attribute, 'div', '', label+': '+from)
-		const Arrow = createDiv(Attribute, 'edit__arrow')
+	if(!modified) modified = attributeData.map(a => [...a])
+
+	modified.forEach(([from, to], i) => {
+		let label = ['Phase', 'Normal', 'Skill', 'Burst'][i]
+		if (from === attributeData[i][1]) return
+		const Attribute = createDiv(Levels, 'levels__attribute')
+		
+		createTxt(Attribute, 'div', 'attribute__label attribute__text', label)
+		
+		const Level = createDiv(Attribute, 'attribute__level')
+		createTxt(Level, 'div', 'level__from attribute__text', from)
+		const Arrow = createDiv(Level, 'level__arrow')
 		createIcon(Arrow, '#Arrow')
-		createTxt(Attribute, 'div', '', to)
+		const Edit = createDiv(Level, 'level__edit')
+
+		const Decrease = create(Edit, 'button', {'class':'btn edit__btn'})
+		createTxt(Decrease, 'div', 'attribute__text', '\u25C4')
+		if (to == from) Decrease.disabled = true
+
+		createTxt(Edit, 'div', 'edit__text attribute__text', to,
+			{'id':'edit-'+label})
+
+		const Increase = create(Edit, 'button', {'class':'btn edit__btn'})
+		createTxt(Increase, 'div', 'attribute__text', '\u25BA')
+		if (to == attributeData[i][1]) Increase.disabled = true
+
+		Decrease.addEventListener('click', () => {
+			modified[i][1] -= 1
+			modifyUpgrade(attributeData, upgradeCosts, modified)
+		})
+		Increase.addEventListener('click', () => {
+			modified[i][1] += 1
+			modifyUpgrade(attributeData, upgradeCosts, modified)
+		})
 	})
 
 	Object.entries(upgradeCosts).forEach(([cCategory, [cItem, cMaterials]]) => {
@@ -521,7 +567,7 @@ function makeUpgradePanel(attributeData, upgradeCosts){
 		let category = translate(cCategory), item = decode(cCategory, cItem)
 		const Requirements = createDiv(Inventory, 'upgrade__requirements')
 		const calc = makeRequirements(Requirements, category, item, cMaterials,
-			{usedMaterials: {}})
+			{noCraft: true})
 		
 		if (!calc['isObtained']){
 			const Craft = createDiv(CraftCont, 'craft craft--color')
@@ -533,7 +579,7 @@ function makeUpgradePanel(attributeData, upgradeCosts){
 			Confirm.addEventListener('click', () => {
 				crafting()
 				makeContent()
-				makeUpgradePanel(attributeData, upgradeCosts)
+				makeUpgradePanel(attributeData, upgradeCosts, modified)
 			})
 		}
 	})
@@ -545,10 +591,35 @@ function makeUpgradePanel(attributeData, upgradeCosts){
 			createIcon(Icon, '#Check')
 			createTxt(Confirm, 'div', '', 'Upgrade')
 			Confirm.addEventListener('click', () => {
-				consume(upgradeCosts, attributeData)
+				consume(upgradeCosts, modified)
 				closePopup()
 			})
 	}
+}
+
+function modifyUpgrade(attributeData, upgradeCosts, modified){
+	const info = isChar ? DBC[objName] : DBW[objName]
+	
+	upgradeCosts = {}
+	let phaseData = modified[0]
+	let talentData = [modified[1], modified[2], modified[3]]
+	
+	if (phaseData[1] !== phaseData[0]){
+		const costCalc = isChar ? calcCharA : calcWpn
+		upgradeCosts = costCalc(info, phaseData, false)
+	}
+
+	if (isChar){
+		let talentsUpgradable = false
+		talentData.forEach(data => {
+			talentsUpgradable ||= data[1] !== data[0]
+		})
+
+		if (talentsUpgradable) upgradeCosts = mergeCosts([upgradeCosts,
+			calcCharT(info, talentData, false)])
+	}
+
+	makeUpgradePanel(attributeData, upgradeCosts, modified)
 }
 
 /**--INVENTORY CRAFTING PROCESSING-- */
@@ -598,8 +669,8 @@ function getCrafted(category, item, cMaterials, iMaterials){
 function getMaxUpgrades(){
 	const state = uGet(isChar ? userChar[objName] : userWpn[objName], '')
 	const info = isChar ? DBC[objName] : DBW[objName]
-	let nonEmpty = false, upgradable = false, attributeData = []
-	let upgradeCosts = {}
+	let nonEmpty = false, upgradable = false
+	let attributeData = [], upgradeCosts = {}
 	
 	//Ascension
 	let uData = [+state.PHASE, +state.TARGET]
@@ -618,10 +689,8 @@ function getMaxUpgrades(){
 			else break
 		}
 		upgradable = uData[1] !== uData[0]
-		attributeData.push(['Phase', uData])
-		if (upgradable){
-			upgradeCosts = costCalc(info, uData, false)
-		}
+		attributeData[0] = uData
+		if (upgradable) upgradeCosts = costCalc(info, uData, false)
 	}
 
 	//Talents
@@ -642,7 +711,7 @@ function getMaxUpgrades(){
 			loop:
 			for (let end = minBase + 1; end <= maxTarget; end++){
 				for (let i = 0; i < 3; i++){
-					if (targets[i] < end) continue
+					if (targets[i] < end || end <= bases[i]) continue
 					tempUData[i][1] = end
 					let cost = mergeCosts([calcCharT(info, tempUData, false), upgradeCosts])
 					if (checkCompleted(cost)) uData[i][1] = end
@@ -654,19 +723,20 @@ function getMaxUpgrades(){
 				let talentUpgradable = uData[i][1] !== uData[i][0]
 				upgradable ||= talentUpgradable
 				talentsUpgradable ||= talentUpgradable
-				attributeData.push([i, uData[i]])
+				attributeData[i+1] = uData[i]
 			}
-			if (talentsUpgradable){
-				upgradeCosts = mergeCosts([upgradeCosts, calcCharT(info, uData, false)])
-			}
+			if (talentsUpgradable) upgradeCosts = mergeCosts(
+				[upgradeCosts, calcCharT(info, uData, false)])
 		}
 	}
 	return [nonEmpty, upgradable, attributeData, upgradeCosts]
 }
 
 function checkCalc(costs, attribute){
+	let costList = Object.entries(costs)
+	if (costList.length === 0) return
 	let num = 0, numChecked = 0
-	Object.entries(costs).forEach(([cCategory, [cItem, cMaterials]]) => {
+	costList.forEach(([cCategory, [cItem, cMaterials]]) => {
 		if (!cMaterials) return;
 		const nonEmpty = Object.entries(cMaterials).some(([_,v]) => v !== 0);
 		if (!nonEmpty) return
@@ -714,9 +784,9 @@ function consume(costs, attributeData){
 
 	let userObj = isChar ? userChar : userWpn
 	let storeFunc = isChar ? storeUserC : storeUserW
-	attributeData.forEach(([label, [from, to]]) => {
-		const attr = {'Phase':'PHASE', 0:'NORMAL', 1:'SKILL', 2:'BURST'}
-		uSet(userObj[objName], [attr[label]], to);
+	attributeData.forEach(([from, to], i) => {
+		const attr = ['PHASE', 'NORMAL', 'SKILL', 'BURST'][i]
+		uSet(userObj[objName], [attr], to);
 	})
 	storeFunc(user, userObj)
 	setCalc(true);

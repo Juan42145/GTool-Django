@@ -386,11 +386,11 @@ CONVERT
 	--convert-values-bgclr: var(--clr-comet-dkst);
 	--convert-title-bgclr: var(--clr-comet-dkr);
 
-	--cols: 4;
+	--cols: 5;
 
 	display: grid;
-	grid-template-columns: repeat(var(--cols), minmax(min-content, 1fr));
-	place-items: center;
+	grid-template-columns: repeat(var(--cols), max-content);
+	place-content: center;
 	gap: 0.5em 1em;
 }
 
@@ -398,20 +398,25 @@ CONVERT
 	--cols: 1;
 }
 
-.convert--subgrid{
+.convert > *{
 	grid-column: 1/-1;
 	display: grid;
 	grid-template-columns: subgrid;
 	place-items: center;
 }
 
-.convert__inventory, .convert__materials{
-	display: contents;
+:not(.convert--single) > .convert__amount, :not(.convert--single) > .convert__pick{
+	grid-column: 2/-1;
 }
 
-.convert__values{
-	grid-column: 1/-1;
-	display: contents;
+.convert__amount{
+	padding: 0.5em;
+	background-color: var(--convert-values-bgclr);
+}
+
+.convert__pick{
+	padding: 0.5em;
+	background-color: var(--convert-title-bgclr);
 }
 
 .convert__title{
@@ -425,21 +430,20 @@ CONVERT
 	background-color: var(--convert-title-bgclr);
 }
 
+.convert__materials{
+	grid-row: span 6;
+	grid-template-rows: subgrid;
+}
+
 .convert .card{
 	width: 4em;
 }
 
+.card--total{
+	padding-left: 1em;
+}
+
 /* Convert Elements */
-.convert__amount{
-	padding: 0.5em;
-	background-color: var(--convert-values-bgclr);
-}
-
-.convert__pick{
-	padding: 0.5em;
-	background-color: var(--convert-title-bgclr);
-}
-
 .convert__material{
 	display: grid;
 	grid-auto-columns: 1fr;
@@ -467,20 +471,17 @@ UPGRADE PANEL
 .upgrade-panel{
 	--header-bgclr: var(--clr-comet-dk);
 	--content-bgclr: var(--clr-comet);
-
+	
 	--craft-values-bgclr: var(--clr-comet-dkst);
 	--craft-title-bgclr: var(--clr-comet-dkr);
 
 	--required-bgclr: var(--clr-comet-dk);
 	--required-craft-txclr: var(--insufficient-clr);
 
-	display: grid;
-	grid-template-columns: auto auto;
+	display: flex;
+	flex-wrap: wrap;
+	place-content: center;
 	gap: 1em;
-}
-
-.upgrade-panel__crafting{
-	grid-column: span 2;
 }
 
 .upgrade-panel__inventory{
@@ -489,6 +490,10 @@ UPGRADE PANEL
 	place-content: center;
 	place-items: center;
 	gap: 0.5em;
+}
+
+.upgrade-panel__crafting:not(:has(.craft)){
+	display: none;
 }
 
 .crafting__header{
@@ -504,4 +509,94 @@ UPGRADE PANEL
 	padding: 0.5em;
 	gap: 1em;
 	background-color: var(--content-bgclr);
+}
+
+.upgrade-panel__levels{
+	--level-txclr: var(--clr-ecru-dk);
+	--level-bgclr: var(--clr-ecru-lt);
+	--level-bdclr: var(--clr-ecru-dk);
+
+	--label-txclr: var(--clr-comet-dkr);
+
+	--edit-txclr: var(--clr-comet-dk);
+	--edit-bgclr: var(--clr-ecru);
+	--edit-btn-txclr: var(--clr-ecru-lt);
+	--edit-btn-bgclr: var(--clr-comet-lt);
+
+	display: grid;
+	place-self: center stretch;
+	padding: 0.75em;
+	gap: 0.1em;
+	background-color: var(--level-bgclr);
+	color: var(--level-txclr);
+	fill: var(--level-txclr);
+}
+
+.upgrade-panel__crafting:not(:has(.craft)) ~ .upgrade-panel__levels{
+	grid-column: span 2;
+}
+
+.levels__attribute{
+	display: grid;
+	gap: 0.25em;
+	padding-top: 0.2em;
+	padding-bottom: 0.3em;
+	border-bottom: 0.1em solid var(--level-bdclr);
+}
+
+.levels__attribute:nth-child(1){
+	border-top: 0.1em solid var(--level-bdclr);
+}
+
+.attribute__text{
+	font-size: 1.5em;
+	font-weight: bolder;
+}
+
+.attribute__label{
+	color: var(--label-txclr);
+}
+
+.attribute__level{
+	display: grid;
+	grid-template-columns: repeat(3, min-content);
+	place-content: center;
+	place-items: center;
+	gap: 0.5em;
+}
+
+.level__arrow{
+	display: grid;
+}
+
+.level__edit{
+	display: flex;
+	place-items: stretch;
+	border-radius: 5em;
+	gap: 0.25em;
+	overflow: hidden;
+}
+
+.edit__btn{
+	--btn-txclr: var(--edit-btn-txclr);
+	--btn-bgclr: var(--edit-btn-bgclr);
+
+	font-size: 1.4em;
+	min-height: 0;
+	padding: 0.25em 0.25em;
+	border: 0;
+	border-radius: 0;
+}
+
+.edit__btn:disabled{
+	opacity: 0.2;
+	pointer-events: none;
+}
+
+.edit__text{
+	display: flex;
+	place-items: center;
+	padding: 0 1em;
+	background-color: var(--edit-bgclr);
+	color: var(--edit-txclr);
 }
