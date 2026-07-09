@@ -169,11 +169,13 @@ GLOBAL
 	transition: all 0.15s ease-in-out;
 }
 
-.btn:hover{
-	fill: var(--btn-hover-fillclr);
-	color: var(--btn-hover-txclr);
-	background-color: var(--btn-hover-bgclr);
-	border-color: var(--btn-hover-bdclr, transparent);
+@media not all and (pointer: coarse){
+	.btn:hover{
+		fill: var(--btn-hover-fillclr);
+		color: var(--btn-hover-txclr);
+		background-color: var(--btn-hover-bgclr);
+		border-color: var(--btn-hover-bdclr, transparent);
+	}
 }
 
 .btn--clear{
